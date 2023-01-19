@@ -1,0 +1,157 @@
+## This file contains all the build statements describing the
+# compilation DAG.
+
+# =============================================================================
+# Write statements declared in CMakeLists.txt:
+# 
+# Which is the root file.
+# =============================================================================
+
+# =============================================================================
+# Project: cahoot
+# Configurations: Debug
+# =============================================================================
+
+#############################################
+# Minimal version of Ninja required by this file
+
+ninja_required_version = 1.5
+
+
+#############################################
+# Set configuration variable for custom commands.
+
+CONFIGURATION = Debug
+# =============================================================================
+# Include auxiliary files.
+
+
+#############################################
+# Include rules file.
+
+include CMakeFiles/rules.ninja
+
+# =============================================================================
+
+#############################################
+# Logical path to working directory; prefix for absolute paths.
+
+cmake_ninja_workdir = /Users/tom/Documents/GitHub/cahoot/cmake-build-debug/
+# =============================================================================
+# Object build statements for EXECUTABLE target cahoot
+
+
+#############################################
+# Order-only phony target for cahoot
+
+build cmake_object_order_depends_target_cahoot: phony || CMakeFiles/cahoot.dir
+
+build CMakeFiles/cahoot.dir/client.c.o: C_COMPILER__cahoot_Debug /Users/tom/Documents/GitHub/cahoot/client.c || cmake_object_order_depends_target_cahoot
+  DEP_FILE = CMakeFiles/cahoot.dir/client.c.o.d
+  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics -std=gnu11
+  OBJECT_DIR = CMakeFiles/cahoot.dir
+  OBJECT_FILE_DIR = CMakeFiles/cahoot.dir
+
+build CMakeFiles/cahoot.dir/main.c.o: C_COMPILER__cahoot_Debug /Users/tom/Documents/GitHub/cahoot/main.c || cmake_object_order_depends_target_cahoot
+  DEP_FILE = CMakeFiles/cahoot.dir/main.c.o.d
+  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics -std=gnu11
+  OBJECT_DIR = CMakeFiles/cahoot.dir
+  OBJECT_FILE_DIR = CMakeFiles/cahoot.dir
+
+build CMakeFiles/cahoot.dir/server.c.o: C_COMPILER__cahoot_Debug /Users/tom/Documents/GitHub/cahoot/server.c || cmake_object_order_depends_target_cahoot
+  DEP_FILE = CMakeFiles/cahoot.dir/server.c.o.d
+  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics -std=gnu11
+  OBJECT_DIR = CMakeFiles/cahoot.dir
+  OBJECT_FILE_DIR = CMakeFiles/cahoot.dir
+
+build CMakeFiles/cahoot.dir/packet.c.o: C_COMPILER__cahoot_Debug /Users/tom/Documents/GitHub/cahoot/packet.c || cmake_object_order_depends_target_cahoot
+  DEP_FILE = CMakeFiles/cahoot.dir/packet.c.o.d
+  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics -std=gnu11
+  OBJECT_DIR = CMakeFiles/cahoot.dir
+  OBJECT_FILE_DIR = CMakeFiles/cahoot.dir
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target cahoot
+
+
+#############################################
+# Link the executable cahoot
+
+build cahoot: C_EXECUTABLE_LINKER__cahoot_Debug CMakeFiles/cahoot.dir/client.c.o CMakeFiles/cahoot.dir/main.c.o CMakeFiles/cahoot.dir/server.c.o CMakeFiles/cahoot.dir/packet.c.o
+  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk
+  OBJECT_DIR = CMakeFiles/cahoot.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = cahoot
+  TARGET_PDB = cahoot.dbg
+
+
+#############################################
+# Utility command for edit_cache
+
+build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /Users/tom/Documents/GitHub/cahoot/cmake-build-debug && "/Users/tom/Library/Application Support/JetBrains/Toolbox/apps/CLion/ch-0/231.4840.362/CLion 2023.1 EAP.app/Contents/bin/cmake/mac/bin/cmake" -E echo No\ interactive\ CMake\ dialog\ available.
+  DESC = No interactive CMake dialog available...
+  restat = 1
+
+build edit_cache: phony CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /Users/tom/Documents/GitHub/cahoot/cmake-build-debug && "/Users/tom/Library/Application Support/JetBrains/Toolbox/apps/CLion/ch-0/231.4840.362/CLion 2023.1 EAP.app/Contents/bin/cmake/mac/bin/cmake" --regenerate-during-build -S/Users/tom/Documents/GitHub/cahoot -B/Users/tom/Documents/GitHub/cahoot/cmake-build-debug
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build rebuild_cache: phony CMakeFiles/rebuild_cache.util
+
+# =============================================================================
+# Target aliases.
+
+# =============================================================================
+# Folder targets.
+
+# =============================================================================
+
+#############################################
+# Folder: /Users/tom/Documents/GitHub/cahoot/cmake-build-debug
+
+build all: phony cahoot
+
+# =============================================================================
+# Built-in targets
+
+
+#############################################
+# Re-run CMake if any of its inputs changed.
+
+build build.ninja: RERUN_CMAKE | /Users/tom/Documents/GitHub/cahoot/CMakeLists.txt /Users/tom/Library/Application$ Support/JetBrains/Toolbox/apps/CLion/ch-0/231.4840.362/CLion$ 2023.1$ EAP.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeCInformation.cmake /Users/tom/Library/Application$ Support/JetBrains/Toolbox/apps/CLion/ch-0/231.4840.362/CLion$ 2023.1$ EAP.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeCommonLanguageInclude.cmake /Users/tom/Library/Application$ Support/JetBrains/Toolbox/apps/CLion/ch-0/231.4840.362/CLion$ 2023.1$ EAP.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeGenericSystem.cmake /Users/tom/Library/Application$ Support/JetBrains/Toolbox/apps/CLion/ch-0/231.4840.362/CLion$ 2023.1$ EAP.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeInitializeConfigs.cmake /Users/tom/Library/Application$ Support/JetBrains/Toolbox/apps/CLion/ch-0/231.4840.362/CLion$ 2023.1$ EAP.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeLanguageInformation.cmake /Users/tom/Library/Application$ Support/JetBrains/Toolbox/apps/CLion/ch-0/231.4840.362/CLion$ 2023.1$ EAP.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeSystemSpecificInformation.cmake /Users/tom/Library/Application$ Support/JetBrains/Toolbox/apps/CLion/ch-0/231.4840.362/CLion$ 2023.1$ EAP.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeSystemSpecificInitialize.cmake /Users/tom/Library/Application$ Support/JetBrains/Toolbox/apps/CLion/ch-0/231.4840.362/CLion$ 2023.1$ EAP.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/AppleClang-C.cmake /Users/tom/Library/Application$ Support/JetBrains/Toolbox/apps/CLion/ch-0/231.4840.362/CLion$ 2023.1$ EAP.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/CMakeCommonCompilerMacros.cmake /Users/tom/Library/Application$ Support/JetBrains/Toolbox/apps/CLion/ch-0/231.4840.362/CLion$ 2023.1$ EAP.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/Clang.cmake /Users/tom/Library/Application$ Support/JetBrains/Toolbox/apps/CLion/ch-0/231.4840.362/CLion$ 2023.1$ EAP.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/GNU.cmake /Users/tom/Library/Application$ Support/JetBrains/Toolbox/apps/CLion/ch-0/231.4840.362/CLion$ 2023.1$ EAP.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Apple-AppleClang-C.cmake /Users/tom/Library/Application$ Support/JetBrains/Toolbox/apps/CLion/ch-0/231.4840.362/CLion$ 2023.1$ EAP.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Apple-Clang-C.cmake /Users/tom/Library/Application$ Support/JetBrains/Toolbox/apps/CLion/ch-0/231.4840.362/CLion$ 2023.1$ EAP.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Apple-Clang.cmake /Users/tom/Library/Application$ Support/JetBrains/Toolbox/apps/CLion/ch-0/231.4840.362/CLion$ 2023.1$ EAP.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Darwin-Initialize.cmake /Users/tom/Library/Application$ Support/JetBrains/Toolbox/apps/CLion/ch-0/231.4840.362/CLion$ 2023.1$ EAP.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Darwin.cmake /Users/tom/Library/Application$ Support/JetBrains/Toolbox/apps/CLion/ch-0/231.4840.362/CLion$ 2023.1$ EAP.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.24.2/CMakeCCompiler.cmake CMakeFiles/3.24.2/CMakeSystem.cmake
+  pool = console
+
+
+#############################################
+# A missing CMake input file is not an error.
+
+build /Users/tom/Documents/GitHub/cahoot/CMakeLists.txt /Users/tom/Library/Application$ Support/JetBrains/Toolbox/apps/CLion/ch-0/231.4840.362/CLion$ 2023.1$ EAP.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeCInformation.cmake /Users/tom/Library/Application$ Support/JetBrains/Toolbox/apps/CLion/ch-0/231.4840.362/CLion$ 2023.1$ EAP.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeCommonLanguageInclude.cmake /Users/tom/Library/Application$ Support/JetBrains/Toolbox/apps/CLion/ch-0/231.4840.362/CLion$ 2023.1$ EAP.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeGenericSystem.cmake /Users/tom/Library/Application$ Support/JetBrains/Toolbox/apps/CLion/ch-0/231.4840.362/CLion$ 2023.1$ EAP.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeInitializeConfigs.cmake /Users/tom/Library/Application$ Support/JetBrains/Toolbox/apps/CLion/ch-0/231.4840.362/CLion$ 2023.1$ EAP.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeLanguageInformation.cmake /Users/tom/Library/Application$ Support/JetBrains/Toolbox/apps/CLion/ch-0/231.4840.362/CLion$ 2023.1$ EAP.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeSystemSpecificInformation.cmake /Users/tom/Library/Application$ Support/JetBrains/Toolbox/apps/CLion/ch-0/231.4840.362/CLion$ 2023.1$ EAP.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeSystemSpecificInitialize.cmake /Users/tom/Library/Application$ Support/JetBrains/Toolbox/apps/CLion/ch-0/231.4840.362/CLion$ 2023.1$ EAP.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/AppleClang-C.cmake /Users/tom/Library/Application$ Support/JetBrains/Toolbox/apps/CLion/ch-0/231.4840.362/CLion$ 2023.1$ EAP.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/CMakeCommonCompilerMacros.cmake /Users/tom/Library/Application$ Support/JetBrains/Toolbox/apps/CLion/ch-0/231.4840.362/CLion$ 2023.1$ EAP.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/Clang.cmake /Users/tom/Library/Application$ Support/JetBrains/Toolbox/apps/CLion/ch-0/231.4840.362/CLion$ 2023.1$ EAP.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/GNU.cmake /Users/tom/Library/Application$ Support/JetBrains/Toolbox/apps/CLion/ch-0/231.4840.362/CLion$ 2023.1$ EAP.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Apple-AppleClang-C.cmake /Users/tom/Library/Application$ Support/JetBrains/Toolbox/apps/CLion/ch-0/231.4840.362/CLion$ 2023.1$ EAP.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Apple-Clang-C.cmake /Users/tom/Library/Application$ Support/JetBrains/Toolbox/apps/CLion/ch-0/231.4840.362/CLion$ 2023.1$ EAP.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Apple-Clang.cmake /Users/tom/Library/Application$ Support/JetBrains/Toolbox/apps/CLion/ch-0/231.4840.362/CLion$ 2023.1$ EAP.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Darwin-Initialize.cmake /Users/tom/Library/Application$ Support/JetBrains/Toolbox/apps/CLion/ch-0/231.4840.362/CLion$ 2023.1$ EAP.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Darwin.cmake /Users/tom/Library/Application$ Support/JetBrains/Toolbox/apps/CLion/ch-0/231.4840.362/CLion$ 2023.1$ EAP.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.24.2/CMakeCCompiler.cmake CMakeFiles/3.24.2/CMakeSystem.cmake: phony
+
+
+#############################################
+# Clean all the built files.
+
+build clean: CLEAN
+
+
+#############################################
+# Print all primary targets available.
+
+build help: HELP
+
+
+#############################################
+# Make the all target the default.
+
+default all
