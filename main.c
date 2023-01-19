@@ -71,15 +71,15 @@ int main()
                 //while (strcmp(textInput, stopWord) != 0);
 
                 createPacket(textInput);
+                message = "Vous avez bien créé le paquet !";
 
                 break;
 
             case 2:
                 printf("Bye\n");
 
-                free(stopWord);
                 free(textInput);
-                free(message);
+
                 return 1;
 
 
@@ -87,18 +87,11 @@ int main()
                 printf("Oups, nous ne savons pas ce qui a bien pu se passer...\n"
                        "Vous pouvez nous envoyer un message avec la manip effectuer pour que nous puissions regarder ça de plus près ! ;)\n");
 
-                free(stopWord);
+
                 free(textInput);
-                free(message);
 
                 return 0;
         }
     }
-    while (choice != 8);
-
-    free(stopWord);
-    free(textInput);
-    free(message);
-
-    return 0;
+    while (choice != 2);
 }
