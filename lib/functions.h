@@ -1,0 +1,1 @@
+int check(char* packetName, char* forbidden, int len);
