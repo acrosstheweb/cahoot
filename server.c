@@ -11,33 +11,29 @@
 
 typedef struct {
     int client_id;
-    int sock_fd;
+    int client_sock_fd;
 } thread_args_t;
 
 void* client_handler(void* arg) {
-    thread_args_t* args = (thread_args_t*) arg;
-    int client_id = args->client_id;
-    int sock_fd = args->sock_fd;
-    char buffer[1024] = {0};
+	thread_args_t* args = (thread_args_t*) arg;
+	int client_id = args->client_id;
+	int client_sock_fd = args->client_sock_fd;
+	char response[256] = {0};
 
-    while (1) {
-    	// Send the question to the client
-    	char* question = "What is your name?\n";
-    	send(sock_fd, question, strlen(question), 0);
+	// Send the question to the client
+	char* question = "What is your name ?\n";
+	send(client_sock_fd, question, strlen(question)+1, 0);
 
-    	// Receive the response from the client
-    	int valread = read(sock_fd, buffer, 1024);
-    	printf("Client %d: %s", client_id, buffer);
-    }
+	// Receive the response from the client
+	recv(client_sock_fd, response, strlen(response)+1, 0);
+	printf("Client %d: %s\n", client_id, response);
 
-    return NULL;
+	return NULL;
 }
 
 int main(){
 
 	int clients[MAX_CLIENTS], response_read;
-	char* response = malloc(sizeof(char) * 1024);
-	char** responses = malloc(sizeof(char*) * MAX_CLIENTS);
 	char* serv_welcome_msg = "Welcome to Cards server";
 
 	int server_socket = socket(AF_INET, SOCK_STREAM, 0);
@@ -79,7 +75,7 @@ int main(){
 
     	for (int c = 0; c < MAX_CLIENTS; c++) {
         	thread_args[c].client_id = c;
-        	thread_args[c].sock_fd = clients[c];
+        	thread_args[c].client_sock_fd = clients[c];
         	if (pthread_create(&threads[c], NULL, client_handler, &thread_args[c]) != 0) {
             		perror("pthread_create failed");
             		exit(EXIT_FAILURE);

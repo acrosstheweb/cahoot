@@ -8,7 +8,6 @@
 
 int main(){
 
-	char response[1024];
 	int network_socket = socket(AF_INET, SOCK_STREAM, 0);
 
 	// Address assignement
@@ -26,18 +25,23 @@ int main(){
 	}
 
 	// Receive data
-	char quizz_response[23];
-	recv(network_socket, &quizz_response, sizeof(quizz_response), 0);
+	char question[23];
+	recv(network_socket, &question, sizeof(question), 0);
 
-	printf("The server sent the data : %s\n", quizz_response);
+	printf("The server sent the data : %s\n", question);
+
+	// Send back data
+	char* response = malloc(sizeof(char) * 256);
 
 	printf(">>> ");
-	scanf("%s", &response);
+	scanf("%s", response);
 
-	send(network_socket, response, strlen(response), 0);
+	send(network_socket, response, strlen(response)+1, 0);
 
 	close(network_socket);
 	printf("\nGoodbye\n");
+
+	free(response);
 
 	return 0;
 }
