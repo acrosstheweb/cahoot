@@ -40,19 +40,19 @@ int menu()
 int main()
 {
     int choice;
-    char *message = " ";
+    char *message = "";
     char *stopWord = "-stop";
     char *textInput = (char *) malloc(sizeof(char) * 30);
-    char forbidden[10] = {'<', '>', '"', ':', '/', '\\', '|', '?', ' '};
+    char forbidden[9] = {'<', '>', '"', ':', '/', '\\', '|', '?', ' '};
     int len = sizeof(forbidden) / sizeof (forbidden[0]); // permet de retourner la taille du tableau
 
     do
     {
         system("clear");
-        if(strcmp(message, " ") != 0)
+        if(strcmp(message, "") != 0)
         {
             printf("%s\n", message);
-            message = " ";
+            message = "";
         }
         choice = menu();
 
@@ -63,14 +63,19 @@ int main()
                 system("clear");
                 printf("Entrez '%s' pour sortir.\n", stopWord);
 
-                // if (strcmp(textInput, stopWord) != 0)
-                    // break;
+                printf("Quel nom voulez-vous donner à votre nouveau paquet ?\nCaractères interdits : %s\n", forbidden);
+                scanf("%[^\n]s", textInput);
+                getchar();
 
-                do{
-                    printf("Quel nom voulez-vous donner à votre nouveau paquet ?\nCaractères interdits : %s\n", forbidden);
+                if (!strcmp(textInput, stopWord)) {
+                    break;
+                }
+
+                while (check(textInput, forbidden, len)){
+                    printf("Erreur: votre saisie comporte au moins un caractère interdit.\nQuel nom voulez-vous donner à votre nouveau paquet ?\nCaractères interdits : %s\n", forbidden);
                     scanf("%[^\n]s", textInput);
                     getchar();
-                }while (check(textInput, forbidden, len) != 0);
+                }
 
                 createPacket(textInput);
                 message = "Vous avez bien créé le paquet !";
