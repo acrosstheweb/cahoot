@@ -43,7 +43,7 @@ int main()
     char *message = " ";
     char *stopWord = "-stop";
     char *textInput = (char *) malloc(sizeof(char) * 30);
-    char forbidden[] = {'<', '>', '"', ':', '/', '\\', '|', '?'};
+    char forbidden[10] = {'<', '>', '"', ':', '/', '\\', '|', '?', ' '};
     int len = sizeof(forbidden) / sizeof (forbidden[0]); // permet de retourner la taille du tableau
 
     do
@@ -63,18 +63,14 @@ int main()
                 system("clear");
                 printf("Entrez '%s' pour sortir.\n", stopWord);
 
-                printf("Quel nom voulez-vous donner à votre nouveau paquet ?\n");
-                scanf("%[^\n]s", textInput);
-                getchar();
-
                 // if (strcmp(textInput, stopWord) != 0)
                     // break;
 
-                while(strchr(textInput, ' ')){
-                    printf("Your packet should not contain spaces ! Try again :\n");
+                do{
+                    printf("Quel nom voulez-vous donner à votre nouveau paquet ?\nCaractères interdits : %s\n", forbidden);
                     scanf("%[^\n]s", textInput);
                     getchar();
-                }
+                }while (check(textInput, forbidden, len) != 0);
 
                 createPacket(textInput);
                 message = "Vous avez bien créé le paquet !";
