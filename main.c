@@ -26,7 +26,7 @@ int menu()
         scanf("%d", &choice);
         getchar();
 
-        if (!(choice >= 1 && choice <= 2))
+        if (!(choice >= 1 && choice <= 3))
             message = "Aïe ! Cette option n'existe pas encore ! Veuillez réessayer :";
         else
             valid = 1;
@@ -79,6 +79,30 @@ int main()
 
                 createPacket(textInput);
                 message = "Vous avez bien créé le paquet !";
+
+                break;
+
+            case 3:
+
+                system("clear");
+                printf("Entrez '%s' pour sortir.\n", stopWord);
+
+                printf("Quel nom voulez-vous donner à votre nouveau paquet ?\nCaractères interdits : %s\n", forbidden);
+                scanf("%[^\n]s", textInput);
+                getchar();
+
+                if (!strcmp(textInput, stopWord)) {
+                    break;
+                }
+
+                while (check(textInput, forbidden, len)){
+                    printf("Erreur: votre saisie comporte au moins un caractère interdit.\nQuel nom voulez-vous donner à votre nouveau paquet ?\nCaractères interdits : %s\n", forbidden);
+                    scanf("%[^\n]s", textInput);
+                    getchar();
+                }
+
+                deletePacket(textInput);
+                message = "Vous avez bien supprimé le paquet !";
 
                 break;
 
