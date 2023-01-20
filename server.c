@@ -4,9 +4,34 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <unistd.h>
+#include <pthread.h>
 
 #define PORT 13337
 #define MAX_CLIENTS 2
+
+typedef struct {
+    int client_id;
+    int sock_fd;
+} thread_args_t;
+
+void* client_handler(void* arg) {
+    thread_args_t* args = (thread_args_t*) arg;
+    int client_id = args->client_id;
+    int sock_fd = args->sock_fd;
+    char buffer[1024] = {0};
+
+    while (1) {
+    	// Send the question to the client
+    	char* question = "What is your name?\n";
+    	send(sock_fd, question, strlen(question), 0);
+
+    	// Receive the response from the client
+    	int valread = read(sock_fd, buffer, 1024);
+    	printf("Client %d: %s", client_id, buffer);
+    }
+
+    return NULL;
+}
 
 int main(){
 
@@ -48,24 +73,25 @@ int main(){
 		}
 	}
 
-	// Loop to ask questions to clients and receive their responses
-	while(1){
-		for(int c = 0; c < MAX_CLIENTS; c++){
-			char* question = "What is your name ?\n";
-			send(clients[c], question, strlen(question), 0);
+	// Create threads to handle communication with each client
+    	pthread_t threads[MAX_CLIENTS];
+    	thread_args_t thread_args[MAX_CLIENTS];
 
-			response_read = read(clients[c], response, 1024);
-			responses[c] = response_read;
-			printf("Client %d : %s", c, response);
-		}
-	}
+    	for (int c = 0; c < MAX_CLIENTS; c++) {
+        	thread_args[c].client_id = c;
+        	thread_args[c].sock_fd = clients[c];
+        	if (pthread_create(&threads[c], NULL, client_handler, &thread_args[c]) != 0) {
+            		perror("pthread_create failed");
+            		exit(EXIT_FAILURE);
+        	}
+    	}
 
-	// Send welcome message
-	// if(send(client_socket, serv_welcome_msg, sizeof(serv_welcome_msg), 0) != -1){
-	//      printf("Message sent.\n");
-	// }
+    	// Wait for the threads to finish
+    	for (int c = 0; c < MAX_CLIENTS; c++) {
+        	pthread_join(threads[c], NULL);
+    	}
 
-	//close(server_socket);
+
 	printf("\nGoodbye\n");
 
 
