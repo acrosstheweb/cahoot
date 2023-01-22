@@ -1,7 +1,7 @@
 .idea
 cmake-build-debug
 .DS_Store
-.ini
+*.ini
 main
 packets
 CMakeLists.txt
