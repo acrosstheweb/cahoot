@@ -3,6 +3,7 @@
 #include <string.h>
 #include "lib/packet.h"
 #include "lib/functions.h"
+// #include "window/window.h"
 
 int menu()
 {
@@ -45,6 +46,15 @@ int main()
     char *textInput = (char *) malloc(sizeof(char) * 30);
     char forbidden[9] = {'<', '>', '"', ':', '/', '\\', '|', '?', ' '};
     int len = sizeof(forbidden) / sizeof (forbidden[0]); // permet de retourner la taille du tableau
+
+    // Window *window = create_window();
+    //
+    //
+    // destroy_window(window);
+    //
+    // SDL_Quit();
+    //
+    // return 0;
 
     do
     {
@@ -95,16 +105,13 @@ int main()
                     break;
                 }
 
-                while (check(textInput, forbidden, len)){
+                while (check(textInput, forbidden, len)) {
                     printf("Erreur: votre saisie comporte au moins un caractère interdit.\nQuel nom voulez-vous donner à votre nouveau paquet ?\nCaractères interdits : %s\n", forbidden);
                     scanf("%[^\n]s", textInput);
                     getchar();
                 }
 
                 message = deletePacket(textInput);
-                if( message == ""){
-                    message = "Vous avez bien supprimé le paquet !";
-                }
 
                 break;
 

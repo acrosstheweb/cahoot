@@ -56,8 +56,12 @@ char* deletePacket(char* packetName)
         res = "No existing packets, cannot delete any.\n";
     } else if (stat(filePath, &s) == -1) {
         res = "Packet doesn't exist, cannot delete it.\n";
-    } else if (remove(filePath) != 0) {
-        res = "Unable to delete the file";
+    } else {
+        if (remove(filePath) == 0) {
+            res = "Vous avez bien supprimé le paquet !";
+        } else {
+            res = "Unable to delete the file";
+        }
     }
     return res;
 }
