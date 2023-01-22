@@ -38,8 +38,9 @@ void addQuestion(FILE* packet)
 
 }
 
-void deletePacket(char* packetName)
+char* deletePacket(char* packetName)
 {
+    char* res = "";
     struct stat s = {0};
     char* directory = "packets/";
     char* extension = ".json";
@@ -51,20 +52,12 @@ void deletePacket(char* packetName)
     strcat(filePath, packetName);
     strcat(filePath, extension);
 
-    if (stat(filePath, &s) == -1) {
-        printf("Packet doesn't exist, cannot delete it.\n");
-        return;
-    }
-
     if (stat(directory, &s) == -1) {
-        printf("No existing packets, cannot delete any.\n");
-        return;
+        res = "No existing packets, cannot delete any.\n";
+    } else if (stat(filePath, &s) == -1) {
+        res = "Packet doesn't exist, cannot delete it.\n";
+    } else if (remove(filePath) != 0) {
+        res = "Unable to delete the file";
     }
-
-    if (remove(filePath) == 0) {
-        printf("Deleted successfully");
-    } else {
-        printf("Unable to delete the file");
-    }
-   return;
+    return res;
 }

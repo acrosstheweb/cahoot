@@ -87,7 +87,7 @@ int main()
                 system("clear");
                 printf("Entrez '%s' pour sortir.\n", stopWord);
 
-                printf("Quel nom voulez-vous donner à votre nouveau paquet ?\nCaractères interdits : %s\n", forbidden);
+                printf("Quel paquet voulez-vous supprimer ?\n");
                 scanf("%[^\n]s", textInput);
                 getchar();
 
@@ -101,8 +101,10 @@ int main()
                     getchar();
                 }
 
-                deletePacket(textInput);
-                message = "Vous avez bien supprimé le paquet !";
+                message = deletePacket(textInput);
+                if( message == ""){
+                    message = "Vous avez bien supprimé le paquet !";
+                }
 
                 break;
 
