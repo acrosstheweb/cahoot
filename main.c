@@ -4,7 +4,7 @@
 #include "lib/packet.h"
 #include "lib/functions.h"
 #include "window/window.h"
-
+/*
 int menu()
 {
     int choice;
@@ -36,10 +36,12 @@ int menu()
 
     return choice;
 }
-
-
+ */
 int main()
 {
+    Window *window = create_window();
+    menu(window);
+/* 
     int choice;
     char *message = "";
     char *stopWord = "-stop";
@@ -47,12 +49,11 @@ int main()
     char forbidden[9] = {'<', '>', '"', ':', '/', '\\', '|', '?', ' '};
     int len = sizeof(forbidden) / sizeof (forbidden[0]); // permet de retourner la taille du tableau
 
-    Window *window = create_window();
-        
+
     destroy_window(window);
-    
+
     SDL_Quit();
-    
+
     return 0;
 
     do
@@ -133,4 +134,19 @@ int main()
         }
     }
     while (choice != 2);
+}
+
+    // Nettoyer les ressources
+    SDL_DestroyTexture(button1Texture);
+    SDL_DestroyTexture(button2Texture);
+    SDL_DestroyTexture(button3Texture);
+    SDL_FreeSurface(button1Surface);
+    SDL_FreeSurface(button2Surface);
+    SDL_FreeSurface(button3Surface);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+
+*/
+    return 0;
 }
