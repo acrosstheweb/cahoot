@@ -3,7 +3,7 @@
 #include <string.h>
 #include "lib/packet.h"
 #include "lib/functions.h"
-// #include "window/window.h"
+#include "window/window.h"
 
 int menu()
 {
@@ -47,14 +47,13 @@ int main()
     char forbidden[9] = {'<', '>', '"', ':', '/', '\\', '|', '?', ' '};
     int len = sizeof(forbidden) / sizeof (forbidden[0]); // permet de retourner la taille du tableau
 
-    // Window *window = create_window();
-    //
-    //
-    // destroy_window(window);
-    //
-    // SDL_Quit();
-    //
-    // return 0;
+    Window *window = create_window();
+        
+    destroy_window(window);
+    
+    SDL_Quit();
+    
+    return 0;
 
     do
     {
