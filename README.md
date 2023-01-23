@@ -2,4 +2,4 @@
 Projet langage C - S1 - 2A2
 
 ## Commande pour compiler
-    gcc main.c lib/packet.c lib/functions.c -o main
+    gcc main.c lib/*.c window/*.c $(sdl2-config --cflags --libs) -o main
