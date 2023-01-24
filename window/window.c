@@ -63,19 +63,13 @@ void menu(Window* window) {
         buttonSettingsWidth,
         buttonSettingsHeight
     };
-/* 
-    ButtonList* buttons = createButtonList();
-    addButtonToList(buttons->first, buttonLeaveRect, buttonLeaveTexture, buttonLeaveHoverTexture);  
-    addButtonToList(buttons->first, buttonSettingsRect, buttonSettingsTexture, buttonSettingsHoverTexture); */
-    Button* first = malloc(sizeof(Button));
-    // first = addButton(first, buttonLeaveRect, buttonLeaveTexture, buttonLeaveHoverTexture);
-    first->isHovered = 0;
-    first->next = NULL;
-    first->rect = buttonLeaveRect;
-    first->texture = buttonLeaveTexture;
-    first->textureHovered = buttonLeaveHoverTexture;
+    
+    Button* first = NULL;
+    Button* current = NULL;
     addButtonToList(first, buttonSettingsRect, buttonSettingsTexture, buttonSettingsHoverTexture);
-    Button* current = first;
+    printf("first: %p\nnext: %p\n", first, first->next);
+    addButtonToList(first, buttonLeaveRect, buttonLeaveTexture, buttonLeaveHoverTexture);
+    printf("first: %p\nnext: %p\nnextnext: %p", first, first->next, first->next->next);
 
 
     
@@ -83,10 +77,6 @@ void menu(Window* window) {
     int quit = 0;
     while (!quit) {
         SDL_Event e;
-
-        // Effacer l'écran
-        SDL_SetRenderDrawColor(window->renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-        SDL_RenderClear(window->renderer);
         
         //je suppose, bau pire on met ttf ou jsp quoi SDL_font à null tout le temps
         //laisse comme ça pour l'instant, on changera plus tard si besoin oui
@@ -107,6 +97,7 @@ void menu(Window* window) {
                 }
             }
         } */
+        printf("jaaj");
         int x, y;
         while (SDL_PollEvent(&e)) {
             switch (e.type) {
@@ -119,6 +110,11 @@ void menu(Window* window) {
                     return;
             }
         }
+
+        // Effacer l'écran
+        SDL_SetRenderDrawColor(window->renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+        SDL_RenderClear(window->renderer);
+
         while(current->next != first){
             if (current->isHovered)
             {
@@ -160,100 +156,35 @@ void checkHover(Button* b, int mouseX, int mouseY){
     }
 }
 
-void hover(Window* window, Button* button){
-    //IL SUFFIT
-
-    //SDL_Texture* hoveredTexture = SDL_CreateTextureFromSurface(window->renderer, imageHovered);
-
-    // Effacer l'écran
-    /* SDL_SetRenderDrawColor(window->renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-    SDL_RenderClear(window->renderer);
-
-    // Place les boutons sur la fenêtre
-    */
-    //if (textureHovered){
-    SDL_RenderCopy(window->renderer, button->textureHovered, NULL, &(button->rect));
-    //}
-    // else {
-    //     SDL_RenderCopy(window->renderer, buttonSelectTexture, NULL, &buttonRectangle);
-    // }
-
-    // Mettre à jour l'affichage | 
-    // SDL_RenderPresent(window->renderer);
-}
-
-Button* addButton(Button* b, SDL_Rect rect, SDL_Texture* texture, SDL_Texture* textureHovered){
-    Button* newButton = malloc(sizeof(Button));
-    if(newButton == NULL){
-        printf("Echec malloc newButton");
-        exit(EXIT_FAILURE);
-    }
-    newButton->isHovered = 0;
-    newButton->next = b;
-    newButton->rect = rect;
-    newButton->texture = texture;
-    newButton->textureHovered = textureHovered;
-
-    return newButton;
-}
-
-ButtonList* createButtonList(){
-    ButtonList* liste = malloc(sizeof(ButtonList));
-    if(liste == NULL){
-        printf("Echec malloc liste");
-        exit(EXIT_FAILURE);
-    }
-    liste->first = NULL;
-    liste->size = 0;
-    return liste;
-}
-
-/* void addButtonToList(ButtonList* buttonList, SDL_Rect rect, SDL_Texture* texture, SDL_Texture* textureHovered){
-    Button* temp = malloc(sizeof(Button));
-    temp->rect = rect;
-    temp->texture = texture;
-    temp->textureHovered = textureHovered;
-    temp->next = NULL;
-    if (temp == NULL) { // Si la liste chaînée est vide, on crée le premier élément
-        buttonList->first = temp;
-    } else { // Sinon, on rajoute un élément AU DEBUT et on le relie à celui qui était premier 
-        //buttonList->first = addButton(buttonList->first, rect, texture, textureHovered);
-  
-        // last node now has reference
-        // of the new node temp
-        temp->next = buttonList->first->next;
-        buttonList->first->next = temp;
-    }
-    buttonList->size++;
-    if (buttonList->size >=2) {
-        buttonList->first->next = buttonList->first;
-    }
-} */
-
 void addButtonToList(Button* button, SDL_Rect rect, SDL_Texture* texture, SDL_Texture* textureHovered){
-    Button* first = button;
-    while (button->next != first || button->next != NULL){
-        button = button->next;
-    }
-    button->next = malloc(sizeof(Button));
-    if(button->next == NULL){
-        printf("Echec malloc button->next");
-        exit(EXIT_FAILURE);
-    }
-    button->rect = rect;
-    button->texture = texture;
-    button->textureHovered = textureHovered;
-    button->next->next = first;
-}
-void pop(ButtonList* buttonList){
-    Button* firstButton = buttonList->first;
-    buttonList->first = firstButton->next;
+    printf("in function, button : %p\n", button);
+    if (!button){
+        button = malloc(sizeof(Button));
+        if(button == NULL){
+            printf("Echec malloc button");
+            exit(EXIT_FAILURE);
+        }
+        button->isHovered = 0;
+        button->next = button;
+        button->rect = rect;
+        button->texture = texture;
+        button->textureHovered = textureHovered;
+    } else {
+        Button* first = button;
+        while (button->next != first){
+            button = button->next;
+        }
 
-    // TODO: Free le SDL_Rect ?
-    // SDL_Rect rectToDel = firstButton->rect;
-    
-    free(firstButton->texture);
-    free(firstButton);
+        button->next = malloc(sizeof(Button));
+        if(button->next == NULL){
+            printf("Echec malloc button->next");
+            exit(EXIT_FAILURE);
+        }
+        button->rect = rect;
+        button->texture = texture;
+        button->textureHovered = textureHovered;
+        button->next->next = first;
+    }
 }
 
 /* void display(ButtonList* buttonList)
