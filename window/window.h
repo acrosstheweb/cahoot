@@ -1,3 +1,4 @@
+// TODO: remplacer option par toutes les options possibles
 #define SCREEN_WIDTH  1280
 #define SCREEN_HEIGHT 720
 #include <SDL2/SDL.h>
@@ -9,8 +10,6 @@ typedef struct {
     SDL_Renderer *renderer;
 } Window;
 
-Window* create_window();
 void menu(Window* window);
 
-void destroy_window(Window* window);
 void option(int option);
