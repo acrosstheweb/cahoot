@@ -21,6 +21,10 @@ Window* create_window() {
     SDL_Init(SDL_INIT_VIDEO);
 
     Window* window = malloc(sizeof(Window));
+    if(window == NULL){
+        printf("Echec malloc window");
+        exit(EXIT_FAILURE);
+    }
 
     // Initialisation de la fenêtre
     window->sdl_window = SDL_CreateWindow("Cahoot", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);

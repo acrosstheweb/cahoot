@@ -6,10 +6,32 @@
 #include <SDL2/SDL_ttf.h>
 
 typedef struct {
-    SDL_Window *sdl_window;
-    SDL_Renderer *renderer;
+    SDL_Window* sdl_window;
+    SDL_Renderer* renderer;
 } Window;
 
-void menu(Window* window);
+typedef struct Button Button;
+struct Button{
+    int id;
+    int isHovered;
+    SDL_Rect rect;
+    SDL_Texture* texture;
+    SDL_Texture* textureHovered;
+    Button* next;
+};
 
+typedef struct {
+    int size;
+    Button* first;
+} ButtonList;
+
+void menu(Window* window);
 void option(int option);
+
+void checkHover(Button* b, int mouseX, int mouseY);
+void hover(Window* window, Button* button);
+
+Button* addButton(Button* b, SDL_Rect rect, SDL_Texture* texture, SDL_Texture* textureHovered);
+ButtonList* createButtonList();
+void addButtonToList(Button* button, SDL_Rect rect, SDL_Texture* texture, SDL_Texture* textureHovered);
+void pop(ButtonList* buttonList);
