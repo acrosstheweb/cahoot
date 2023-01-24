@@ -55,7 +55,25 @@ void menu(Window* window) {
             if (e.type == SDL_QUIT) {
                 quit = 1;
             }
-            // continuer l'événement de la souris
+            // TODO: AU HOVER
+            /* else if (e.type == SDL_MOUSEMOTION) {
+                int x, y;
+                SDL_GetMouseState(&x, &y);
+                if (
+                x >= buttonSelect1Rect.x && x <= buttonSelect1Rect.x + buttonSelect1Rect.w &&
+                y >= buttonSelect1Rect.y && y <= buttonSelect1Rect.y + buttonSelect1Rect.h) {
+                    // effet hover option 1;
+                } else if (
+                x >= buttonSelect2Rect.x && x <= buttonSelect2Rect.x + buttonSelect2Rect.w &&
+                y >= buttonSelect2Rect.y && y <= buttonSelect2Rect.y + buttonSelect2Rect.h) {
+                    // effet hover option 2;
+                } else if (
+                x >= buttonLeaveRect.x && x <= buttonLeaveRect.x + buttonLeaveRect.w &&
+                y >= buttonLeaveRect.y && y <= buttonLeaveRect.y + buttonLeaveRect.h) {
+                    // effet hover boutton quitter;
+                }
+            } */
+            // AU CLIC
             else if (e.type == SDL_MOUSEBUTTONDOWN) {
                 int x, y;
                 SDL_GetMouseState(&x, &y);
