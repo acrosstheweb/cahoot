@@ -18,14 +18,20 @@ void menu(Window* window) {
     // Charger les images des boutons
     SDL_Surface* buttonSelect = IMG_Load("img/arrow_select.png");
     SDL_Surface* buttonLeave = IMG_Load("img/quit_program.png");
+    SDL_Surface* buttonSelectHover = IMG_Load("img/arrow_select_hover.png");
+    SDL_Surface* buttonLeaveHover = IMG_Load("img/quit_program_hover.png");
 
     // Créer les textures des boutons
     SDL_Texture* buttonSelectTexture = SDL_CreateTextureFromSurface(window->renderer, buttonSelect);
     SDL_Texture* buttonLeaveTexture = SDL_CreateTextureFromSurface(window->renderer, buttonLeave);
+    SDL_Texture* buttonSelectHoverTexture = SDL_CreateTextureFromSurface(window->renderer, buttonSelectHover);
+    SDL_Texture* buttonLeaveHoverTexture = SDL_CreateTextureFromSurface(window->renderer, buttonLeaveHover);
+    SDL_Texture* test = NULL;
+    SDL_Texture* testLeave = NULL;
 
     // Obtenir les dimensions des boutons
     int buttonSelectWidth = 50, buttonSelectHeight = 50;
-    int buttonLeaveWidth = 75, buttonLeaveHeight = 75;
+    int buttonLeaveWidth = 50, buttonLeaveHeight = 50;
 
     // Définir les positions des boutons (x, y, w, h)
     SDL_Rect buttonSelect1Rect = {
@@ -56,23 +62,26 @@ void menu(Window* window) {
                 quit = 1;
             }
             // TODO: AU HOVER
-            /* else if (e.type == SDL_MOUSEMOTION) {
+            else if (e.type == SDL_MOUSEMOTION) {
                 int x, y;
                 SDL_GetMouseState(&x, &y);
                 if (
                 x >= buttonSelect1Rect.x && x <= buttonSelect1Rect.x + buttonSelect1Rect.w &&
                 y >= buttonSelect1Rect.y && y <= buttonSelect1Rect.y + buttonSelect1Rect.h) {
-                    // effet hover option 1;
+                    test = buttonSelectHoverTexture;
                 } else if (
                 x >= buttonSelect2Rect.x && x <= buttonSelect2Rect.x + buttonSelect2Rect.w &&
                 y >= buttonSelect2Rect.y && y <= buttonSelect2Rect.y + buttonSelect2Rect.h) {
-                    // effet hover option 2;
+                    test = buttonSelectHoverTexture;
                 } else if (
                 x >= buttonLeaveRect.x && x <= buttonLeaveRect.x + buttonLeaveRect.w &&
                 y >= buttonLeaveRect.y && y <= buttonLeaveRect.y + buttonLeaveRect.h) {
-                    // effet hover boutton quitter;
+                    testLeave = buttonLeaveHoverTexture;
+                } else {
+                    test = NULL;
+                    testLeave = NULL;
                 }
-            } */
+            }
             // AU CLIC
             else if (e.type == SDL_MOUSEBUTTONDOWN) {
                 int x, y;
@@ -90,8 +99,12 @@ void menu(Window* window) {
                 y >= buttonLeaveRect.y && y <= buttonLeaveRect.y + buttonLeaveRect.h) {
                     SDL_DestroyTexture(buttonSelectTexture);
                     SDL_DestroyTexture(buttonLeaveTexture);
+                    SDL_DestroyTexture(buttonSelectHoverTexture);
+                    SDL_DestroyTexture(buttonLeaveHoverTexture);
                     SDL_FreeSurface(buttonSelect);
                     SDL_FreeSurface(buttonLeave);
+                    SDL_FreeSurface(buttonSelectHover);
+                    SDL_FreeSurface(buttonLeaveHover);
                     SDL_DestroyRenderer(window->renderer);
                     SDL_DestroyWindow(window->sdl_window);
                     return;
@@ -104,9 +117,18 @@ void menu(Window* window) {
         SDL_RenderClear(window->renderer);
 
         // Place les boutons sur la fenêtre
-        SDL_RenderCopy(window->renderer, buttonSelectTexture, NULL, &buttonSelect1Rect);
+        if (test){
+            SDL_RenderCopy(window->renderer, buttonSelectHoverTexture, NULL, &buttonSelect1Rect);
+        } else {
+            SDL_RenderCopy(window->renderer, buttonSelectTexture, NULL, &buttonSelect1Rect);
+        }
         SDL_RenderCopy(window->renderer, buttonSelectTexture, NULL, &buttonSelect2Rect);
-        SDL_RenderCopy(window->renderer, buttonLeaveTexture, NULL, &buttonLeaveRect);
+
+        if (testLeave){
+            SDL_RenderCopy(window->renderer, buttonLeaveHoverTexture, NULL, &buttonLeaveRect);
+        } else {
+            SDL_RenderCopy(window->renderer, buttonLeaveTexture, NULL, &buttonLeaveRect);
+        }
 
         // Mettre à jour l'affichage
         SDL_RenderPresent(window->renderer);
