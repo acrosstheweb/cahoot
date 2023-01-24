@@ -1,6 +1,8 @@
 // TODO: add resource function to add resource created to an array
 // TODO: cleanup on leave function to free all resources in array
 #include "window.h"
+Button* first = NULL;
+
 
 /*
     printf("---- MENU ----\n");
@@ -64,12 +66,20 @@ void menu(Window* window) {
         buttonSettingsHeight
     };
     
-    Button* first = NULL;
-    Button* current = NULL;
-    addButtonToList(first, buttonSettingsRect, buttonSettingsTexture, buttonSettingsHoverTexture);
-    printf("first: %p\nnext: %p\n", first, first->next);
-    addButtonToList(first, buttonLeaveRect, buttonLeaveTexture, buttonLeaveHoverTexture);
-    printf("first: %p\nnext: %p\nnextnext: %p", first, first->next, first->next->next);
+    addButtonToList(buttonSettingsRect, buttonSettingsTexture, buttonSettingsHoverTexture);
+    printf("oof");
+    printf("first: %p\n", first);
+
+    addButtonToList(buttonLeaveRect, buttonLeaveTexture, buttonLeaveHoverTexture);
+
+    Button* current = first;
+    printf("first: %p\ncurrent: %p\n", first, current);
+    while (current->next != NULL){
+        current = current->next;
+    }
+    current->next = first;
+    printf("after while\n");
+    
 
 
     
@@ -115,14 +125,17 @@ void menu(Window* window) {
         SDL_SetRenderDrawColor(window->renderer, 0xFF, 0xFF, 0xFF, 0xFF);
         SDL_RenderClear(window->renderer);
 
-        while(current->next != first){
-            if (current->isHovered)
+        Button* current2 = first;
+        printf("first: %p\ncurrent2: %p\n", first, current2);
+        while(current2->next != first){
+            if (current2->isHovered)
             {
                 // hover(window, current);
-                SDL_RenderCopy(window->renderer, current->textureHovered, NULL, &(current->rect));
+                SDL_RenderCopy(window->renderer, current2->textureHovered, NULL, &(current2->rect));
             } else {
-                SDL_RenderCopy(window->renderer, current->textureHovered, NULL, &(current->rect));
+                SDL_RenderCopy(window->renderer, current2->texture, NULL, &(current2->rect));
             }
+            current2 = current2->next;
         }
     
 
@@ -156,34 +169,40 @@ void checkHover(Button* b, int mouseX, int mouseY){
     }
 }
 
-void addButtonToList(Button* button, SDL_Rect rect, SDL_Texture* texture, SDL_Texture* textureHovered){
-    printf("in function, button : %p\n", button);
-    if (!button){
-        button = malloc(sizeof(Button));
-        if(button == NULL){
-            printf("Echec malloc button");
+void addButtonToList(SDL_Rect rect, SDL_Texture* texture, SDL_Texture* textureHovered){
+    printf("in function, first : %d\n", first);
+    if (!first){
+        printf("in if: %d\n", first);
+        first = malloc(sizeof(Button));
+        if(first == NULL){
+            printf("Echec malloc first");
             exit(EXIT_FAILURE);
         }
-        button->isHovered = 0;
-        button->next = button;
-        button->rect = rect;
-        button->texture = texture;
-        button->textureHovered = textureHovered;
+        printf("after malloc: %d\n", first);
+        first->isHovered = 0;
+        first->next = NULL;
+        printf("after next: %d\n", first);
+        first->rect = rect;
+        first->texture = texture;
+        first->textureHovered = textureHovered;
+        printf("end if:%p\n", first);
     } else {
-        Button* first = button;
-        while (button->next != first){
-            button = button->next;
+        printf("in else\n");
+        Button* current = first;
+        while (current->next != NULL){
+            current = current->next;
         }
 
-        button->next = malloc(sizeof(Button));
-        if(button->next == NULL){
-            printf("Echec malloc button->next");
+        current->next = malloc(sizeof(Button));
+        if(current->next == NULL){
+            printf("Echec malloc current->next");
             exit(EXIT_FAILURE);
         }
-        button->rect = rect;
-        button->texture = texture;
-        button->textureHovered = textureHovered;
-        button->next->next = first;
+        current->rect = rect;
+        current->texture = texture;
+        current->textureHovered = textureHovered;
+        current->next->next = NULL;
+        printf("end else\n");
     }
 }
 

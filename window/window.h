@@ -26,12 +26,7 @@ typedef struct {
 } ButtonList;
 
 void menu(Window* window);
-void option(int option);
 
 void checkHover(Button* b, int mouseX, int mouseY);
-void hover(Window* window, Button* button);
 
-Button* addButton(Button* b, SDL_Rect rect, SDL_Texture* texture, SDL_Texture* textureHovered);
-ButtonList* createButtonList();
-void addButtonToList(Button* button, SDL_Rect rect, SDL_Texture* texture, SDL_Texture* textureHovered);
-void pop(ButtonList* buttonList);
+void addButtonToList(SDL_Rect rect, SDL_Texture* texture, SDL_Texture* textureHovered);
