@@ -63,10 +63,10 @@ void menu(Window* window) {
         buttonSettingsWidth,
         buttonSettingsHeight
     };
-
+/* 
     ButtonList* buttons = createButtonList();
     addButtonToList(buttons->first, buttonLeaveRect, buttonLeaveTexture, buttonLeaveHoverTexture);  
-    addButtonToList(buttons->first, buttonSettingsRect, buttonSettingsTexture, buttonSettingsHoverTexture);
+    addButtonToList(buttons->first, buttonSettingsRect, buttonSettingsTexture, buttonSettingsHoverTexture); */
     Button* first = malloc(sizeof(Button));
     // first = addButton(first, buttonLeaveRect, buttonLeaveTexture, buttonLeaveHoverTexture);
     first->isHovered = 0;
