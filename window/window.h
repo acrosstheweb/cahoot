@@ -1,4 +1,3 @@
-// TODO: remplacer option par toutes les options possibles
 #define SCREEN_WIDTH  1280
 #define SCREEN_HEIGHT 720
 #include <SDL2/SDL.h>
@@ -10,23 +9,21 @@ typedef struct {
     SDL_Renderer* renderer;
 } Window;
 
-typedef struct Button Button;
-struct Button{
-    int id;
+typedef struct {
     int isHovered;
     SDL_Rect rect;
     SDL_Texture* texture;
     SDL_Texture* textureHovered;
-    Button* next;
-};
+} Button;
 
-typedef struct {
-    int size;
-    Button* first;
-} ButtonList;
+typedef struct Node Node;
+struct Node{
+    Button button;
+    Node* next;
+};
 
 void menu(Window* window);
 
-void checkHover(Button* b, int mouseX, int mouseY);
+void checkHover(Node* first, int mouseX, int mouseY);
 
-void addButtonToList(SDL_Rect rect, SDL_Texture* texture, SDL_Texture* textureHovered);
+void addButtonToList(Node* first, SDL_Rect rect, SDL_Texture* texture, SDL_Texture* textureHovered);
