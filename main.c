@@ -2,9 +2,6 @@
 // IDEA: meme chat (animation tournante) si mauvaise réponse
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include "lib/packet.h"
-#include "lib/functions.h"
 #include "window/window.h"
 
 Window* create_window();
