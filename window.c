@@ -34,22 +34,27 @@ void menu(Window* window) {
     SDL_Texture* buttonSettingsHoverTexture = textureFromImage(window->renderer, "img/settings_hover.png");
     
     SDL_Texture* cahootTexture = textureFromMessage(window->renderer, "Cahoot", 0);
-    SDL_Texture* select1Texture = textureFromMessage(window->renderer, "Créer un paquet", 0);
-    SDL_Texture* select1HoverTexture = textureFromMessage(window->renderer, "Créer un paquet", 0);
+    SDL_Texture* menuTexture = textureFromMessage(window->renderer, "===MENU===", 0);
+    SDL_Texture* select1Texture = textureFromMessage(window->renderer, "Creer un paquet", 0);
+    SDL_Texture* select1HoverTexture = textureFromMessage(window->renderer, "Creer un paquet", 1);
+    SDL_Texture* select2Texture = textureFromMessage(window->renderer, "Gerer mes paquets", 0);
+    SDL_Texture* select2HoverTexture = textureFromMessage(window->renderer, "Gerer mes paquets", 1);
 
     States* logo = setStates(cahootTexture, cahootTexture);
+    States* menu = setStates(menuTexture, menuTexture);
     States* settings = setStates(buttonSettingsTexture, buttonSettingsHoverTexture);
     States* quitApp = setStates(buttonLeaveTexture, buttonLeaveHoverTexture);
-    States* select1 = setStates(buttonSelectTexture, buttonSelectHoverTexture);
+    States* select = setStates(buttonSelectTexture, buttonSelectHoverTexture);
     States* select1Text = setStates(select1Texture, select1HoverTexture);
+    States* select2Text = setStates(select2Texture, select2HoverTexture);
 
     // Définir les dimensions
     int margin = 24;
     int buttonSelectWidth = 25, buttonSelectHeight = 25;
     int buttonLeaveWidth = 50, buttonLeaveHeight = 50;
     int buttonSettingsWidth = 50, buttonSettingsHeight = 50;
-    int selectX = 450;
-    int selectTextX = selectX + buttonSelectWidth;
+    int selectX = 425, selectY = 100;
+    int selectTextX = selectX + buttonSelectWidth+10;
 
     // Définir les positions des boutons (x, y, w, h)
     SDL_Rect buttonSettingsRect = {
@@ -64,27 +69,39 @@ void menu(Window* window) {
         250,
         100
     };
+    SDL_Rect menuRect = {
+        (SCREEN_WIDTH - 250) / 2,
+        150,
+        250,
+        50
+    };
     SDL_Rect buttonSelect1Rect = {
         selectX,
-        100,
+        200 + selectY,
         buttonSelectWidth,
         buttonSelectHeight
     };
     SDL_Rect buttonSelect1TextRect = {
-        buttonSelect1Rect.x + buttonSelect1Rect.w,
-        buttonSelect1Rect.y,
-        100,
+        selectTextX,
+        buttonSelect1Rect.y - buttonSelectHeight/2,
+        400,
         2*buttonSelect1Rect.h
     };
     SDL_Rect buttonSelect2Rect = {
-        (SCREEN_WIDTH - buttonSelectWidth) / 2 - buttonSelectWidth,
-        200,
+        selectX,
+        200 + selectY * 2,
         buttonSelectWidth,
         buttonSelectHeight
     };
+    SDL_Rect buttonSelect2TextRect = {
+        selectTextX,
+        buttonSelect2Rect.y - buttonSelectHeight/2,
+        400,
+        2*buttonSelect2Rect.h
+    };
     SDL_Rect buttonLeaveRect = {
         (SCREEN_WIDTH - buttonLeaveWidth) / 2,
-        SCREEN_HEIGHT - (SCREEN_HEIGHT / 6),
+        (SCREEN_WIDTH - buttonLeaveHeight) / 2 - margin,
         buttonLeaveWidth,
         buttonLeaveHeight
     };
@@ -92,9 +109,13 @@ void menu(Window* window) {
 
 
     Node* first = NULL;
+    addButtonToList(&first, logoRect, logo, emptyRect, NULL);
+    addButtonToList(&first, menuRect, menu, emptyRect, NULL);
     addButtonToList(&first, buttonSettingsRect, settings, emptyRect, NULL);
     addButtonToList(&first, buttonLeaveRect, quitApp, emptyRect, NULL);
-    addButtonToList(&first, buttonSelect1Rect, select1, buttonSelect1TextRect, select1Text);
+    Node* firstOption = NULL;
+    addButtonToList(&firstOption, buttonSelect1Rect, select, buttonSelect1TextRect, select1Text);
+    addButtonToList(&firstOption, buttonSelect2Rect, select, buttonSelect2TextRect, select2Text);
     
     // Boucle principale
     int quit = 0;
@@ -108,6 +129,7 @@ void menu(Window* window) {
                     x = e.motion.x;
                     y = e.motion.y;
                     checkHover(first, x, y);
+                    checkHover(firstOption, x, y);
                     break;
                 case SDL_QUIT:
                     return;
@@ -118,14 +140,21 @@ void menu(Window* window) {
         SDL_SetRenderDrawColor(window->renderer, 0xF1, 0xFA, 0xEE, 0xFF);
         SDL_RenderClear(window->renderer);
 
-        Node *current = first;
+        Node* current = first;
         if (first != NULL) {
             do {
                 display(window->renderer, current->button);
                 current = current->next;
             }while (current != first);
         }
-        SDL_RenderCopy(window->renderer, cahootTexture, NULL, &logoRect);
+
+        current = firstOption;
+        if (firstOption != NULL) {
+            do {
+                display(window->renderer, current->button);
+                current = current->next;
+            }while (current != firstOption);
+        }
 
         // Mettre à jour l'affichage
         SDL_RenderPresent(window->renderer);
