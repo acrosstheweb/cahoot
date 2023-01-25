@@ -2,13 +2,15 @@
 // IDEA: meme chat (animation tournante) si mauvaise réponse
 #include <stdio.h>
 #include <stdlib.h>
-#include "window/window.h"
+#include "includes/struct.h"
+#include "includes/functions.h"
+#include "includes/window.h"
 
 Window* create_window();
 void destroy_window(Window* window);
 
 int main() {
-    Window *window = create_window();
+    Window* window = create_window();
     menu(window);
     destroy_window(window);
     return 0;
