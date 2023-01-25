@@ -124,7 +124,7 @@ SDL_Texture* textureFromMessage(SDL_Renderer* renderer, char* message, int isBol
         exit(1);
     }
 
-    SDL_Surface* surface = TTF_RenderText_Solid(Montserrat, "Cahoot", Black); 
+    SDL_Surface* surface = TTF_RenderText_Solid(Montserrat, message, Black); 
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
 
     free(surface); // A vérifier
