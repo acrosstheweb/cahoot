@@ -116,7 +116,7 @@ SDL_Texture* textureFromMessage(SDL_Renderer* renderer, char* message, int isBol
 
     TTF_Font* Montserrat = NULL;
     
-    Montserrat = (isBold) ? TTF_OpenFont("fonts/Montserrat-Bold.ttf", 144) : TTF_OpenFont("fonts/Montserrat-ExtraBold.ttf", 144);
+    Montserrat = (isBold) ? TTF_OpenFont("fonts/Montserrat-ExtraBold.ttf", 144) : TTF_OpenFont("fonts/Montserrat-Bold.ttf", 144);
     // ༼ つ ◕_◕ ༽つ
     if (Montserrat == NULL){
         printf("Erreur de OpenFont : \n%s\n", TTF_GetError());
