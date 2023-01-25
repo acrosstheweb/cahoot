@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include "functions.h"
 
 int check(char* packetName, char* forbidden, int len)
