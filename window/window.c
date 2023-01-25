@@ -30,8 +30,6 @@ void menu(Window* window) {
     SDL_Texture* buttonLeaveHoverTexture = SDL_CreateTextureFromSurface(window->renderer, buttonLeaveHover);
     SDL_Texture* buttonSettingsTexture = SDL_CreateTextureFromSurface(window->renderer, buttonSettings);
     SDL_Texture* buttonSettingsHoverTexture = SDL_CreateTextureFromSurface(window->renderer, buttonSettingsHover);
-    SDL_Texture* test = NULL;
-    SDL_Texture* testLeave = NULL;
 
     // Obtenir les dimensions des boutons
     int margin = 24;
@@ -66,22 +64,11 @@ void menu(Window* window) {
     };
 
 
-
-    Node* first = malloc(sizeof(Node));
-    if (!first){
-        printf("Erreur de malloc sur first\n");
-    }
-    first->button.isHovered = 0;
-    first->button.rect = buttonSettingsRect;
-    first->button.texture = buttonSettingsTexture;
-    first->button.textureHovered = buttonSettingsHoverTexture;
-
-
-
-    addButtonToList(first, buttonLeaveRect, buttonLeaveTexture, buttonLeaveHoverTexture);
+    Node* first = NULL;
+    addButtonToList(&first, buttonSettingsRect, buttonSettingsTexture, buttonSettingsHoverTexture);
+    addButtonToList(&first, buttonLeaveRect, buttonLeaveTexture, buttonLeaveHoverTexture);
+    addButtonToList(&first, buttonSelect1Rect, buttonSelectTexture, buttonSelectHoverTexture);
     
-
-
     
     // Boucle principale
     int quit = 0;
@@ -108,17 +95,18 @@ void menu(Window* window) {
         SDL_SetRenderDrawColor(window->renderer, 0xFF, 0xFF, 0xFF, 0xFF);
         SDL_RenderClear(window->renderer);
 
-        Node* current = first;
-        while(current->next != first) {
-            if (current->button.isHovered)
-            {
-                SDL_RenderCopy(window->renderer, current->button.textureHovered, NULL, &(current->button.rect));
-            } else {
-                SDL_RenderCopy(window->renderer, current->button.texture, NULL, &(current->button.rect));
-            }
-            current = current->next;
+        Node *current = first;
+        if (first != NULL) {
+            do {
+                if (current->button.isHovered)
+                {
+                    SDL_RenderCopy(window->renderer, current->button.textureHovered, NULL, &(current->button.rect));
+                } else {
+                    SDL_RenderCopy(window->renderer, current->button.texture, NULL, &(current->button.rect));
+                }
+                current = current->next;
+            }while (current != first);
         }
-        SDL_RenderCopy(window->renderer, buttonSettingsTexture, NULL, &buttonSettingsRect);
 
         // Mettre à jour l'affichage
         SDL_RenderPresent(window->renderer);
@@ -129,49 +117,47 @@ void menu(Window* window) {
 
 void checkHover(Node* first, int mouseX, int mouseY){
     Node* current = first;
-    while (current->next != first){
-        if ( mouseX >= current->button.rect.x && mouseX <= current->button.rect.x + current->button.rect.w &&
-            mouseY >= current->button.rect.y && mouseY <= current->button.rect.y + current->button.rect.h)
-        {
-            current->button.isHovered = 1;
-        } else {
-            current->button.isHovered = 0;
-        }
-        current = current->next;
-    }
-}
-
-void addButtonToList(Node* first, SDL_Rect rect, SDL_Texture* texture, SDL_Texture* textureHovered){
-    Node* current = first;
-    while (current->next != first){
-        current = current->next;
-    }
-
-    current->next = malloc(sizeof(Button));
-    if(current->next == NULL){
-        exit(EXIT_FAILURE);
-    }
-    current->button.rect = rect;
-    current->button.texture = texture;
-    current->button.textureHovered = textureHovered;
-    current->next->next = first;
-}
-
-/* void display(ButtonList* buttonList)
-{
-    if (buttonList->first == NULL){
-        printf("\nList is empty\n");
-    }
-    else {
-        struct Button* temp;
-        temp = last->next;
-  
-        // While first node is not
-        // reached again, print,
-        // since the list is circular
+    if (first != NULL) {
+    
         do {
-            printf("\nID = %d", temp->id);
-            temp = temp->next;
-        } while (temp != last->next);
+            if ( mouseX >= current->button.rect.x && mouseX <= current->button.rect.x + current->button.rect.w &&
+                mouseY >= current->button.rect.y && mouseY <= current->button.rect.y + current->button.rect.h)
+            {
+                current->button.isHovered = 1;
+            } else {
+                current->button.isHovered = 0;
+            }
+            current = current->next;
+        } while (current != first);
     }
-} */
+}
+
+void addButtonToList(Node** first, SDL_Rect rect, SDL_Texture* texture, SDL_Texture* textureHovered){
+    Node* node = malloc(sizeof(Node));
+    node->button.isHovered = 0;
+    node->button.rect= rect;
+    node->button.texture = texture;
+    node->button.textureHovered = textureHovered;
+    node->next = *first;
+ 
+    if (*first != NULL) {
+        Node* temp = *first;
+        while (temp->next != *first)
+            temp = temp->next;
+        temp->next = node;
+    }
+    else
+        node->next = node;
+ 
+    *first = node;
+}
+
+void print(Node* first) {
+    Node *temp = first;
+    if (first != NULL) {
+        do {
+        printf("current: %p\ncurrent->next: %p\n-----\n", temp, temp->next);
+            temp = temp->next;
+        }while (temp != first);
+    }
+}

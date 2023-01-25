@@ -22,8 +22,15 @@ struct Node{
     Node* next;
 };
 
+typedef struct {
+    Node *first;
+    int size;
+} List;
+
 void menu(Window* window);
 
 void checkHover(Node* first, int mouseX, int mouseY);
 
-void addButtonToList(Node* first, SDL_Rect rect, SDL_Texture* texture, SDL_Texture* textureHovered);
+void addButtonToList(Node** head, SDL_Rect rect, SDL_Texture* texture, SDL_Texture* textureHovered);
+
+void print(Node* first);
