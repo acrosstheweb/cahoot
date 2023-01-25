@@ -1,7 +1,8 @@
+//#warning window
 #ifndef WINDOW
 #define WINDOW
 
-#include "../lib/struct.h"
+#include "struct.h"
 
 #define SCREEN_WIDTH  1280
 #define SCREEN_HEIGHT 720

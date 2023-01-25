@@ -1,9 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "functions.h"
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
+#include "includes/struct.h"
+#include "includes/functions.h"
 
-int check(char* packetName, char* forbidden, int len)
-{
+SDL_Color Black = {27, 27, 27};
+SDL_Color Red = {208, 19, 23};
+SDL_Color Green = {2, 167, 125};
+SDL_Color Blue = {55, 101, 174};
+
+int check(char* packetName, char* forbidden, int len) {
 
     for (int j = 0; j < len; j++){
         if (strchr(packetName, forbidden[j])){
@@ -85,7 +93,6 @@ SDL_Texture* textureFromMessage(SDL_Renderer* renderer, char* message, int isBol
     free(surface); // A vérifier
     TTF_Quit();
     return texture;
-
 }
 
 SDL_Texture* textureFromImage(SDL_Renderer* renderer, char* imagePath){
@@ -103,7 +110,7 @@ States* setStates(SDL_Texture* normal, SDL_Texture* hover){
     element->hover = hover;
     return element;
 }
-//wesh wesh canne à peche 
+
 void display(SDL_Renderer* renderer, Button button){
     if (button.isHovered){
         if (button.iconRect.x || button.iconRect.y || button.iconRect.w ||button.iconRect.h){

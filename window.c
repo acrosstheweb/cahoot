@@ -4,8 +4,10 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
-#include "window.h"
-#include "../lib/functions.h"
+#include "includes/window.h"
+#include "includes/functions.h"
+
+SDL_Rect emptyRect = {0, 0, 0, 0};
 
 /*
     printf("---- MENU ----\n");
@@ -43,9 +45,11 @@ void menu(Window* window) {
 
     // Définir les dimensions
     int margin = 24;
-    int buttonSelectWidth = 50, buttonSelectHeight = 50;
+    int buttonSelectWidth = 25, buttonSelectHeight = 25;
     int buttonLeaveWidth = 50, buttonLeaveHeight = 50;
     int buttonSettingsWidth = 50, buttonSettingsHeight = 50;
+    int selectX = 450;
+    int selectTextX = selectX + buttonSelectWidth;
 
     // Définir les positions des boutons (x, y, w, h)
     SDL_Rect buttonSettingsRect = {
@@ -61,16 +65,16 @@ void menu(Window* window) {
         100
     };
     SDL_Rect buttonSelect1Rect = {
-        (SCREEN_WIDTH - buttonSelectWidth) / 2 - buttonSelectWidth,
+        selectX,
         100,
         buttonSelectWidth,
         buttonSelectHeight
     };
     SDL_Rect buttonSelect1TextRect = {
-        (SCREEN_WIDTH - buttonSelectWidth) / 2 - buttonSelectWidth,
+        buttonSelect1Rect.x + buttonSelect1Rect.w,
+        buttonSelect1Rect.y,
         100,
-        buttonSelectWidth,
-        buttonSelectHeight
+        2*buttonSelect1Rect.h
     };
     SDL_Rect buttonSelect2Rect = {
         (SCREEN_WIDTH - buttonSelectWidth) / 2 - buttonSelectWidth,

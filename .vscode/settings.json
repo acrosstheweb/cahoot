@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "sdl_ttf.h": "c",
+        "string.h": "c",
+        "stdio.h": "c",
+        "functions.h": "c",
+        "struct.h": "c",
+        "sdl_image.h": "c",
+        "window.h": "c"
+    }
+}
