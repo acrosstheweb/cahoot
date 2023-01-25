@@ -11,6 +11,14 @@ SDL_Color Red = {208, 19, 23};
 SDL_Color Green = {2, 167, 125};
 SDL_Color Blue = {55, 101, 174};
 
+/**
+ * Permet de vérifier que le nom d'un paquet ne contient pas de caractères interdits
+ *
+ * @param packetName
+ * @param forbidden
+ * @param len
+ * @return
+ */
 int check(char* packetName, char* forbidden, int len) {
 
     for (int j = 0; j < len; j++){
@@ -21,6 +29,15 @@ int check(char* packetName, char* forbidden, int len) {
     return 0;
 }
 
+/**
+ * Permet d'ajouter un bouton à une liste chaînée
+ *
+ * @param first
+ * @param iconRect
+ * @param icon
+ * @param textRect
+ * @param text
+ */
 void addButtonToList(Node** first, SDL_Rect iconRect, States* icon, SDL_Rect textRect, States* text){
     Node* node = malloc(sizeof(Node));
     node->button.isHovered = 0;
@@ -42,6 +59,13 @@ void addButtonToList(Node** first, SDL_Rect iconRect, States* icon, SDL_Rect tex
     *first = node;
 }
 
+/**
+ * Permet de vérifier si un élement est survolé
+ *
+ * @param first
+ * @param mouseX
+ * @param mouseY
+ */
 void checkHover(Node* first, int mouseX, int mouseY){
     Node* current = first;
     if (first != NULL) {
@@ -60,6 +84,11 @@ void checkHover(Node* first, int mouseX, int mouseY){
     }
 }
 
+/**
+ * Permet d'afficher tous les éléments d'un paquet
+ *
+ * @param first
+ */
 void print(Node* first) {
     Node *temp = first;
     if (first != NULL) {
@@ -70,6 +99,14 @@ void print(Node* first) {
     }
 }
 
+/**
+ * Permet de créer la texture d'un texte pour SDL
+ *
+ * @param renderer
+ * @param message
+ * @param isBold
+ * @return
+ */
 SDL_Texture* textureFromMessage(SDL_Renderer* renderer, char* message, int isBold){
     if (TTF_Init() != 0){
         printf("Erreur de TTF_Init() : \n%s\n", TTF_GetError());
@@ -95,6 +132,13 @@ SDL_Texture* textureFromMessage(SDL_Renderer* renderer, char* message, int isBol
     return texture;
 }
 
+/**
+ * Permet de créer la texture d'une image pour SDL
+ *
+ * @param renderer
+ * @param imagePath
+ * @return
+ */
 SDL_Texture* textureFromImage(SDL_Renderer* renderer, char* imagePath){
     SDL_Surface* image = IMG_Load(imagePath);
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, image);
@@ -104,6 +148,13 @@ SDL_Texture* textureFromImage(SDL_Renderer* renderer, char* imagePath){
 
 }
 
+/**
+ * Permet de définir les textures qui représentent un élément
+ *
+ * @param normal
+ * @param hover
+ * @return
+ */
 States* setStates(SDL_Texture* normal, SDL_Texture* hover){
     States *element = malloc(sizeof(States));
     element->normal = normal;
@@ -111,6 +162,12 @@ States* setStates(SDL_Texture* normal, SDL_Texture* hover){
     return element;
 }
 
+/**
+ * Permet d'afficher un élément
+ *
+ * @param renderer
+ * @param button
+ */
 void display(SDL_Renderer* renderer, Button button){
     if (button.isHovered){
         if (button.iconRect.x || button.iconRect.y || button.iconRect.w ||button.iconRect.h){
