@@ -39,6 +39,10 @@ void menu(Window* window) {
     SDL_Texture* select1HoverTexture = textureFromMessage(window->renderer, "Creer un paquet", 1);
     SDL_Texture* select2Texture = textureFromMessage(window->renderer, "Gerer mes paquets", 0);
     SDL_Texture* select2HoverTexture = textureFromMessage(window->renderer, "Gerer mes paquets", 1);
+    SDL_Texture* select3Texture = textureFromMessage(window->renderer, "Heberger une partie", 0);
+    SDL_Texture* select3HoverTexture = textureFromMessage(window->renderer, "Heberger une partie", 1);
+    SDL_Texture* select4Texture = textureFromMessage(window->renderer, "Rejoindre une partie", 0);
+    SDL_Texture* select4HoverTexture = textureFromMessage(window->renderer, "Rejoindre une partie", 1);
 
     States* logo = setStates(cahootTexture, cahootTexture);
     States* menu = setStates(menuTexture, menuTexture);
@@ -47,13 +51,15 @@ void menu(Window* window) {
     States* select = setStates(buttonSelectTexture, buttonSelectHoverTexture);
     States* select1Text = setStates(select1Texture, select1HoverTexture);
     States* select2Text = setStates(select2Texture, select2HoverTexture);
+    States* select3Text = setStates(select3Texture, select3HoverTexture);
+    States* select4Text = setStates(select4Texture, select4HoverTexture);
 
     // Définir les dimensions
     int margin = 24;
     int buttonSelectWidth = 25, buttonSelectHeight = 25;
     int buttonLeaveWidth = 50, buttonLeaveHeight = 50;
     int buttonSettingsWidth = 50, buttonSettingsHeight = 50;
-    int selectX = 425, selectY = 100;
+    int selectX = 425, selectY = 75, selectStartY = 175;
     int selectTextX = selectX + buttonSelectWidth+10;
 
     // Définir les positions des boutons (x, y, w, h)
@@ -77,7 +83,7 @@ void menu(Window* window) {
     };
     SDL_Rect buttonSelect1Rect = {
         selectX,
-        200 + selectY,
+        selectStartY + selectY,
         buttonSelectWidth,
         buttonSelectHeight
     };
@@ -89,7 +95,7 @@ void menu(Window* window) {
     };
     SDL_Rect buttonSelect2Rect = {
         selectX,
-        200 + selectY * 2,
+        selectStartY + selectY * 2,
         buttonSelectWidth,
         buttonSelectHeight
     };
@@ -98,6 +104,30 @@ void menu(Window* window) {
         buttonSelect2Rect.y - buttonSelectHeight/2,
         400,
         2*buttonSelect2Rect.h
+    };
+    SDL_Rect buttonSelect3Rect = {
+        selectX,
+        selectStartY + selectY * 3,
+        buttonSelectWidth,
+        buttonSelectHeight
+    };
+    SDL_Rect buttonSelect3TextRect = {
+        selectTextX,
+        buttonSelect3Rect.y - buttonSelectHeight/2,
+        400,
+        2*buttonSelect3Rect.h
+    };
+    SDL_Rect buttonSelect4Rect = {
+        selectX,
+        selectStartY + selectY * 4,
+        buttonSelectWidth,
+        buttonSelectHeight
+    };
+    SDL_Rect buttonSelect4TextRect = {
+        selectTextX,
+        buttonSelect4Rect.y - buttonSelectHeight/2,
+        400,
+        2*buttonSelect4Rect.h
     };
     SDL_Rect buttonLeaveRect = {
         (SCREEN_WIDTH - buttonLeaveWidth) / 2,
@@ -116,6 +146,8 @@ void menu(Window* window) {
     Node* firstOption = NULL;
     addButtonToList(&firstOption, buttonSelect1Rect, select, buttonSelect1TextRect, select1Text);
     addButtonToList(&firstOption, buttonSelect2Rect, select, buttonSelect2TextRect, select2Text);
+    addButtonToList(&firstOption, buttonSelect3Rect, select, buttonSelect3TextRect, select3Text);
+    addButtonToList(&firstOption, buttonSelect4Rect, select, buttonSelect4TextRect, select4Text);
     
     // Boucle principale
     int quit = 0;
