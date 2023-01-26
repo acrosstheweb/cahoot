@@ -7,6 +7,11 @@
 #include "includes/window.h"
 #include "includes/functions.h"
 
+SDL_Color Black = {27, 27, 27};
+SDL_Color Red = {208, 19, 23};
+SDL_Color Green = {2, 167, 125};
+SDL_Color Blue = {55, 101, 174};
+
 SDL_Rect emptyRect = {0, 0, 0, 0};
 
 int menu(Window* window) {
@@ -27,16 +32,16 @@ int menu(Window* window) {
     SDL_Texture* buttonSettingsTexture = textureFromImage(window->renderer, "img/settings.png");
     SDL_Texture* buttonSettingsHoverTexture = textureFromImage(window->renderer, "img/settings_hover.png");
     
-    SDL_Texture* cahootTexture = textureFromMessage(window->renderer, "Cahoot", 0);
-    SDL_Texture* menuTexture = textureFromMessage(window->renderer, "===MENU===", 0);
-    SDL_Texture* select1Texture = textureFromMessage(window->renderer, "Creer un paquet", 0);
-    SDL_Texture* select1HoverTexture = textureFromMessage(window->renderer, "Creer un paquet", 1);
-    SDL_Texture* select2Texture = textureFromMessage(window->renderer, "Gerer mes paquets", 0);
-    SDL_Texture* select2HoverTexture = textureFromMessage(window->renderer, "Gerer mes paquets", 1);
-    SDL_Texture* select3Texture = textureFromMessage(window->renderer, "Heberger une partie", 0);
-    SDL_Texture* select3HoverTexture = textureFromMessage(window->renderer, "Heberger une partie", 1);
-    SDL_Texture* select4Texture = textureFromMessage(window->renderer, "Rejoindre une partie", 0);
-    SDL_Texture* select4HoverTexture = textureFromMessage(window->renderer, "Rejoindre une partie", 1);
+    SDL_Texture* cahootTexture = textureFromMessage(window->renderer, "Cahoot", Black);
+    SDL_Texture* menuTexture = textureFromMessage(window->renderer, "===MENU===", Black);
+    SDL_Texture* select1Texture = textureFromMessage(window->renderer, "Creer un paquet", Black);
+    SDL_Texture* select1HoverTexture = textureFromMessage(window->renderer, "Creer un paquet", Blue);
+    SDL_Texture* select2Texture = textureFromMessage(window->renderer, "Gerer mes paquets", Black);
+    SDL_Texture* select2HoverTexture = textureFromMessage(window->renderer, "Gerer mes paquets", Blue);
+    SDL_Texture* select3Texture = textureFromMessage(window->renderer, "Heberger une partie", Black);
+    SDL_Texture* select3HoverTexture = textureFromMessage(window->renderer, "Heberger une partie", Blue);
+    SDL_Texture* select4Texture = textureFromMessage(window->renderer, "Rejoindre une partie", Black);
+    SDL_Texture* select4HoverTexture = textureFromMessage(window->renderer, "Rejoindre une partie", Blue);
 
     States* logo = setStates(cahootTexture, cahootTexture);
     States* menu = setStates(menuTexture, menuTexture);
@@ -64,15 +69,15 @@ int menu(Window* window) {
         buttonSettingsHeight
     };
     SDL_Rect logoRect = {
-        (SCREEN_WIDTH - 250) / 2,
+        (SCREEN_WIDTH - getTextWidth("Cahoot", 0, 100)) / 2,
         margin / 10,
-        250,
+        getTextWidth("Cahoot", 0, 100),
         100
     };
     SDL_Rect menuRect = {
-        (SCREEN_WIDTH - 250) / 2,
+        (SCREEN_WIDTH - getTextWidth("===MENU===", 0, 50)) / 2,
         150,
-        250,
+        getTextWidth("===MENU===", 0, 50),
         50
     };
     SDL_Rect buttonSelect1Rect = {
@@ -84,8 +89,8 @@ int menu(Window* window) {
     SDL_Rect buttonSelect1TextRect = {
         selectTextX,
         buttonSelect1Rect.y - buttonSelectHeight/2,
-        400,
-        2*buttonSelect1Rect.h
+        getTextWidth("Creer un paquet", 0, 2*buttonSelectHeight),
+        2*buttonSelectHeight
     };
     SDL_Rect buttonSelect2Rect = {
         selectX,

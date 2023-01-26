@@ -6,11 +6,6 @@
 #include "includes/struct.h"
 #include "includes/functions.h"
 
-SDL_Color Black = {27, 27, 27};
-SDL_Color Red = {208, 19, 23};
-SDL_Color Green = {2, 167, 125};
-SDL_Color Blue = {55, 101, 174};
-
 /**
  * Permet de vérifier que le nom d'un paquet ne contient pas de caractères interdits
  *
@@ -101,15 +96,17 @@ void print(Node* first) {
     }
 }
 
+
 /**
- * Permet de créer la texture d'un texte pour SDL
+ * Permet d'avoir la largeur "naturelle" d'un texte
  *
  * @param renderer
- * @param message
- * @param isBold
+ * @param imagePath
  * @return
  */
-SDL_Texture* textureFromMessage(SDL_Renderer* renderer, char* message, int isBold){
+int getTextWidth(char* message, int isBold, int height){
+    int w = 0;
+    int h = 0;
     if (TTF_Init() != 0){
         printf("Erreur de TTF_Init() : \n%s\n", TTF_GetError());
         SDL_Quit();
@@ -125,8 +122,44 @@ SDL_Texture* textureFromMessage(SDL_Renderer* renderer, char* message, int isBol
         SDL_Quit();
         exit(1);
     }
+    
+    if (!TTF_SizeText(Montserrat, message, &w, &h)){
+        w = (w*height)/176;
+    } else {
+        printf("ERROR: could not calculate text width\n");
+        return 0;
+    }
 
-    SDL_Surface* surface = TTF_RenderText_Solid(Montserrat, message, Black); 
+    TTF_Quit();
+    return w;
+}
+
+/**
+ * Permet de créer la texture d'un texte pour SDL
+ *
+ * @param renderer
+ * @param message
+ * @param isBold
+ * @return
+ */
+SDL_Texture* textureFromMessage(SDL_Renderer* renderer, char* message, SDL_Color color){
+    if (TTF_Init() != 0){
+        printf("Erreur de TTF_Init() : \n%s\n", TTF_GetError());
+        SDL_Quit();
+        exit(EXIT_FAILURE);
+    }
+
+    TTF_Font* Montserrat = NULL;
+    
+    Montserrat =  TTF_OpenFont("fonts/Montserrat-Bold.ttf", 144);
+    // ༼ つ ◕_◕ ༽つ
+    if (Montserrat == NULL){
+        printf("Erreur de OpenFont : \n%s\n", TTF_GetError());
+        SDL_Quit();
+        exit(1);
+    }
+
+    SDL_Surface* surface = TTF_RenderText_Solid(Montserrat, message, color); 
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
 
     free(surface); // A vérifier
