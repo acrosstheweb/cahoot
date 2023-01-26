@@ -3,21 +3,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "includes/struct.h"
-#include "includes/functions.h"
-#include "includes/window.h"
+#include "includes/functionsDisplay.h"
+#include "includes/menu.h"
 
 Window* create_window();
 void destroy_window(Window* window);
-
-int main() {
-    int choice;
-    Window* window = create_window();
-    do{
-        choice = menu(window);
-    }while (choice != 1);
-    destroy_window(window);
-    return 0;
-}
 
 Window* create_window() {
     SDL_Init(SDL_INIT_VIDEO);
@@ -48,4 +38,35 @@ void destroy_window(Window *window) {
     free(window);
     SDL_Quit();
     return;
+}
+
+
+int main() {
+    int choice;
+    Window* window = create_window();
+
+    do{
+        choice = menu(window);
+
+        switch (choice) {
+            case 1:
+                break;
+
+            
+            case 2:
+            break;
+            
+            default:
+                /*
+                Afficher message (en ligne de commande au cas où ca crash ? )
+                "Oups, je ne sais pas ce qui a bien pu se passer...\n"
+                       "Vous pouvez nous envoyer un message avec la manip effectuer pour que nous puissions regarder ça de plus près ! ;)\n"
+                */
+                break;
+        }
+        
+    }while (choice != 1);
+
+    destroy_window(window);
+    return 0;
 }
