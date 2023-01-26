@@ -16,6 +16,8 @@ typedef struct {
 
 typedef struct {
     int isHovered;
+    int isOption;
+    int isClickable;
     SDL_Rect iconRect;
     States* icon;
     SDL_Rect textRect;

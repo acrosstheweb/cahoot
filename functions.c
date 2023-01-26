@@ -38,13 +38,15 @@ int check(char* packetName, char* forbidden, int len) {
  * @param textRect
  * @param text
  */
-void addButtonToList(Node** first, SDL_Rect iconRect, States* icon, SDL_Rect textRect, States* text){
+void addButtonToList(Node** first, SDL_Rect iconRect, States* icon, SDL_Rect textRect, States* text, int isOption, int isClickable){
     Node* node = malloc(sizeof(Node));
     node->button.isHovered = 0;
     node->button.iconRect= iconRect;
     node->button.icon = icon;
     node->button.textRect = textRect;
     node->button.text = text;
+    node->button.isOption = isOption;
+    node->button.isClickable = isClickable;
     node->next = *first;
  
     if (*first != NULL) {

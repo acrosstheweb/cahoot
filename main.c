@@ -10,8 +10,11 @@ Window* create_window();
 void destroy_window(Window* window);
 
 int main() {
+    int choice;
     Window* window = create_window();
-    menu(window);
+    do{
+        choice = menu(window);
+    }while (choice != 1);
     destroy_window(window);
     return 0;
 }

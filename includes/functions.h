@@ -11,7 +11,7 @@ int check(char* packetName, char* forbidden, int len);
 
 void checkHover(Node* first, int mouseX, int mouseY);
 // void addButtonToList(Node** first, Button *button); ?
-void addButtonToList(Node** first, SDL_Rect iconRect, States* icon, SDL_Rect textRect, States* text);
+void addButtonToList(Node** first, SDL_Rect iconRect, States* icon, SDL_Rect textRect, States* text, int isOption, int isClickable);
 
 void print(Node* first);
 

@@ -9,13 +9,7 @@
 
 SDL_Rect emptyRect = {0, 0, 0, 0};
 
-/*
-    printf("---- MENU ----\n");
-    printf("1 - Créer un Paquet\n");
-    printf("2 - Voir mes paquets\n");
-    printf("3 - EXIT\n");
- */
-void menu(Window* window) {
+int menu(Window* window) {
 
     TTF_Init();
     if (TTF_Init() != 0)
@@ -139,21 +133,20 @@ void menu(Window* window) {
 
 
     Node* first = NULL;
-    addButtonToList(&first, logoRect, logo, emptyRect, NULL);
-    addButtonToList(&first, menuRect, menu, emptyRect, NULL);
-    addButtonToList(&first, buttonSettingsRect, settings, emptyRect, NULL);
-    addButtonToList(&first, buttonLeaveRect, quitApp, emptyRect, NULL);
-    Node* firstOption = NULL;
-    addButtonToList(&firstOption, buttonSelect1Rect, select, buttonSelect1TextRect, select1Text);
-    addButtonToList(&firstOption, buttonSelect2Rect, select, buttonSelect2TextRect, select2Text);
-    addButtonToList(&firstOption, buttonSelect3Rect, select, buttonSelect3TextRect, select3Text);
-    addButtonToList(&firstOption, buttonSelect4Rect, select, buttonSelect4TextRect, select4Text);
+    addButtonToList(&first, logoRect, logo, emptyRect, NULL, 0, 0);
+    addButtonToList(&first, menuRect, menu, emptyRect, NULL, 0, 0);
+    addButtonToList(&first, buttonLeaveRect, quitApp, emptyRect, NULL, 0, 1);
+    addButtonToList(&first, buttonSettingsRect, settings, emptyRect, NULL, 0, 2);
+    addButtonToList(&first, buttonSelect1Rect, select, buttonSelect1TextRect, select1Text, 1, 3);
+    addButtonToList(&first, buttonSelect2Rect, select, buttonSelect2TextRect, select2Text, 1, 4);
+    addButtonToList(&first, buttonSelect3Rect, select, buttonSelect3TextRect, select3Text, 1, 5);
+    addButtonToList(&first, buttonSelect4Rect, select, buttonSelect4TextRect, select4Text, 1, 6);
     
     // Boucle principale
     int quit = 0;
     while (!quit) {
         SDL_Event e;
-
+        Node* current = first;
         int x, y;
         while (SDL_PollEvent(&e)) {
             switch (e.type) {
@@ -161,10 +154,24 @@ void menu(Window* window) {
                     x = e.motion.x;
                     y = e.motion.y;
                     checkHover(first, x, y);
-                    checkHover(firstOption, x, y);
                     break;
+                
+                case SDL_MOUSEBUTTONDOWN:
+                    x = e.motion.x;
+                    y = e.motion.y;
+                    checkHover(first, x, y);
+                    if (first != NULL) {
+                        do {
+                            if (current->button.isHovered && current->button.isClickable){
+                                return current->button.isClickable;
+                            }
+                            current = current->next;
+                        }while (current != first);
+                    }
+                    break;
+
                 case SDL_QUIT:
-                    return;
+                    return 1;
             }
         }
 
@@ -172,7 +179,6 @@ void menu(Window* window) {
         SDL_SetRenderDrawColor(window->renderer, 0xF1, 0xFA, 0xEE, 0xFF);
         SDL_RenderClear(window->renderer);
 
-        Node* current = first;
         if (first != NULL) {
             do {
                 display(window->renderer, current->button);
@@ -180,17 +186,8 @@ void menu(Window* window) {
             }while (current != first);
         }
 
-        current = firstOption;
-        if (firstOption != NULL) {
-            do {
-                display(window->renderer, current->button);
-                current = current->next;
-            }while (current != firstOption);
-        }
-
         // Mettre à jour l'affichage
         SDL_RenderPresent(window->renderer);
     }
-    return;
+    return 1;
 }
-

@@ -7,5 +7,5 @@
 #define SCREEN_WIDTH  1280
 #define SCREEN_HEIGHT 720
 
-void menu(Window* window);
+int menu(Window* window);
 #endif
