@@ -1,4 +1,4 @@
-FILE* createPacket(char* packetName);
+FILE* createPacketFile(char* packetName);
 
 void addQuestion(FILE* packet);
 

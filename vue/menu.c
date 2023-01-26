@@ -7,13 +7,6 @@
 #include "../includes/menu.h"
 #include "../includes/functionsDisplay.h"
 
-SDL_Color Black = {27, 27, 27};
-SDL_Color Red = {208, 19, 23};
-SDL_Color Green = {2, 167, 125};
-SDL_Color Blue = {55, 101, 174};
-
-SDL_Rect emptyRect = {0, 0, 0, 0};
-
 int menu(Window* window) {
 
     TTF_Init();
@@ -32,16 +25,16 @@ int menu(Window* window) {
     SDL_Texture* buttonSettingsTexture = textureFromImage(window->renderer, "img/settings.png");
     SDL_Texture* buttonSettingsHoverTexture = textureFromImage(window->renderer, "img/settings_hover.png");
     
-    SDL_Texture* cahootTexture = textureFromMessage(window->renderer, "Cahoot", Black);
-    SDL_Texture* menuTexture = textureFromMessage(window->renderer, "===MENU===", Black);
-    SDL_Texture* select1Texture = textureFromMessage(window->renderer, "Creer un paquet", Black);
-    SDL_Texture* select1HoverTexture = textureFromMessage(window->renderer, "Creer un paquet", Blue);
-    SDL_Texture* select2Texture = textureFromMessage(window->renderer, "Gerer mes paquets", Black);
-    SDL_Texture* select2HoverTexture = textureFromMessage(window->renderer, "Gerer mes paquets", Blue);
-    SDL_Texture* select3Texture = textureFromMessage(window->renderer, "Heberger une partie", Black);
-    SDL_Texture* select3HoverTexture = textureFromMessage(window->renderer, "Heberger une partie", Blue);
-    SDL_Texture* select4Texture = textureFromMessage(window->renderer, "Rejoindre une partie", Black);
-    SDL_Texture* select4HoverTexture = textureFromMessage(window->renderer, "Rejoindre une partie", Blue);
+    SDL_Texture* cahootTexture = textureFromMessage(window->renderer, "Cahoot", setColor("Black"));
+    SDL_Texture* menuTexture = textureFromMessage(window->renderer, "===MENU===", setColor("Black"));
+    SDL_Texture* select1Texture = textureFromMessage(window->renderer, "Creer un paquet", setColor("Black"));
+    SDL_Texture* select1HoverTexture = textureFromMessage(window->renderer, "Creer un paquet", setColor("Blue"));
+    SDL_Texture* select2Texture = textureFromMessage(window->renderer, "Gerer mes paquets", setColor("Black"));
+    SDL_Texture* select2HoverTexture = textureFromMessage(window->renderer, "Gerer mes paquets", setColor("Blue"));
+    SDL_Texture* select3Texture = textureFromMessage(window->renderer, "Heberger une partie", setColor("Black"));
+    SDL_Texture* select3HoverTexture = textureFromMessage(window->renderer, "Heberger une partie", setColor("Blue"));
+    SDL_Texture* select4Texture = textureFromMessage(window->renderer, "Rejoindre une partie", setColor("Black"));
+    SDL_Texture* select4HoverTexture = textureFromMessage(window->renderer, "Rejoindre une partie", setColor("Blue"));
 
     States* logo = setStates(cahootTexture, cahootTexture);
     States* menu = setStates(menuTexture, menuTexture);
@@ -59,7 +52,7 @@ int menu(Window* window) {
     int buttonLeaveWidth = 50, buttonLeaveHeight = 50;
     int buttonSettingsWidth = 50, buttonSettingsHeight = 50;
     int selectX = 425, selectY = 75, selectStartY = 175;
-    int selectTextX = selectX + buttonSelectWidth+10;
+    int selectTextX = selectX + buttonSelectWidth + 10;
 
     // Définir les positions des boutons (x, y, w, h)
     SDL_Rect buttonSettingsRect = {
@@ -138,10 +131,10 @@ int menu(Window* window) {
 
 
     Node* first = NULL;
-    addButtonToList(&first, logoRect, logo, emptyRect, NULL, 0, 0);
-    addButtonToList(&first, menuRect, menu, emptyRect, NULL, 0, 0);
-    addButtonToList(&first, buttonLeaveRect, quitApp, emptyRect, NULL, 0, 1);
-    addButtonToList(&first, buttonSettingsRect, settings, emptyRect, NULL, 0, 2);
+    addButtonToList(&first, logoRect, logo, empty(), NULL, 0, 0);
+    addButtonToList(&first, menuRect, menu, empty(), NULL, 0, 0);
+    addButtonToList(&first, buttonLeaveRect, quitApp, empty(), NULL, 0, 1);
+    addButtonToList(&first, buttonSettingsRect, settings, empty(), NULL, 0, 2);
     addButtonToList(&first, buttonSelect1Rect, select, buttonSelect1TextRect, select1Text, 1, 3);
     addButtonToList(&first, buttonSelect2Rect, select, buttonSelect2TextRect, select2Text, 1, 4);
     addButtonToList(&first, buttonSelect3Rect, select, buttonSelect3TextRect, select3Text, 1, 5);

@@ -4,7 +4,7 @@
 #include <sys/stat.h>
 #include "../includes/functionsPacket.h"
 
-FILE* createPacket(char* packetName)
+FILE* createPacketFile(char* packetName)
 {
     struct stat s = {0};
     char* directory = "packets/";

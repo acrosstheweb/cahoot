@@ -1,6 +1,6 @@
 //#warning struct
-#ifndef STRUCTS
-#define STRUCTS
+#ifndef _STRUCT
+#define _STRUCT
 
 #include <SDL2/SDL.h>
 

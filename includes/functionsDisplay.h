@@ -1,12 +1,23 @@
-//#warning functions
-#ifndef FUNCTIONS
-#define FUNCTIONS
+#ifndef _FUNCTIONS
+#define _FUNCTIONS
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include "struct.h"
 
+#define SCREEN_WIDTH  1280
+#define SCREEN_HEIGHT 720
+
+Window* create_window();
+
+void newRenderer(Window* window);
+
+void destroy_window(Window* window);
+
+SDL_Rect empty();
+
+SDL_Color setColor(char* name);
 // void addButtonToList(Node** first, Button *button); ?
 void addButtonToList(Node** first, SDL_Rect iconRect, States* icon, SDL_Rect textRect, States* text, int isOption, int isClickable);
 

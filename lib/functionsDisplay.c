@@ -1,10 +1,76 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include "../includes/struct.h"
 #include "../includes/functionsDisplay.h"
+
+Window* create_window() {
+    SDL_Init(SDL_INIT_VIDEO);
+
+    Window* window = malloc(sizeof(Window));
+    if(window == NULL){
+        printf("Echec malloc window");
+        exit(EXIT_FAILURE);
+    }
+
+    // Initialisation de la fenêtre
+    window->sdl_window = SDL_CreateWindow("Cahoot", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    if (window->sdl_window == NULL) {
+        printf("Window could not be created! SDL_Error: %s", SDL_GetError());
+        SDL_Quit();
+        exit(-1);
+    }
+
+    window->renderer = SDL_CreateRenderer(window->sdl_window, -1, SDL_RENDERER_ACCELERATED);
+
+    return window;
+
+}
+
+void newRenderer(Window* window){
+    SDL_DestroyRenderer(window->renderer);
+        window->renderer = SDL_CreateRenderer(window->sdl_window, -1, SDL_RENDERER_ACCELERATED);
+}
+
+void destroy_window(Window *window) {
+    SDL_DestroyRenderer(window->renderer);
+    SDL_DestroyWindow(window->sdl_window);
+    free(window);
+    SDL_Quit();
+    return;
+}
+
+/**
+ * Permet d'avoir un rectangle vide
+ *
+ */
+SDL_Rect empty(){
+    SDL_Rect emptyRect = {0, 0, 0, 0};
+    return emptyRect;
+}
+
+/**
+ * Permet d'avoir une couleur par son nom
+ *
+ * @param name
+ */
+SDL_Color setColor(char* name){
+    SDL_Color Black = {27, 27, 27};
+    SDL_Color Red = {208, 19, 23};
+    SDL_Color Green = {2, 167, 125};
+    SDL_Color Blue = {55, 101, 174};
+    if (strcmp(name, "Red") == 0){
+        return Red;
+    } else if (strcmp(name, "Green") == 0){
+        return Green;
+    } else if (strcmp(name, "Blue") == 0){
+        return Blue;
+    }
+    return Black;
+}
 
 /**
  * Permet d'ajouter un bouton à une liste chaînée
@@ -82,8 +148,9 @@ void print(Node* first) {
 /**
  * Permet d'avoir la largeur "naturelle" d'un texte
  *
- * @param renderer
- * @param imagePath
+ * @param message
+ * @param isBold
+ * @param height
  * @return
  */
 int getTextWidth(char* message, int isBold, int height){
