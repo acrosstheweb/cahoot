@@ -3,19 +3,19 @@ CFLAGS = -Wall -Wextra -I/usr/local/include/SDL2 -D_REENTRANT
 LDFLAGS = -L/usr/local/lib -lSDL2 -lSDL2_image -lSDL2_ttf -g
 
 SRC_DIR = .
-IMG_DIR = img
+LIB_DIR = ./lib
 
-IMG_SOURCES = $(wildcard $IMG_DIR/*)
-
-$(IMG_OBJECTS): $(IMG_SOURCES)
-	gdk-pixbuf-csource --name=images_data $(IMG_SOURCES) > ./lib/images.c
-
-SOURCES = $(wildcard $(SRC_DIR)/main.c) $(wildcard $(SRC_DIR)/lib/*.c) $(wildcard $(SRC_DIR)/vue/*.c)
+IMG_SRC = $(wildcard $SRC_DIR/img/*)
+IMG_OBJ = $(patsubst $(SRC_DIR)/img/%, $(LIB_DIR)/images_%.c, $(IMG_SRC))
 
 TARGET = main
 
+$(LIB_DIR)/images.c: $(IMG_SRC)
+	gdk-pixbuf-csource --raw --name=images $(IMG_SRC) > $@
 
-$(TARGET): $(SOURCES) $(IMG_OBJECTS)
+SOURCES = $(wildcard $(SRC_DIR)/main.c) $(wildcard $(LIB_DIR)/*.c) $(wildcard $(SRC_DIR)/vue/*.c)
+
+$(TARGET): $(SOURCES)
 	$(CC) $(CFLAGS) $(SOURCES) $(LDFLAGS) -o $@
 
 .PHONY: clean
