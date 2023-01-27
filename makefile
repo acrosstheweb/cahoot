@@ -1,9 +1,16 @@
-EXE = main
-CFLAGS = -lSDL2 -lSDL2_image -lSDL2_ttf -g
-SRC = $(wildcard *.c) $(wildcard */*.c)
+CC = gcc
+CFLAGS = -Wall -Wextra -Werror -I/usr/local/include/SDL2 -D_REENTRANT
+LDFLAGS = -L/usr/local/lib -lSDL2 -lm
 
-$(EXE): $(SRC)
-	gcc $(CFLAGS) -o $(EXE) $(SRC)
+SRC_DIR = .
 
+SOURCES = $(wildcard $(SRC_DIR)/*.c) $(wildcard $(SRC_DIR)/*/*.c)
+
+TARGET = main
+
+$(TARGET): $(SOURCES)
+    $(CC) $(CFLAGS) $^ $(LDFLAGS) -o $@
+
+.PHONY: clean
 clean:
-	rm -f $(EXE)
+    rm -f $(TARGET)
