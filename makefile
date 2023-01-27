@@ -3,9 +3,11 @@ CFLAGS = -Wall -Wextra -I/usr/local/include/SDL2 -D_REENTRANT
 LDFLAGS = -L/usr/local/lib -lSDL2 -lSDL2_image -lSDL2_ttf -g
 
 SRC_DIR = .
-LIB_DIR = ./lib
+LIB_DIR = lib
 
-IMG_SRC = $(wildcard $SRC_DIR/img/*)
+SOURCES = $(wildcard $(SRC_DIR)/main.c) $(wildcard $(LIB_DIR)/*.c) $(wildcard $(SRC_DIR)/vue/*.c)
+
+IMG_SRC = $(wildcard $(SRC_DIR)/img/*)
 IMG_OBJ = $(patsubst $(SRC_DIR)/img/%, $(LIB_DIR)/images_%.c, $(IMG_SRC))
 
 TARGET = main
@@ -13,11 +15,9 @@ TARGET = main
 $(LIB_DIR)/images.c: $(IMG_SRC)
 	gdk-pixbuf-csource --raw --name=images $(IMG_SRC) > $@
 
-SOURCES = $(wildcard $(SRC_DIR)/main.c) $(wildcard $(LIB_DIR)/*.c) $(wildcard $(SRC_DIR)/vue/*.c)
-
-$(TARGET): $(SOURCES)
-	$(CC) $(CFLAGS) $(SOURCES) $(LDFLAGS) -o $@
+$(TARGET): $(SOURCES) $(IMG_OBJ)
+	$(CC) $(CFLAGS) $(SOURCES) $(IMG_OBJ) $(LDFLAGS) -o $@
 
 .PHONY: clean
 clean:
-	rm -f $(TARGET)
+	rm -f $(TARGET) $(IMG_OBJ)
