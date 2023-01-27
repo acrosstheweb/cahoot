@@ -9,4 +9,4 @@ Projet langage C - S1 - 2A2
 ## Commande pour compiler
     gcc main.c functions.c window.c $(sdl2-config --cflags --libs) -lSDL2 -lSDL2_image -lSDL2_ttf -o main -g
 ou
-    gcc main.c functions.c window.c -lSDL2 -lSDL2_image -lSDL2_ttf -o main
+    gcc main.c lib/*.c vue/*.c -lSDL2 -lSDL2_image -lSDL2_ttf -o main -g

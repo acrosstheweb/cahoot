@@ -58,16 +58,19 @@ SDL_Rect empty(){
  * @param name
  */
 SDL_Color setColor(char* name){
-    SDL_Color Black = {27, 27, 27};
-    SDL_Color Red = {208, 19, 23};
-    SDL_Color Green = {2, 167, 125};
-    SDL_Color Blue = {55, 101, 174};
+    SDL_Color Black = {27, 27, 27, 255};
+    SDL_Color Red = {208, 19, 23, 255};
+    SDL_Color Green = {2, 167, 125, 255};
+    SDL_Color Blue = {55, 101, 174, 255};
+    SDL_Color Yellow = {253, 197, 0, 255};
     if (strcmp(name, "Red") == 0){
         return Red;
     } else if (strcmp(name, "Green") == 0){
         return Green;
     } else if (strcmp(name, "Blue") == 0){
         return Blue;
+    } else if (strcmp(name, "Yellow") == 0){
+        return Yellow;
     }
     return Black;
 }
@@ -229,7 +232,6 @@ SDL_Texture* textureFromImage(SDL_Renderer* renderer, char* imagePath){
 
     free(image); // A vérifier
     return texture;
-
 }
 
 /**
@@ -268,4 +270,72 @@ void display(SDL_Renderer* renderer, Button button){
             SDL_RenderCopy(renderer, button.text->normal, NULL, &(button.textRect));
         }
     }
+}
+
+void addTempalteToList(Node** first, SDL_Renderer* renderer, int displayLogo, int displayBackToMenu, int displaySettings, char* titleText){
+    if (displayLogo){
+        SDL_Texture* cahootTexture = textureFromMessage(renderer, "Cahoot", setColor("Black"));
+        States* logo = setStates(cahootTexture, cahootTexture);
+        SDL_Rect logoRect = {
+            (SCREEN_WIDTH - getTextWidth("Cahoot", 0, 100)) / 2,
+            MARGIN / 10,
+            getTextWidth("Cahoot", 0, 100),
+            100
+        };
+        addButtonToList(first, logoRect, logo, empty(), NULL, 0, 0);
+    }
+    if (displayBackToMenu){
+        SDL_Texture* buttonMenuTexture = textureFromImage(renderer, "img/back_to_menu.png");
+        SDL_Texture* buttonMenuHoverTexture = textureFromImage(renderer, "img/back_to_menu_hover.png");
+        SDL_Texture* menuTextTexture = textureFromMessage(renderer, "Revenir au menu principal", setColor("Black"));
+        SDL_Texture* menuTextHoverTexture = textureFromMessage(renderer, "Revenir au menu principal", setColor("Yellow"));
+        States* menu = setStates(buttonMenuTexture, buttonMenuHoverTexture);
+        States* menuText = setStates(menuTextTexture, menuTextHoverTexture);
+        SDL_Rect buttonMenuRect = {
+            MARGIN,
+            MARGIN + (SETTINGS_HEIGHT - MENU_HEIGHT)/2,
+            MENU_WIDTH,
+            MENU_HEIGHT
+        };
+        SDL_Rect menuTextRect = {
+            buttonMenuRect.x + buttonMenuRect.w + 10,
+            buttonMenuRect.y,
+            getTextWidth("Revenir au menu principal", 0, MENU_HEIGHT),
+            MENU_HEIGHT
+        };
+        addButtonToList(first, buttonMenuRect, menu, menuTextRect, menuText, 0, 3);
+    }
+    if (displaySettings){
+        SDL_Texture* buttonSettingsTexture = textureFromImage(renderer, "img/settings.png");
+        SDL_Texture* buttonSettingsHoverTexture = textureFromImage(renderer, "img/settings_hover.png");
+        States* settings = setStates(buttonSettingsTexture, buttonSettingsHoverTexture);
+        SDL_Rect buttonSettingsRect = {
+            SCREEN_WIDTH - SETTINGS_WIDTH - MARGIN,
+            MARGIN,
+            SETTINGS_WIDTH,
+            SETTINGS_HEIGHT
+        };
+        addButtonToList(first, buttonSettingsRect, settings, empty(), NULL, 0, 2);
+    }
+    
+    SDL_Texture* titleTexture = textureFromMessage(renderer, titleText, setColor("Black"));
+    States* title = setStates(titleTexture, titleTexture);
+    SDL_Rect titleRect = {
+        (SCREEN_WIDTH - getTextWidth(titleText, 0, 50)) / 2,
+        100,
+        getTextWidth(titleText, 0, 50),
+        50
+    };
+    addButtonToList(first, titleRect, title, empty(), NULL, 0, 0);
+    
+    SDL_Texture* buttonLeaveTexture = textureFromImage(renderer, "img/quit_program.png");
+    SDL_Texture* buttonLeaveHoverTexture = textureFromImage(renderer, "img/quit_program_hover.png");
+    States* quitApp = setStates(buttonLeaveTexture, buttonLeaveHoverTexture);
+    SDL_Rect buttonLeaveRect = {
+        (SCREEN_WIDTH - LEAVE_WIDTH) / 2,
+        SCREEN_HEIGHT - LEAVE_HEIGHT - MARGIN,
+        LEAVE_WIDTH,
+        LEAVE_HEIGHT
+    };
+    addButtonToList(first, buttonLeaveRect, quitApp, empty(), NULL, 0, 1);
 }

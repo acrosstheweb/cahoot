@@ -21,7 +21,7 @@ int main() {
             
             case 3:
                 newRenderer(window);
-                createPacket(window);
+                choice = createPacket(window);
             break;
             
             default:
