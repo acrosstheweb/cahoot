@@ -6,22 +6,28 @@
 #include "includes/functionsDisplay.h"
 #include "includes/menu.h"
 #include "includes/createPacket.h"
+#include "includes/managePackets.h"
 
 int main() {
     int choice;
     Window* window = create_window();
 
     do{
+        choice = 0;
         choice = menu(window);
 
         switch (choice) {
             case 1:
                 break;
-
             
             case 3:
                 newRenderer(window);
                 choice = createPacket(window);
+            break;
+
+            case 4:
+                newRenderer(window);
+                choice = managePackets(window);
             break;
             
             default:

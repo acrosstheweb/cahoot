@@ -9,7 +9,7 @@
 
 
 int createPacket(Window* window) {
-    int color = rand() % 4;
+    int colorNum = rand() % 4;
 
     TTF_Init();
     if (TTF_Init() != 0)
@@ -20,39 +20,33 @@ int createPacket(Window* window) {
     }
 
     // Créer les textures
-    SDL_Texture* redRectTexture = textureFromImage(window->renderer, "img/rect_red.png");
-    SDL_Texture* redRectHoverTexture = textureFromImage(window->renderer, "img/rect_red_hover.png");
-    SDL_Texture* greenRectTexture = textureFromImage(window->renderer, "img/rect_green.png");
-    SDL_Texture* greenRectHoverTexture = textureFromImage(window->renderer, "img/rect_green_hover.png");
-    SDL_Texture* blueRectTexture = textureFromImage(window->renderer, "img/rect_blue.png");
-    SDL_Texture* blueRectHoverTexture = textureFromImage(window->renderer, "img/rect_blue_hover.png");
-    SDL_Texture* yellowRectTexture = textureFromImage(window->renderer, "img/rect_yellow.png");
-    SDL_Texture* yellowRectHoverTexture = textureFromImage(window->renderer, "img/rect_yellow_hover.png");
+    SDL_Texture* colorRectTexture = textureFromImage(window->renderer, "img/rect_blue.png");
+    SDL_Texture* colorRectHoverTexture = textureFromImage(window->renderer, "img/rect_blue_hover.png");
     
-    States* red = setStates(redRectTexture, redRectHoverTexture);
-    States* green = setStates(greenRectTexture, greenRectHoverTexture);
+    if (colorNum == 0){
+        colorRectTexture = textureFromImage(window->renderer, "img/rect_red.png");
+        colorRectHoverTexture = textureFromImage(window->renderer, "img/rect_red_hover.png");
+    } else if (colorNum == 1){
+        colorRectTexture = textureFromImage(window->renderer, "img/rect_green.png");
+        colorRectHoverTexture = textureFromImage(window->renderer, "img/rect_green_hover.png");
+    } else if (colorNum == 2){
+        colorRectTexture = textureFromImage(window->renderer, "img/rect_yellow.png");
+        colorRectHoverTexture = textureFromImage(window->renderer, "img/rect_yellow_hover.png");
+    }
+    States* color = setStates(colorRectTexture, colorRectHoverTexture);
+
 
     // Définir les positions des boutons (x, y, w, h)
-    SDL_Rect redRect = {
-        PACKET_RECT_STARTX,
-        PACKET_RECT_STARTY + MARGIN,
+    SDL_Rect colorRect = {
+        (SCREEN_WIDTH - PACKET_RECT_WIDTH) / 2,
+        (SCREEN_HEIGHT - PACKET_RECT_HEIGHT) / 2,
         PACKET_RECT_WIDTH,
         PACKET_RECT_HEIGHT
     };
-    SDL_Rect greenRect = {
-        PACKET_RECT_ENDX - PACKET_RECT_WIDTH,
-        PACKET_RECT_STARTY + MARGIN,
-        PACKET_RECT_WIDTH,
-        PACKET_RECT_HEIGHT
-    };
-    // printf("%d\n", buttonLeaveRect.y);
-
-
 
     Node* first = NULL;
-    addTempalteToList(&first, window->renderer, 1, 1, 1, "Comment voulez-vous appeler votre paquet?");
-    addButtonToList(&first, redRect, red, empty(), NULL, 1, 4);
-    addButtonToList(&first, greenRect, green, empty(), NULL, 1, 4);
+    addTemplateToList(&first, window->renderer, 1, 1, 1, "Comment voulez-vous appeler votre paquet?");
+    addButtonToList(&first, colorRect, color, empty(), NULL, 0, 1);
     
     // Boucle principale
     int quit = 0;

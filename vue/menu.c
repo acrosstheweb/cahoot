@@ -93,7 +93,7 @@ int menu(Window* window) {
 
 
     Node* first = NULL;
-    addTempalteToList(&first, window->renderer, 1, 0, 1, "===MENU===");
+    addTemplateToList(&first, window->renderer, 1, 0, 1, "===MENU===");
     addButtonToList(&first, buttonSelect1Rect, select, buttonSelect1TextRect, select1Text, 1, 3);
     addButtonToList(&first, buttonSelect2Rect, select, buttonSelect2TextRect, select2Text, 1, 4);
     addButtonToList(&first, buttonSelect3Rect, select, buttonSelect3TextRect, select3Text, 1, 5);

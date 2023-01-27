@@ -272,7 +272,7 @@ void display(SDL_Renderer* renderer, Button button){
     }
 }
 
-void addTempalteToList(Node** first, SDL_Renderer* renderer, int displayLogo, int displayBackToMenu, int displaySettings, char* titleText){
+void addTemplateToList(Node** first, SDL_Renderer* renderer, int displayLogo, int displayBackToMenu, int displaySettings, char* titleText){
     if (displayLogo){
         SDL_Texture* cahootTexture = textureFromMessage(renderer, "Cahoot", setColor("Black"));
         States* logo = setStates(cahootTexture, cahootTexture);

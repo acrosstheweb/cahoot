@@ -51,6 +51,6 @@ States* setStates(SDL_Texture* normal, SDL_Texture* hover);
 
 void display(SDL_Renderer* renderer, Button button);
 
-void addTempalteToList(Node** first, SDL_Renderer* renderer, int logo, int backToMenu, int settings, char* titleText);
+void addTemplateToList(Node** first, SDL_Renderer* renderer, int logo, int backToMenu, int settings, char* titleText);
 
 #endif
