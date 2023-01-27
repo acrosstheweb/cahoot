@@ -1,13 +1,9 @@
 EXE = main
 CFLAGS = -lSDL2 -lSDL2_image -lSDL2_ttf -g
 SRC = $(wildcard *.c) $(wildcard */*.c)
-OBJ = $(SRC:.c=.o)
 
-$(EXE): $(OBJ)
-	gcc $(CFLAGS) -o $(EXE) $(OBJ)
-
-%.o: %.c
-	gcc -c $(CFLAGS) $< -o $@
+$(EXE): $(SRC)
+	gcc $(CFLAGS) -o $(EXE) $(SRC)
 
 clean:
-	rm -f $(EXE) $(OBJ)
+	rm -f $(EXE)
