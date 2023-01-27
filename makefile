@@ -9,8 +9,8 @@ SOURCES = $(wildcard $(SRC_DIR)/main.c) $(wildcard $(SRC_DIR)/lib/*.c) $(wildcar
 TARGET = main
 
 $(TARGET): $(SOURCES)
-    $(CC) $(CFLAGS) $(SOURCES) $(LDFLAGS) -o $@
+	$(CC) $(CFLAGS) $(SOURCES) $(LDFLAGS) -o $@
 
 .PHONY: clean
 clean:
-    rm -f $(TARGET)
+	rm -f $(TARGET)
