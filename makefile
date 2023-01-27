@@ -14,7 +14,7 @@ TARGET = main
 $(IMG_OBJECTS): $(IMG_SOURCES)
 	gdk-pixbuf-csource --name=images_data $(IMG_SOURCES) > $@
 
-$(TARGET): $(SOURCES)
+$(TARGET): $(SOURCES) $(IMG_OBJECTS)
 	$(CC) $(CFLAGS) $(SOURCES) $(LDFLAGS) -o $@
 
 .PHONY: clean
