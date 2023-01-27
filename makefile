@@ -4,10 +4,10 @@ SRC = $(wildcard *.c) $(wildcard */*.c)
 OBJ = $(SRC:.c=.o)
 
 $(EXE): $(OBJ)
-    gcc $(CFLAGS) -o $(EXE) $(OBJ)
+	gcc $(CFLAGS) -o $(EXE) $(OBJ)
 
 %.o: %.c
-    gcc -c $< -o $@ $(CFLAGS)
+	gcc -c $(CFLAGS) $< -o $@
 
 clean:
-    rm -f $(EXE) $(OBJ)
+	rm -f $(EXE) $(OBJ)
