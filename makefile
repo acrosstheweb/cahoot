@@ -7,7 +7,7 @@ $(EXE): $(OBJ)
     gcc $(CFLAGS) -o $(EXE) $(OBJ)
 
 %.o: %.c
-    gcc -c $< $(CFLAGS)
+    gcc -c $< -o $@ $(CFLAGS)
 
 clean:
     rm -f $(EXE) $(OBJ)
