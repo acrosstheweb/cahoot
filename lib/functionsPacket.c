@@ -29,13 +29,31 @@ FILE* createPacketFile(char* packetName)
         return NULL;
     }
 
+    fprintf(filePointer, "[");
+    fprintf(filePointer, "]");
+
     free(filePath);
     return filePointer;
 }
 
-void addQuestion(FILE* packet)
+void addQuestion(FILE* packet, char* question, char* answer1, char* answer2, char* answer3, char* answer4)
 {
+    fprintf(packet, "{\n");
+    fprintf(packet, "   \"question\": \"%s\",\n", question);
+    fprintf(packet, "   \"answer\": [\n");
 
+    char* answers[4] = {answer1, answer2, answer3, answer4};
+    int correct[4] = {1, 0, 0, 0};
+
+    for (int i = 0; i < 4; i++) {
+        fprintf(packet, "   {\n");
+        fprintf(packet, "   \"answer\": \"%s\n", answers[i]);
+        fprintf(packet, "   \"correct\": \"%s\n", correct[i] ? "true" : "false");
+        fprintf(packet, "   }%s\n", i < 3 ? "," : "");
+    }
+
+    fprintf(packet, "   ]\n");
+    fprintf(packet, "}\n");
 }
 
 char* deletePacket(char* packetName)
