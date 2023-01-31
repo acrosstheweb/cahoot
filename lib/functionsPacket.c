@@ -38,6 +38,8 @@ FILE* createPacketFile(char* packetName)
 
 void addQuestion(FILE* packet, char* question, char* answer1, char* answer2, char* answer3, char* answer4)
 {
+
+    // Est-ce qu'il faut faire un fopen(...) puis un fclose(...) ?
     fprintf(packet, "{\n");
     fprintf(packet, "   \"question\": \"%s\",\n", question);
     fprintf(packet, "   \"answer\": [\n");
