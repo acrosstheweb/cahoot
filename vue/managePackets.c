@@ -8,7 +8,6 @@
 
 
 int managePackets(Window* window) {
-    printf("jaaj\n");
 
     TTF_Init();
     if (TTF_Init() != 0)

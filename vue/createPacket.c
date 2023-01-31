@@ -6,6 +6,9 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include "../includes/functionsDisplay.h"
+#include "../includes/functions.h"
+
+#define MAX_LEN 30
 
 
 int createPacket(Window* window) {
@@ -43,17 +46,29 @@ int createPacket(Window* window) {
         PACKET_RECT_WIDTH,
         PACKET_RECT_HEIGHT
     };
+    SDL_Rect inputRect = {
+        SCREEN_WIDTH / 2,
+        SCREEN_HEIGHT / 2,
+        200,
+        50
+    };
+    
+    char inputText[MAX_LEN + 1] = "";
+    int inputLen = 0;
+    char *composition;
 
     Node* first = NULL;
-    addTemplateToList(&first, window->renderer, 1, 1, 1, "Comment voulez-vous appeler votre paquet?");
-    addButtonToList(&first, colorRect, color, empty(), NULL, 0, 1);
-    
+    addTemplateToList(&first, window->renderer, 1, 1, 1, "Comment voulez-vous appeler votre paquet? 30 caracteres max.");
+    addButtonToList(&first, colorRect, color, empty(), NULL, 0, 0);
+
+    SDL_StartTextInput();
     // Boucle principale
     int quit = 0;
     while (!quit) {
         SDL_Event e;
         Node* current = first;
-        int x, y;
+        int x, y, j;
+        SDL_TextInputEvent textEvent;
         while (SDL_PollEvent(&e)) {
             switch (e.type) {
                 case SDL_MOUSEMOTION:
@@ -75,6 +90,52 @@ int createPacket(Window* window) {
                         }while (current != first);
                     }
                     break;
+                
+                case SDL_KEYDOWN:
+                    if (e.key.keysym.sym == SDLK_BACKSPACE && strlen(inputText) > 0) { // Backspace
+                        inputText[strlen(inputText) - 1] = '\0';
+                        printf("backspace\n");
+                    }
+                //         inputText[inputLen - 1] = '\0';
+                //         inputLen--;
+                //     } else if (e.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL) { // Copy
+                //         char* temp = NULL;
+                //         memcpy(temp, inputText, inputLen + 1);
+                //         SDL_SetClipboardText(temp);
+                //         free(temp);
+                //     } else if (e.key.keysym.sym == SDLK_v && SDL_GetModState() & KMOD_CTRL) { // Paste
+                //         char* temp = SDL_GetClipboardText();
+                //         j  = 0;
+                //         if (strlen(temp) > MAX_LEN - inputLen){
+                //             for (int i = inputLen; i < MAX_LEN; i++){
+                //                 inputText[i] = temp[j];
+                //                 j++;
+                //                 inputLen--;
+                //             }
+                //         } else {
+                //             for (int i = 0; i <= strlen(temp); i++){
+                //                 inputText[inputLen + i] = temp[j];
+                //                 j++;
+                //                 inputLen--;
+                //             }
+                //         }
+                //     }
+                //     getLastElement(&first)->button.text->normal = textureFromMessage(window->renderer, getStringFromArray(inputText, inputLen), setColor("Black"));
+                    break;
+
+                case SDL_TEXTINPUT:
+                    textEvent = e.text;
+                    strcat(inputText, textEvent.text);
+                    j = 1;
+                    // j = 0;
+                    // for (int i = 0; i < strlen(e.text.text); i++){
+                    //     if (inputLen < MAX_LEN){
+                    //         inputText[inputLen + i] = e.text.text[j];
+                    //         j++;
+                    //         inputLen++;
+                    //     }
+                    // }
+                    break;
 
                 case SDL_QUIT:
                     return 1;
@@ -84,6 +145,12 @@ int createPacket(Window* window) {
         // Effacer l'écran
         SDL_SetRenderDrawColor(window->renderer, 0xF1, 0xFA, 0xEE, 0xFF);
         SDL_RenderClear(window->renderer);
+        if (j){
+            SDL_Texture *texture = textureFromMessage(window->renderer, inputText, setColor("Black"));
+            inputRect.w = getTextWidth(inputText, 0, 50);
+            inputRect.x = (SCREEN_WIDTH - inputRect.w) / 2;
+            SDL_RenderCopy(window->renderer, texture, NULL, &inputRect);
+        }
 
         if (first != NULL) {
             do {
