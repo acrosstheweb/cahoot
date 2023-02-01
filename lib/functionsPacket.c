@@ -3,6 +3,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #include "../includes/functionsPacket.h"
+#include <unistd.h>
 
 FILE* createPacketFile(char* packetName)
 {
@@ -39,6 +40,9 @@ FILE* createPacketFile(char* packetName)
 void addQuestion(FILE* packet, char* question, char* answer1, char* answer2, char* answer3, char* answer4)
 {
 
+    fseek(packet, -2, SEEK_END); // on déplace le pointeur de fichier 2 octets avant la fin du fichier
+    ftruncate(fileno(packet), ftell(packet)); // on découpe le fichier à cet emplacement
+
     // Est-ce qu'il faut faire un fopen(...) puis un fclose(...) ?
     fprintf(packet, "{\n");
     fprintf(packet, "   \"question\": \"%s\",\n", question);
@@ -56,6 +60,7 @@ void addQuestion(FILE* packet, char* question, char* answer1, char* answer2, cha
 
     fprintf(packet, "   ]\n");
     fprintf(packet, "}\n");
+    fprintf(packet, "]\n");
 }
 
 char* deletePacket(char* packetName)
