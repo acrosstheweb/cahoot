@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_image.h>
 #include "../includes/struct.h"
 #include "../includes/functionsDisplay.h"
 
@@ -25,6 +25,9 @@ Window* create_window() {
     }
 
     window->renderer = SDL_CreateRenderer(window->sdl_window, -1, SDL_RENDERER_ACCELERATED);
+    
+    window->font = initTTF();
+    printf("%p\n", window->font);
 
     return window;
 
@@ -32,12 +35,14 @@ Window* create_window() {
 
 void newRenderer(Window* window){
     SDL_DestroyRenderer(window->renderer);
-        window->renderer = SDL_CreateRenderer(window->sdl_window, -1, SDL_RENDERER_ACCELERATED);
+    window->renderer = SDL_CreateRenderer(window->sdl_window, -1, SDL_RENDERER_ACCELERATED);
 }
 
 void destroy_window(Window *window) {
     SDL_DestroyRenderer(window->renderer);
     SDL_DestroyWindow(window->sdl_window);
+    TTF_CloseFont(window->font);
+    TTF_Quit();
     free(window);
     SDL_Quit();
     return;
@@ -147,16 +152,33 @@ void print(Node* first) {
     }
 }
 
+TTF_Font* initTTF(){
+    if (TTF_Init() != 0){
+        printf("Erreur de TTF_Init() : \n%s\n", TTF_GetError());
+        SDL_Quit();
+        exit(EXIT_FAILURE);
+    }
+    
+    TTF_Font* Montserrat = TTF_OpenFont("fonts/Montserrat-Bold.ttf", 144);
+    // ༼ つ ◕_◕ ༽つ
+    if (Montserrat == NULL){
+        printf("Erreur de OpenFont : \n%s\n", TTF_GetError());
+        SDL_Quit();
+        exit(-1);
+    }
+    printf("%p\n", Montserrat);
 
+    return Montserrat;
+}
 /**
  * Permet d'avoir la largeur "naturelle" d'un texte
  *
  * @param message
- * @param isBold
  * @param height
+ * @param Monsterrat
  * @return
  */
-int getTextWidth(char* message, int isBold, int height){
+int getTextWidth(char* message, int height){
     int w = 0;
     int h = 0;
     if (TTF_Init() != 0){
@@ -164,24 +186,21 @@ int getTextWidth(char* message, int isBold, int height){
         SDL_Quit();
         exit(EXIT_FAILURE);
     }
-
-    TTF_Font* Montserrat = NULL;
     
-    Montserrat = (isBold) ? TTF_OpenFont("fonts/Montserrat-ExtraBold.ttf", 144) : TTF_OpenFont("fonts/Montserrat-Bold.ttf", 144);
+    TTF_Font* Montserrat = TTF_OpenFont("fonts/Montserrat-Bold.ttf", 144);
     // ༼ つ ◕_◕ ༽つ
     if (Montserrat == NULL){
         printf("Erreur de OpenFont : \n%s\n", TTF_GetError());
         SDL_Quit();
-        exit(1);
+        exit(-1);
     }
-    
     if (!TTF_SizeText(Montserrat, message, &w, &h)){
         w = (w*height)/176;
     } else {
-        printf("ERROR: could not calculate text width\n");
+        printf("Erreur de TTF_SizeText() : \n%s\n", TTF_GetError());
         return 0;
     }
-
+    TTF_CloseFont(Montserrat);
     TTF_Quit();
     return w;
 }
@@ -191,31 +210,16 @@ int getTextWidth(char* message, int isBold, int height){
  *
  * @param renderer
  * @param message
- * @param isBold
+ * @param color
  * @return
  */
-SDL_Texture* textureFromMessage(SDL_Renderer* renderer, char* message, SDL_Color color){
-    if (TTF_Init() != 0){
-        printf("Erreur de TTF_Init() : \n%s\n", TTF_GetError());
-        SDL_Quit();
-        exit(EXIT_FAILURE);
-    }
+SDL_Texture* textureFromMessage(SDL_Renderer* renderer, char* message, SDL_Color color, TTF_Font* font){
 
-    TTF_Font* Montserrat = NULL;
-    
-    Montserrat =  TTF_OpenFont("fonts/Montserrat-Bold.ttf", 144);
-    // ༼ つ ◕_◕ ༽つ
-    if (Montserrat == NULL){
-        printf("Erreur de OpenFont : \n%s\n", TTF_GetError());
-        SDL_Quit();
-        exit(1);
-    }
-
-    SDL_Surface* surface = TTF_RenderText_Solid(Montserrat, message, color); 
+    SDL_Surface* surface = TTF_RenderText_Solid(font, message, color); 
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
 
     free(surface); // A vérifier
-    TTF_Quit();
+    // TTF_Quit();
     return texture;
 }
 
@@ -272,14 +276,14 @@ void display(SDL_Renderer* renderer, Button button){
     }
 }
 
-void addTemplateToList(Node** first, SDL_Renderer* renderer, int displayLogo, int displayBackToMenu, int displaySettings, char* titleText){
+void addTemplateToList(Node** first, SDL_Renderer* renderer, int displayLogo, int displayBackToMenu, int displaySettings, char* titleText, TTF_Font* font){
     if (displayLogo){
-        SDL_Texture* cahootTexture = textureFromMessage(renderer, "Cahoot", setColor("Black"));
+        SDL_Texture* cahootTexture = textureFromMessage(renderer, "Cahoot", setColor("Black"), font);
         States* logo = setStates(cahootTexture, cahootTexture);
         SDL_Rect logoRect = {
-            (SCREEN_WIDTH - getTextWidth("Cahoot", 0, 100)) / 2,
+            (SCREEN_WIDTH - getTextWidth("Cahoot", 100)) / 2,
             MARGIN / 10,
-            getTextWidth("Cahoot", 0, 100),
+            getTextWidth("Cahoot", 100),
             100
         };
         addButtonToList(first, logoRect, logo, empty(), NULL, 0, 0);
@@ -287,8 +291,8 @@ void addTemplateToList(Node** first, SDL_Renderer* renderer, int displayLogo, in
     if (displayBackToMenu){
         SDL_Texture* buttonMenuTexture = textureFromImage(renderer, "img/back_to_menu.png");
         SDL_Texture* buttonMenuHoverTexture = textureFromImage(renderer, "img/back_to_menu_hover.png");
-        SDL_Texture* menuTextTexture = textureFromMessage(renderer, "Revenir au menu principal", setColor("Black"));
-        SDL_Texture* menuTextHoverTexture = textureFromMessage(renderer, "Revenir au menu principal", setColor("Yellow"));
+        SDL_Texture* menuTextTexture = textureFromMessage(renderer, "Revenir au menu principal", setColor("Black"), font);
+        SDL_Texture* menuTextHoverTexture = textureFromMessage(renderer, "Revenir au menu principal", setColor("Yellow"), font);
         States* menu = setStates(buttonMenuTexture, buttonMenuHoverTexture);
         States* menuText = setStates(menuTextTexture, menuTextHoverTexture);
         SDL_Rect buttonMenuRect = {
@@ -300,7 +304,7 @@ void addTemplateToList(Node** first, SDL_Renderer* renderer, int displayLogo, in
         SDL_Rect menuTextRect = {
             buttonMenuRect.x + buttonMenuRect.w + 10,
             buttonMenuRect.y,
-            getTextWidth("Revenir au menu principal", 0, MENU_HEIGHT),
+            getTextWidth("Revenir au menu principal", MENU_HEIGHT),
             MENU_HEIGHT
         };
         addButtonToList(first, buttonMenuRect, menu, menuTextRect, menuText, 0, 3);
@@ -318,12 +322,12 @@ void addTemplateToList(Node** first, SDL_Renderer* renderer, int displayLogo, in
         addButtonToList(first, buttonSettingsRect, settings, empty(), NULL, 0, 2);
     }
     
-    SDL_Texture* titleTexture = textureFromMessage(renderer, titleText, setColor("Black"));
+    SDL_Texture* titleTexture = textureFromMessage(renderer, titleText, setColor("Black"), font);
     States* title = setStates(titleTexture, titleTexture);
     SDL_Rect titleRect = {
-        (SCREEN_WIDTH - getTextWidth(titleText, 0, 50)) / 2,
+        (SCREEN_WIDTH - getTextWidth(titleText, 50)) / 2,
         100,
-        getTextWidth(titleText, 0, 50),
+        getTextWidth(titleText, 50),
         50
     };
     addButtonToList(first, titleRect, title, empty(), NULL, 0, 0);

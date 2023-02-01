@@ -39,11 +39,14 @@ void addButtonToList(Node** first, SDL_Rect iconRect, States* icon, SDL_Rect tex
 
 void checkHover(Node* first, int mouseX, int mouseY);
 
-int getTextWidth(char* message, int isBold, int height);
+TTF_Font* initTTF();
+
+int getTextWidth(char* message, int height);
+// int getTextWidth(char* message, int isBold, int height);
 
 void print(Node* first);
 
-SDL_Texture* textureFromMessage(SDL_Renderer* renderer, char* message, SDL_Color color);
+SDL_Texture* textureFromMessage(SDL_Renderer* renderer, char* message, SDL_Color color, TTF_Font* font);
 
 SDL_Texture* textureFromImage(SDL_Renderer* renderer, char* imagePath);
 
@@ -51,6 +54,6 @@ States* setStates(SDL_Texture* normal, SDL_Texture* hover);
 
 void display(SDL_Renderer* renderer, Button button);
 
-void addTemplateToList(Node** first, SDL_Renderer* renderer, int logo, int backToMenu, int settings, char* titleText);
+void addTemplateToList(Node** first, SDL_Renderer* renderer, int displayLogo, int displayBackToMenu, int displaySettings, char* titleText, TTF_Font* font);
 
 #endif

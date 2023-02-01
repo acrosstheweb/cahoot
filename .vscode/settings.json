@@ -6,6 +6,7 @@
         "functions.h": "c",
         "struct.h": "c",
         "sdl_image.h": "c",
-        "window.h": "c"
+        "window.h": "c",
+        "sdl.h": "c"
     }
 }

@@ -9,14 +9,6 @@
 
 int managePackets(Window* window) {
 
-    TTF_Init();
-    if (TTF_Init() != 0)
-    {
-        printf("Erreur de TTF_Init() : \n%s\n", TTF_GetError());
-        SDL_Quit();
-        exit(1);
-    }
-
     // Créer les textures
     SDL_Texture* redRectTexture = textureFromImage(window->renderer, "img/rect_red.png");
     SDL_Texture* redRectHoverTexture = textureFromImage(window->renderer, "img/rect_red_hover.png");
@@ -61,7 +53,7 @@ int managePackets(Window* window) {
 
 
     Node* first = NULL;
-    addTemplateToList(&first, window->renderer, 1, 1, 1, "Mes paquets");
+    addTemplateToList(&first, window->renderer, 1, 1, 1, "Mes paquets", window->font);
     addButtonToList(&first, redRect, red, empty(), NULL, 1, 4);
     addButtonToList(&first, greenRect, green, empty(), NULL, 1, 4);
     addButtonToList(&first, blueRect, blue, empty(), NULL, 1, 4);

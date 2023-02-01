@@ -3,32 +3,23 @@
 #include <stdlib.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
 #include "../includes/menu.h"
 #include "../includes/functionsDisplay.h"
 
 int menu(Window* window) {
 
-    TTF_Init();
-    if (TTF_Init() != 0)
-    {
-        printf("Erreur de TTF_Init() : \n%s\n", TTF_GetError());
-        SDL_Quit();
-        exit(1);
-    }
-
     // Créer les textures
     SDL_Texture* buttonSelectTexture = textureFromImage(window->renderer, "img/arrow_select.png");
     SDL_Texture* buttonSelectHoverTexture = textureFromImage(window->renderer, "img/arrow_select_hover.png");
 
-    SDL_Texture* select1Texture = textureFromMessage(window->renderer, "Creer un paquet", setColor("Black"));
-    SDL_Texture* select1HoverTexture = textureFromMessage(window->renderer, "Creer un paquet", setColor("Blue"));
-    SDL_Texture* select2Texture = textureFromMessage(window->renderer, "Gerer mes paquets", setColor("Black"));
-    SDL_Texture* select2HoverTexture = textureFromMessage(window->renderer, "Gerer mes paquets", setColor("Blue"));
-    SDL_Texture* select3Texture = textureFromMessage(window->renderer, "Heberger une partie", setColor("Black"));
-    SDL_Texture* select3HoverTexture = textureFromMessage(window->renderer, "Heberger une partie", setColor("Blue"));
-    SDL_Texture* select4Texture = textureFromMessage(window->renderer, "Rejoindre une partie", setColor("Black"));
-    SDL_Texture* select4HoverTexture = textureFromMessage(window->renderer, "Rejoindre une partie", setColor("Blue"));
+    SDL_Texture* select1Texture = textureFromMessage(window->renderer, "Creer un paquet", setColor("Black"), window->font);
+    SDL_Texture* select1HoverTexture = textureFromMessage(window->renderer, "Creer un paquet", setColor("Blue"), window->font);
+    SDL_Texture* select2Texture = textureFromMessage(window->renderer, "Gerer mes paquets", setColor("Black"), window->font);
+    SDL_Texture* select2HoverTexture = textureFromMessage(window->renderer, "Gerer mes paquets", setColor("Blue"), window->font);
+    SDL_Texture* select3Texture = textureFromMessage(window->renderer, "Heberger une partie", setColor("Black"), window->font);
+    SDL_Texture* select3HoverTexture = textureFromMessage(window->renderer, "Heberger une partie", setColor("Blue"), window->font);
+    SDL_Texture* select4Texture = textureFromMessage(window->renderer, "Rejoindre une partie", setColor("Black"), window->font);
+    SDL_Texture* select4HoverTexture = textureFromMessage(window->renderer, "Rejoindre une partie", setColor("Blue"), window->font);
 
     States* select = setStates(buttonSelectTexture, buttonSelectHoverTexture);
     States* select1Text = setStates(select1Texture, select1HoverTexture);
@@ -50,7 +41,7 @@ int menu(Window* window) {
     SDL_Rect buttonSelect1TextRect = {
         selectTextX,
         buttonSelect1Rect.y - SELECT_HEIGHT/2,
-        getTextWidth("Creer un paquet", 0, 2*SELECT_HEIGHT),
+        getTextWidth("Creer un paquet", 2*SELECT_HEIGHT),
         2*SELECT_HEIGHT
     };
     SDL_Rect buttonSelect2Rect = {
@@ -62,7 +53,7 @@ int menu(Window* window) {
     SDL_Rect buttonSelect2TextRect = {
         selectTextX,
         buttonSelect2Rect.y - SELECT_HEIGHT/2,
-        getTextWidth("Gerer mes paquets", 0, 2*SELECT_HEIGHT),
+        getTextWidth("Gerer mes paquets", 2*SELECT_HEIGHT),
         2*SELECT_HEIGHT
     };
     SDL_Rect buttonSelect3Rect = {
@@ -74,7 +65,7 @@ int menu(Window* window) {
     SDL_Rect buttonSelect3TextRect = {
         selectTextX,
         buttonSelect3Rect.y - SELECT_HEIGHT/2,
-        getTextWidth("Heberger une partie", 0, 2*SELECT_HEIGHT),
+        getTextWidth("Heberger une partie", 2*SELECT_HEIGHT),
         2*SELECT_HEIGHT
     };
     SDL_Rect buttonSelect4Rect = {
@@ -86,14 +77,14 @@ int menu(Window* window) {
     SDL_Rect buttonSelect4TextRect = {
         selectTextX,
         buttonSelect4Rect.y - SELECT_HEIGHT/2,
-        getTextWidth("Rejoindre une partie", 0, 2*SELECT_HEIGHT),
+        getTextWidth("Rejoindre une partie", 2*SELECT_HEIGHT),
         2*SELECT_HEIGHT
     };
 
 
 
     Node* first = NULL;
-    addTemplateToList(&first, window->renderer, 1, 0, 1, "===MENU===");
+    addTemplateToList(&first, window->renderer, 1, 0, 1, "===MENU===", window->font);
     addButtonToList(&first, buttonSelect1Rect, select, buttonSelect1TextRect, select1Text, 1, 3);
     addButtonToList(&first, buttonSelect2Rect, select, buttonSelect2TextRect, select2Text, 1, 4);
     addButtonToList(&first, buttonSelect3Rect, select, buttonSelect3TextRect, select3Text, 1, 5);
