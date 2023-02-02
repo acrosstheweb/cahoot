@@ -44,13 +44,6 @@ int createPacket(Window* window, char** packetName) {
     };
     
     char inputText[MAX_LEN + 1] = "";
-    char *inputPointer = NULL;
-    // char* inputText = NULL;
-    // inputText = malloc(sizeof(char) * (MAX_LEN + 1));
-    // if (!inputText){
-    //     printf("Erreur de malloc\n");
-    // }
-    // printf("%s\n", inputText);
 
     Node* first = NULL;
     addTemplateToList(&first, window->renderer, 1, 1, 1, "Comment voulez-vous appeler votre paquet? 30 caracteres max.", window->font);
