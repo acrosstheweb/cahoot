@@ -4,17 +4,31 @@
 #include <stdlib.h>
 #include "includes/struct.h"
 #include "includes/functionsDisplay.h"
+#include "includes/functionsPacket.h"
 #include "includes/menu.h"
 #include "includes/createPacket.h"
 #include "includes/managePackets.h"
 
 int main() {
-    int choice;
+    int choice = 10;
+    char* packetName = malloc(sizeof(char*));
     Window* window = create_window();
+    FILE* filePointer = NULL;
 
+    /*
+    0 - menu
+    1 - quit
+    2 - settings
+    3 - create packet
+    4 - manage packets
+    5 - host game
+    6 - join game
+    7 - add question
+    */
     do{
-        choice = 0;
-        choice = menu(window);
+        if (choice == 10){
+            choice = menu(window);
+        }
 
         switch (choice) {
             case 1:
@@ -22,13 +36,19 @@ int main() {
             
             case 3:
                 newRenderer(window);
-                choice = createPacket(window);
-            break;
+                choice = createPacket(window, &packetName);
+                break;
 
             case 4:
                 newRenderer(window);
                 choice = managePackets(window);
-            break;
+                break;
+
+            case 7:
+                printf("%s\n", packetName);
+                filePointer = createPacketFile(packetName);
+                addQuestion(filePointer, "Qu'est-ce que jaaj?", "jaaj", "pas jaaj", "encore pas jaaj", "toujours pas jaaj");
+                break;
             
             default:
                 /*

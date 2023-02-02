@@ -19,3 +19,13 @@ int check(char* packetName, char* forbidden, int len) {
     }
     return 0;
 }
+
+char* stringFromArray(char array[]){
+    char* res = array;
+    int i = 1;
+    while (*(array + i) != '\0'){
+        strcat(res, array + i);
+    }
+    strcat(res, '\0');
+    return res;
+}

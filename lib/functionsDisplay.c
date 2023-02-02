@@ -27,7 +27,6 @@ Window* create_window() {
     window->renderer = SDL_CreateRenderer(window->sdl_window, -1, SDL_RENDERER_ACCELERATED);
     
     window->font = initTTF();
-    printf("%p\n", window->font);
 
     return window;
 
@@ -166,7 +165,6 @@ TTF_Font* initTTF(){
         SDL_Quit();
         exit(-1);
     }
-    printf("%p\n", Montserrat);
 
     return Montserrat;
 }
@@ -307,7 +305,7 @@ void addTemplateToList(Node** first, SDL_Renderer* renderer, int displayLogo, in
             getTextWidth("Revenir au menu principal", MENU_HEIGHT),
             MENU_HEIGHT
         };
-        addButtonToList(first, buttonMenuRect, menu, menuTextRect, menuText, 0, 3);
+        addButtonToList(first, buttonMenuRect, menu, menuTextRect, menuText, 0, 10);
     }
     if (displaySettings){
         SDL_Texture* buttonSettingsTexture = textureFromImage(renderer, "img/settings.png");

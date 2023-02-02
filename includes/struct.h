@@ -5,6 +5,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
+#define MAX_LEN 15
+
 typedef struct {
     SDL_Window* sdl_window;
     SDL_Renderer* renderer;

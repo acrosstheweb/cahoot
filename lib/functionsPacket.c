@@ -12,7 +12,7 @@ FILE* createPacketFile(char* packetName)
     char* extension = ".json";
     size_t len = strlen(directory) + strlen(packetName) + strlen(extension);
 
-    char* filePath = malloc(len + 1);
+    char* filePath = malloc(sizeof(char) * len + 1);
 
     strcpy(filePath, directory);
     strcat(filePath, packetName);
@@ -23,15 +23,17 @@ FILE* createPacketFile(char* packetName)
     }
 
     FILE* filePointer = fopen(filePath, "w");
+    printf("after filePointer declaration\n");
 
     if (filePointer == NULL)
     {
-        printf("Échec de la création d'un paquet\n");
+        printf("Échec de la création de fichier lors de la création d'un paquet\n");
         return NULL;
     }
 
-    fprintf(filePointer, "[");
-    fprintf(filePointer, "]");
+    fprintf(filePointer, "[\n\n]");
+
+    fclose(filePointer);
 
     free(filePath);
     return filePointer;
@@ -39,28 +41,26 @@ FILE* createPacketFile(char* packetName)
 
 void addQuestion(FILE* packet, char* question, char* answer1, char* answer2, char* answer3, char* answer4)
 {
-
-    fseek(packet, -2, SEEK_END); // on déplace le pointeur de fichier 2 octets avant la fin du fichier
+    fseek(packet, -2, SEEK_END); // on déplace le pointeur de fichier 1 octets avant la fin du fichier
     ftruncate(fileno(packet), ftell(packet)); // on découpe le fichier à cet emplacement
 
     // Est-ce qu'il faut faire un fopen(...) puis un fclose(...) ?
-    fprintf(packet, "{\n");
-    fprintf(packet, "   \"question\": \"%s\",\n", question);
-    fprintf(packet, "   \"answer\": [\n");
+    fprintf(packet, "   {\n");
+    fprintf(packet, "      \"question\": \"%s\",\n", question);
+    fprintf(packet, "      \"answers\": [\n");
 
     char* answers[4] = {answer1, answer2, answer3, answer4};
     int correct[4] = {1, 0, 0, 0};
 
     for (int i = 0; i < 4; i++) {
-        fprintf(packet, "   {\n");
-        fprintf(packet, "   \"answer\": \"%s\n", answers[i]);
-        fprintf(packet, "   \"correct\": \"%s\n", correct[i] ? "true" : "false");
-        fprintf(packet, "   }%s\n", i < 3 ? "," : "");
+        fprintf(packet, "      {\n");
+        fprintf(packet, "      \"answer\": \"%s\",\n", answers[i]);
+        fprintf(packet, "      \"correct\": \"%s\"\n", correct[i] ? "true" : "false");
+        fprintf(packet, "      }%s\n", i < 3 ? "," : "");
     }
 
-    fprintf(packet, "   ]\n");
-    fprintf(packet, "}\n");
-    fprintf(packet, "]\n");
+    fprintf(packet, "      ]\n  }\n]\n");
+    fclose(packet);
 }
 
 char* deletePacket(char* packetName)
@@ -71,7 +71,7 @@ char* deletePacket(char* packetName)
     char* extension = ".json";
     size_t len = strlen(directory) + strlen(packetName) + strlen(extension);
 
-    char* filePath = malloc(len + 1);
+    char* filePath = malloc(sizeof(char) * (len + 1));
 
     strcpy(filePath, directory);
     strcat(filePath, packetName);

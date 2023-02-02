@@ -5,12 +5,11 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include "../includes/functionsDisplay.h"
+#include "../includes/functionsPacket.h"
 #include "../includes/functions.h"
 
-#define MAX_LEN 30
 
-
-int createPacket(Window* window) {
+int createPacket(Window* window, char** packetName) {
     int colorNum = rand() % 4;
 
     // Créer les textures
@@ -45,6 +44,13 @@ int createPacket(Window* window) {
     };
     
     char inputText[MAX_LEN + 1] = "";
+    char *inputPointer = NULL;
+    // char* inputText = NULL;
+    // inputText = malloc(sizeof(char) * (MAX_LEN + 1));
+    // if (!inputText){
+    //     printf("Erreur de malloc\n");
+    // }
+    // printf("%s\n", inputText);
 
     Node* first = NULL;
     addTemplateToList(&first, window->renderer, 1, 1, 1, "Comment voulez-vous appeler votre paquet? 30 caracteres max.", window->font);
@@ -57,7 +63,7 @@ int createPacket(Window* window) {
         SDL_Event e;
         Node* current = first;
         int x, y, textAdded = 0;
-        char* clipboard = NULL;
+        char* clipboard = malloc(sizeof(char)*672);
         while (SDL_PollEvent(&e)) {
             switch (e.type) {
                 case SDL_MOUSEMOTION:
@@ -81,49 +87,42 @@ int createPacket(Window* window) {
                     break;
                 
                 case SDL_KEYDOWN:
+                    clipboard = NULL;
                     if (e.key.keysym.sym == SDLK_BACKSPACE && strlen(inputText) > 0) { // Backspace
-                        inputText[strlen(inputText) - 1] = '\0';
+                        *(inputText + strlen(inputText) - 1) = '\0';
                     } else if (e.key.keysym.sym == SDLK_c && (e.key.keysym.mod & KMOD_CTRL)) { // Copy
-                        printf("copy\n");
-                        SDL_SetClipboardText(inputText);
+                        if (SDL_SetClipboardText(inputText) != 0){
+                            printf("Erreur de SDL_SetClipboardText(): %s\n", SDL_GetError());
+                        }
                     } else if (e.key.keysym.sym == SDLK_v && (e.key.keysym.mod & KMOD_CTRL)) { // Paste
                         textAdded = 1;
-                        printf("paste\n");
-                        strcpy(inputText, SDL_GetClipboardText());
+                        clipboard = SDL_GetClipboardText();
+                        if (!SDL_HasClipboardText()){
+                            printf("Erreur de SDL_GetClipboardText(): %s\n", SDL_GetError());
+                        } else {
+                            if (strlen(inputText) + strlen(clipboard) <= MAX_LEN){
+                                strcat(inputText, clipboard);
+                            } else {
+                                memcpy(inputText + strlen(inputText), clipboard, MAX_LEN - strlen(inputText));
+                            }
+                        }
+                    } else if ((e.key.keysym.sym == SDLK_RETURN || e.key.keysym.sym == SDLK_KP_ENTER) && strlen(inputText) > 0) {
+                        *packetName = malloc(sizeof(char) * (strlen(inputText) + 1));
+                        memcpy(*packetName, inputText, strlen(inputText) + 1);
+                        printf("%s\n", *packetName);
+
+                        
+                        return 7;
                     }
-                //     } else if (e.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL) { // Copy
-                //         char* temp = NULL;
-                //         memcpy(temp, inputText, inputLen + 1);
-                //         SDL_SetClipboardText(temp);
-                //         free(temp);
-                //     } else if (e.key.keysym.sym == SDLK_v && SDL_GetModState() & KMOD_CTRL) { // Paste
-                //         char* temp = SDL_GetClipboardText();
-                //         j  = 0;
-                //         if (strlen(temp) > MAX_LEN - inputLen){
-                //             for (int i = inputLen; i < MAX_LEN; i++){
-                //                 inputText[i] = temp[j];
-                //                 j++;
-                //                 inputLen--;
-                //             }
-                //         } else {
-                //             for (int i = 0; i <= strlen(temp); i++){
-                //                 inputText[inputLen + i] = temp[j];
-                //                 j++;
-                //                 inputLen--;
-                //             }
-                //         }
-                //     }
-                //     getLastElement(&first)->button.text->normal = textureFromMessage(window->renderer, getStringFromArray(inputText, inputLen), setColor("Black"));
-                    break;
-                
-                case SDL_CLIPBOARDUPDATE:
-                    // Handle clipboard update
-                    clipboard = SDL_GetClipboardText();
-                    printf("Clipboard updated: %s\n", clipboard);
                     break;
 
                 case SDL_TEXTINPUT:
-                    strcat(inputText, e.text.text);
+                    if (strlen(inputText) == 0){
+
+                        strcpy(inputText, e.text.text);
+                    } else {
+                        strcat(inputText, e.text.text);
+                    }
                     textAdded = 1;
                     break;
 
