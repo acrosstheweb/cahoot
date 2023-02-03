@@ -23,7 +23,6 @@ FILE* createPacketFile(char* packetName)
     }
 
     FILE* filePointer = fopen(filePath, "w");
-    printf("after filePointer declaration\n");
 
     if (filePointer == NULL)
     {
@@ -34,33 +33,37 @@ FILE* createPacketFile(char* packetName)
     fprintf(filePointer, "[\n\n]");
 
     fclose(filePointer);
+    filePointer = fopen(filePath, "w");
 
     free(filePath);
     return filePointer;
 }
 
-void addQuestion(FILE* packet, char* question, char* answer1, char* answer2, char* answer3, char* answer4)
+void addQuestionToFile(FILE** packet, char* question, char* answer1, char* answer2, char* answer3, char* answer4)
 {
-    fseek(packet, -2, SEEK_END); // on déplace le pointeur de fichier 1 octets avant la fin du fichier
-    ftruncate(fileno(packet), ftell(packet)); // on découpe le fichier à cet emplacement
+    fseek(*packet, -1, SEEK_END); // on déplace le pointeur de fichier 1 octets avant la fin du fichier
+    ftruncate(fileno(*packet), ftell(*packet)); // on découpe le fichier à cet emplacement
 
     // Est-ce qu'il faut faire un fopen(...) puis un fclose(...) ?
-    fprintf(packet, "   {\n");
-    fprintf(packet, "      \"question\": \"%s\",\n", question);
-    fprintf(packet, "      \"answers\": [\n");
+    fprintf(*packet, "   {\n");
+    fprintf(*packet, "      \"question\": \"%s\",\n", question);
+    fprintf(*packet, "      \"answers\": [\n");
+
+    printf("in addQuestion : %p\n", *packet);
+
 
     char* answers[4] = {answer1, answer2, answer3, answer4};
     int correct[4] = {1, 0, 0, 0};
 
     for (int i = 0; i < 4; i++) {
-        fprintf(packet, "      {\n");
-        fprintf(packet, "      \"answer\": \"%s\",\n", answers[i]);
-        fprintf(packet, "      \"correct\": \"%s\"\n", correct[i] ? "true" : "false");
-        fprintf(packet, "      }%s\n", i < 3 ? "," : "");
+        fprintf(*packet, "      {\n");
+        fprintf(*packet, "      \"answer\": \"%s\",\n", answers[i]);
+        fprintf(*packet, "      \"correct\": \"%s\"\n", correct[i] ? "true" : "false");
+        fprintf(*packet, "      }%s\n", i < 3 ? "," : "");
     }
 
-    fprintf(packet, "      ]\n  }\n]\n");
-    fclose(packet);
+    fprintf(*packet, "      ]\n  }\n]\n");
+    fclose(*packet);
 }
 
 char* deletePacket(char* packetName)

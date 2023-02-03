@@ -12,6 +12,10 @@
 int createPacket(Window* window, char** packetName) {
     int colorNum = rand() % 4;
 
+    char* subtitleText = "15 caracteres max.";
+    SDL_Texture* subtitleTexture = textureFromMessage(window->renderer, subtitleText, setColor("Black"), window->font);
+    States* subtitle = setStates(subtitleTexture, subtitleTexture);
+
     // Créer les textures
     SDL_Texture* colorRectTexture = textureFromImage(window->renderer, "img/rect_blue.png");
     SDL_Texture* colorRectHoverTexture = textureFromImage(window->renderer, "img/rect_blue_hover.png");
@@ -30,6 +34,12 @@ int createPacket(Window* window, char** packetName) {
 
 
     // Définir les positions des boutons (x, y, w, h)
+    SDL_Rect subtitleRect = {
+        (SCREEN_WIDTH - getTextWidth(subtitleText, 25)) / 2,
+        150,
+        getTextWidth(subtitleText, 25),
+        25
+    };
     SDL_Rect colorRect = {
         (SCREEN_WIDTH - PACKET_RECT_WIDTH) / 2,
         (SCREEN_HEIGHT - PACKET_RECT_HEIGHT) / 2,
@@ -46,7 +56,8 @@ int createPacket(Window* window, char** packetName) {
     char inputText[MAX_LEN + 1] = "";
 
     Node* first = NULL;
-    addTemplateToList(&first, window->renderer, 1, 1, 1, "Comment voulez-vous appeler votre paquet? 30 caracteres max.", window->font);
+    addTemplateToList(&first, window->renderer, 1, 1, 1, "Comment voulez-vous appeler votre paquet?", window->font);
+    addButtonToList(&first, subtitleRect, subtitle, empty(), NULL, 0, 0);
     addButtonToList(&first, colorRect, color, empty(), NULL, 0, 0);
 
     SDL_StartTextInput();

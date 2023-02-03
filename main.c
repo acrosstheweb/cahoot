@@ -45,9 +45,10 @@ int main() {
                 break;
 
             case 7:
-                printf("%s\n", packetName);
                 filePointer = createPacketFile(packetName);
-                addQuestion(filePointer, "Qu'est-ce que jaaj?", "jaaj", "pas jaaj", "encore pas jaaj", "toujours pas jaaj");
+                printf("in addQuestion : %p\n", filePointer);
+                addQuestionToFile(&filePointer, "Qu'est-ce que jaaj?", "jaaj", "pas jaaj", "encore pas jaaj", "toujours pas jaaj");
+                choice = 10;
                 break;
             
             default:
