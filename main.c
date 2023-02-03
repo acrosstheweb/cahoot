@@ -8,6 +8,7 @@
 #include "includes/menu.h"
 #include "includes/createPacket.h"
 #include "includes/managePackets.h"
+#include "includes/addQuestion.h"
 
 int main() {
     int choice = 10;
@@ -45,10 +46,10 @@ int main() {
                 break;
 
             case 7:
-                filePointer = createPacketFile(packetName);
-                printf("in addQuestion : %p\n", filePointer);
-                addQuestionToFile(&filePointer, "Qu'est-ce que jaaj?", "jaaj", "pas jaaj", "encore pas jaaj", "toujours pas jaaj");
-                choice = 10;
+                // choice = addQuestion(window, &filePointer);
+                addQuestionToFile(packetName, "Qu'est-ce que jaaj?", "jaaj", "pas jaaj", "encore pas jaaj", "toujours pas jaaj");
+                addQuestionToFile(packetName, "Qu'est-ce que jaaj?", "jaaj", "pas jaaj", "encore pas jaaj", "toujours pas jaaj");
+                choice = 1;
                 break;
             
             default:

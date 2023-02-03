@@ -113,8 +113,6 @@ int createPacket(Window* window, char** packetName) {
                     } else if ((e.key.keysym.sym == SDLK_RETURN || e.key.keysym.sym == SDLK_KP_ENTER) && strlen(inputText) > 0) {
                         *packetName = malloc(sizeof(char) * (strlen(inputText) + 1));
                         memcpy(*packetName, inputText, strlen(inputText) + 1);
-                        printf("%s\n", *packetName);
-
                         
                         return 7;
                     }

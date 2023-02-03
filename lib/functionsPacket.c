@@ -5,8 +5,7 @@
 #include "../includes/functionsPacket.h"
 #include <unistd.h>
 
-FILE* createPacketFile(char* packetName)
-{
+char* getPacketPath(char* packetName){
     struct stat s = {0};
     char* directory = "packets/";
     char* extension = ".json";
@@ -22,7 +21,12 @@ FILE* createPacketFile(char* packetName)
         mkdir(directory, 0777);
     }
 
-    FILE* filePointer = fopen(filePath, "w");
+    return filePath;
+}
+
+FILE* createPacketFile(char* packetName) {
+    char* filePath = getPacketPath(packetName);
+    FILE* filePointer = fopen(filePath, "w+");
 
     if (filePointer == NULL)
     {
@@ -30,40 +34,38 @@ FILE* createPacketFile(char* packetName)
         return NULL;
     }
 
-    fprintf(filePointer, "[\n\n]");
-
-    fclose(filePointer);
-    filePointer = fopen(filePath, "w");
-
     free(filePath);
     return filePointer;
 }
 
-void addQuestionToFile(FILE** packet, char* question, char* answer1, char* answer2, char* answer3, char* answer4)
-{
-    fseek(*packet, -1, SEEK_END); // on déplace le pointeur de fichier 1 octets avant la fin du fichier
-    ftruncate(fileno(*packet), ftell(*packet)); // on découpe le fichier à cet emplacement
+void addQuestionToFile(char *packetName, char* question, char* answer1, char* answer2, char* answer3, char* answer4) {
+    char* filePath = getPacketPath(packetName);
+    FILE* filePointer = fopen(filePath, "a+");
 
-    // Est-ce qu'il faut faire un fopen(...) puis un fclose(...) ?
-    fprintf(*packet, "   {\n");
-    fprintf(*packet, "      \"question\": \"%s\",\n", question);
-    fprintf(*packet, "      \"answers\": [\n");
-
-    printf("in addQuestion : %p\n", *packet);
-
-
-    char* answers[4] = {answer1, answer2, answer3, answer4};
-    int correct[4] = {1, 0, 0, 0};
-
-    for (int i = 0; i < 4; i++) {
-        fprintf(*packet, "      {\n");
-        fprintf(*packet, "      \"answer\": \"%s\",\n", answers[i]);
-        fprintf(*packet, "      \"correct\": \"%s\"\n", correct[i] ? "true" : "false");
-        fprintf(*packet, "      }%s\n", i < 3 ? "," : "");
+    fseek (filePointer, 0, SEEK_END);
+    if (ftell(filePointer) == 0) {
+        fprintf(filePointer, "[\n");
+    } else {
+        fseek(filePointer, -2, SEEK_END); // on déplace le pointeur de fichier 2 octets avant la fin du fichier
+        ftruncate(fileno(filePointer), ftell(filePointer)); // on découpe le fichier à cet emplacement
+        fprintf(filePointer, ",\n");
     }
 
-    fprintf(*packet, "      ]\n  }\n]\n");
-    fclose(*packet);
+    fprintf(filePointer, "\t{\n");
+    fprintf(filePointer, "\t\t\"question\": \"%s\",\n", question);
+    fprintf(filePointer, "\t\t\"answers\": [\n");
+
+    char* answers[4] = {answer1, answer2, answer3, answer4};
+
+    for (int i = 0; i < 4; i++) {
+        fprintf(filePointer, "\t\t\t{\n");
+        fprintf(filePointer, "\t\t\t\"answer\": \"%s\",\n", answers[i]);
+        fprintf(filePointer, "\t\t\t\"correct\": \"%s\"\n", (i == 0) ? "true" : "false");
+        fprintf(filePointer, "\t\t\t}%s\n", i < 3 ? "," : "");
+    }
+
+    fprintf(filePointer, "\t\t]\n\t}\n]");
+    fclose(filePointer);
 }
 
 char* deletePacket(char* packetName)
