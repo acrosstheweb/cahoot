@@ -19,6 +19,12 @@ typedef struct {
 } States;
 
 typedef struct {
+  SDL_Rect refRect;
+  SDL_Rect inputRect;
+  char *text;
+} TextInput;
+
+typedef struct {
     int isHovered;
     int isOption;
     int isClickable;

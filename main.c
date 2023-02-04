@@ -14,7 +14,6 @@ int main() {
     int choice = 10;
     char* packetName = malloc(sizeof(char*));
     Window* window = create_window();
-    FILE* filePointer = NULL;
 
     /*
     0 - menu
@@ -46,10 +45,7 @@ int main() {
                 break;
 
             case 7:
-                // choice = addQuestion(window, &filePointer);
-                addQuestionToFile(packetName, "Qu'est-ce que jaaj?", "jaaj", "pas jaaj", "encore pas jaaj", "toujours pas jaaj");
-                addQuestionToFile(packetName, "Qu'est-ce que jaaj?", "jaaj", "pas jaaj", "encore pas jaaj", "toujours pas jaaj");
-                choice = 1;
+                choice = addQuestion(window, packetName);
                 break;
             
             default:

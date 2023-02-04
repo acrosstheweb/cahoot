@@ -4,5 +4,5 @@
 
 #include "struct.h"
 
-int addQuestion(Window* window, FILE** filePointer);
+int addQuestion(Window* window, char* packetName);
 #endif

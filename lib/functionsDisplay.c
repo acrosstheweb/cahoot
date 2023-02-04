@@ -274,9 +274,9 @@ void display(SDL_Renderer* renderer, Button button){
     }
 }
 
-void addTemplateToList(Node** first, SDL_Renderer* renderer, int displayLogo, int displayBackToMenu, int displaySettings, char* titleText, TTF_Font* font){
+void addTemplateToList(Node** first, Window* window, int displayLogo, int displayBackToMenu, int displaySettings, char* titleText){
     if (displayLogo){
-        SDL_Texture* cahootTexture = textureFromMessage(renderer, "Cahoot", setColor("Black"), font);
+        SDL_Texture* cahootTexture = textureFromMessage(window->renderer, "Cahoot", setColor("Black"), window->font);
         States* logo = setStates(cahootTexture, cahootTexture);
         SDL_Rect logoRect = {
             (SCREEN_WIDTH - getTextWidth("Cahoot", 100)) / 2,
@@ -287,10 +287,10 @@ void addTemplateToList(Node** first, SDL_Renderer* renderer, int displayLogo, in
         addButtonToList(first, logoRect, logo, empty(), NULL, 0, 0);
     }
     if (displayBackToMenu){
-        SDL_Texture* buttonMenuTexture = textureFromImage(renderer, "img/back_to_menu.png");
-        SDL_Texture* buttonMenuHoverTexture = textureFromImage(renderer, "img/back_to_menu_hover.png");
-        SDL_Texture* menuTextTexture = textureFromMessage(renderer, "Revenir au menu principal", setColor("Black"), font);
-        SDL_Texture* menuTextHoverTexture = textureFromMessage(renderer, "Revenir au menu principal", setColor("Yellow"), font);
+        SDL_Texture* buttonMenuTexture = textureFromImage(window->renderer, "img/back_to_menu.png");
+        SDL_Texture* buttonMenuHoverTexture = textureFromImage(window->renderer, "img/back_to_menu_hover.png");
+        SDL_Texture* menuTextTexture = textureFromMessage(window->renderer, "Menu principal", setColor("Black"), window->font);
+        SDL_Texture* menuTextHoverTexture = textureFromMessage(window->renderer, "Menu principal", setColor("Yellow"), window->font);
         States* menu = setStates(buttonMenuTexture, buttonMenuHoverTexture);
         States* menuText = setStates(menuTextTexture, menuTextHoverTexture);
         SDL_Rect buttonMenuRect = {
@@ -302,14 +302,14 @@ void addTemplateToList(Node** first, SDL_Renderer* renderer, int displayLogo, in
         SDL_Rect menuTextRect = {
             buttonMenuRect.x + buttonMenuRect.w + 10,
             buttonMenuRect.y,
-            getTextWidth("Revenir au menu principal", MENU_HEIGHT),
+            getTextWidth("Menu principal", MENU_HEIGHT),
             MENU_HEIGHT
         };
         addButtonToList(first, buttonMenuRect, menu, menuTextRect, menuText, 0, 10);
     }
     if (displaySettings){
-        SDL_Texture* buttonSettingsTexture = textureFromImage(renderer, "img/settings.png");
-        SDL_Texture* buttonSettingsHoverTexture = textureFromImage(renderer, "img/settings_hover.png");
+        SDL_Texture* buttonSettingsTexture = textureFromImage(window->renderer, "img/settings.png");
+        SDL_Texture* buttonSettingsHoverTexture = textureFromImage(window->renderer, "img/settings_hover.png");
         States* settings = setStates(buttonSettingsTexture, buttonSettingsHoverTexture);
         SDL_Rect buttonSettingsRect = {
             SCREEN_WIDTH - SETTINGS_WIDTH - MARGIN,
@@ -320,7 +320,7 @@ void addTemplateToList(Node** first, SDL_Renderer* renderer, int displayLogo, in
         addButtonToList(first, buttonSettingsRect, settings, empty(), NULL, 0, 2);
     }
     
-    SDL_Texture* titleTexture = textureFromMessage(renderer, titleText, setColor("Black"), font);
+    SDL_Texture* titleTexture = textureFromMessage(window->renderer, titleText, setColor("Black"), window->font);
     States* title = setStates(titleTexture, titleTexture);
     SDL_Rect titleRect = {
         (SCREEN_WIDTH - getTextWidth(titleText, 50)) / 2,
@@ -330,8 +330,8 @@ void addTemplateToList(Node** first, SDL_Renderer* renderer, int displayLogo, in
     };
     addButtonToList(first, titleRect, title, empty(), NULL, 0, 0);
     
-    SDL_Texture* buttonLeaveTexture = textureFromImage(renderer, "img/quit_program.png");
-    SDL_Texture* buttonLeaveHoverTexture = textureFromImage(renderer, "img/quit_program_hover.png");
+    SDL_Texture* buttonLeaveTexture = textureFromImage(window->renderer, "img/quit_program.png");
+    SDL_Texture* buttonLeaveHoverTexture = textureFromImage(window->renderer, "img/quit_program_hover.png");
     States* quitApp = setStates(buttonLeaveTexture, buttonLeaveHoverTexture);
     SDL_Rect buttonLeaveRect = {
         (SCREEN_WIDTH - LEAVE_WIDTH) / 2,
@@ -340,4 +340,12 @@ void addTemplateToList(Node** first, SDL_Renderer* renderer, int displayLogo, in
         LEAVE_HEIGHT
     };
     addButtonToList(first, buttonLeaveRect, quitApp, empty(), NULL, 0, 1);
+}
+
+void updateInputText(Window* window, char* inputText, SDL_Rect refRect, SDL_Rect inputRect){
+    SDL_Texture *texture = textureFromMessage(window->renderer, inputText, setColor("Black"), window->font);
+    inputRect.w = getTextWidth(inputText, inputRect.h);
+    inputRect.x = refRect.x + (refRect.w- inputRect.w) / 2;
+    inputRect.y = refRect.y + (refRect.h- inputRect.h) / 2;
+    SDL_RenderCopy(window->renderer, texture, NULL, &inputRect);
 }

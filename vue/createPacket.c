@@ -56,7 +56,7 @@ int createPacket(Window* window, char** packetName) {
     char inputText[MAX_LEN + 1] = "";
 
     Node* first = NULL;
-    addTemplateToList(&first, window->renderer, 1, 1, 1, "Comment voulez-vous appeler votre paquet?", window->font);
+    addTemplateToList(&first, window, 1, 1, 1, "Comment voulez-vous appeler votre paquet?");
     addButtonToList(&first, subtitleRect, subtitle, empty(), NULL, 0, 0);
     addButtonToList(&first, colorRect, color, empty(), NULL, 0, 0);
 

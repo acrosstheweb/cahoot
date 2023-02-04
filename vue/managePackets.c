@@ -53,7 +53,7 @@ int managePackets(Window* window) {
 
 
     Node* first = NULL;
-    addTemplateToList(&first, window->renderer, 1, 1, 1, "Mes paquets", window->font);
+    addTemplateToList(&first, window, 1, 1, 1, "Mes paquets");
     addButtonToList(&first, redRect, red, empty(), NULL, 1, 4);
     addButtonToList(&first, greenRect, green, empty(), NULL, 1, 4);
     addButtonToList(&first, blueRect, blue, empty(), NULL, 1, 4);

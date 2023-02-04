@@ -26,8 +26,8 @@
 #define PACKET_RECT_ENDY 646
 #define QUESTION_RECT_WIDTH 472
 #define QUESTION_RECT_HEIGHT 224
-#define ANsWER_RECT_WIDTH 224
-#define ANsWER_RECT_HEIGHT 100
+#define ANSWER_RECT_WIDTH 230
+#define ANSWER_RECT_HEIGHT 106
 
 Window* create_window();
 
@@ -58,6 +58,8 @@ States* setStates(SDL_Texture* normal, SDL_Texture* hover);
 
 void display(SDL_Renderer* renderer, Button button);
 
-void addTemplateToList(Node** first, SDL_Renderer* renderer, int displayLogo, int displayBackToMenu, int displaySettings, char* titleText, TTF_Font* font);
+void addTemplateToList(Node** first, Window* window, int displayLogo, int displayBackToMenu, int displaySettings, char* titleText);
+
+void updateInputText(Window* window, char* inputText, SDL_Rect refRect, SDL_Rect inputRect);
 
 #endif
