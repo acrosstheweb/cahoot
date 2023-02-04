@@ -177,6 +177,15 @@ int addQuestion(Window* window, char* packetName) {
                         strlen(questionText) > 0 && strlen(answer1Text) > 0 && strlen(answer2Text) > 0 && strlen(answer3Text) > 0 && strlen(answer4Text) > 0) {
                             addQuestionToFile(packetName, questionText, answer1Text, answer2Text, answer3Text, answer4Text);
                             return 7;
+                        } else if (e.key.keysym.sym == SDLK_TAB) {
+                            activeInput++;
+                            if (activeInput == 5){
+                                activeInput = 0;
+                            }
+                        }
+                    } else if (activeInput == -1){
+                        if (e.key.keysym.sym == SDLK_TAB) {
+                            activeInput = 0;
                         }
                     }
                     break;
