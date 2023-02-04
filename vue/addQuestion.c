@@ -19,9 +19,12 @@ int addQuestion(Window* window, char* packetName) {
     SDL_Texture* greenRectTexture = textureFromImage(window->renderer, "img/rect_green.png");
     SDL_Texture* greenRectHoverTexture = textureFromImage(window->renderer, "img/rect_green_hover.png");
 
+    SDL_Texture* validateTexture = textureFromMessage(window->renderer, "Enregistrer", setColor("Black"), window->font);
+
     States* blue = setStates(blueRectTexture, blueRectHoverTexture);
     States* red = setStates(redRectTexture, redRectHoverTexture);
     States* green = setStates(greenRectTexture, greenRectHoverTexture);
+    States* validate = setStates(validateTexture, validateTexture);
 
 
     // Définir les positions des boutons (x, y, w, h)
@@ -85,6 +88,18 @@ int addQuestion(Window* window, char* packetName) {
         100,
         25
     };
+    SDL_Rect validateRect = {
+        questionRect.x,
+        answer3Rect.y + ANSWER_RECT_HEIGHT + MARGIN / 2,
+        QUESTION_RECT_WIDTH,
+        50
+    };
+    SDL_Rect validateTextRect = {
+        validateRect.x + (validateRect.w- getTextWidth("Enregistrer", 25)) / 2,
+        validateRect.y + (validateRect.h - 25) / 2,
+        getTextWidth("Enregistrer", 25),
+        25
+    };
     
     char questionText[MAX_LEN + 1] = "";
     char answer1Text[MAX_LEN + 1] = "";
@@ -118,6 +133,7 @@ int addQuestion(Window* window, char* packetName) {
     addButtonToList(&first, answer2Rect, red, empty(), NULL, 1, 13);
     addButtonToList(&first, answer3Rect, red, empty(), NULL, 1, 14);
     addButtonToList(&first, answer4Rect, red, empty(), NULL, 1, 15);
+    addButtonToList(&first, validateRect, green, validateTextRect, validate, 1, 16);
 
     SDL_StartTextInput();
     // Boucle principale
@@ -144,8 +160,11 @@ int addQuestion(Window* window, char* packetName) {
                             if (current->button.isHovered && current->button.isClickable){
                                 if (current->button.isClickable <= 10){
                                     return current->button.isClickable;
-                                } else {
+                                } else if (current->button.isClickable <= 15){
                                     activeInput = current->button.isClickable - 11;
+                                }  else if (strlen(questionText) > 0 && strlen(answer1Text) > 0 && strlen(answer2Text) > 0 && strlen(answer3Text) > 0 && strlen(answer4Text) > 0) {
+                                    addQuestionToFile(packetName, questionText, answer1Text, answer2Text, answer3Text, answer4Text);
+                                    return 7;
                                 }
                             }
                             current = current->next;
@@ -177,6 +196,11 @@ int addQuestion(Window* window, char* packetName) {
                         strlen(questionText) > 0 && strlen(answer1Text) > 0 && strlen(answer2Text) > 0 && strlen(answer3Text) > 0 && strlen(answer4Text) > 0) {
                             addQuestionToFile(packetName, questionText, answer1Text, answer2Text, answer3Text, answer4Text);
                             return 7;
+                        } else if (e.key.keysym.sym == SDLK_TAB && (e.key.keysym.mod & KMOD_SHIFT)) {
+                            activeInput--;
+                            if (activeInput == -1){
+                                activeInput = 5;
+                            }
                         } else if (e.key.keysym.sym == SDLK_TAB) {
                             activeInput++;
                             if (activeInput == 5){
