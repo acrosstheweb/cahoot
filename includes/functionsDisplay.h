@@ -28,6 +28,10 @@
 #define QUESTION_RECT_HEIGHT 224
 #define ANSWER_RECT_WIDTH 230
 #define ANSWER_RECT_HEIGHT 106
+#define NEXT_RECT_WIDTH 25
+#define NEXT_RECT_HEIGHT 50
+#define PREV_RECT_WIDTH 25
+#define PREV_RECT_HEIGHT 50
 
 Window* create_window();
 
