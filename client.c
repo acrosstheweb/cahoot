@@ -8,7 +8,6 @@
 #include <pthread.h>
 
 #define PORT 13337
-#define ETIMEDOUT 20
 
 void search_ips();
 void* ip_handler(void* arg);
