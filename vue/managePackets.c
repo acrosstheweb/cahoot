@@ -5,9 +5,13 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include "../includes/functionsDisplay.h"
+#include "../includes/functionsPacket.h"
 
 
 int managePackets(Window* window) {
+    char** packetList = NULL;
+    int* packetNb = malloc(sizeof(int));
+    packetList = listPackets(packetNb);
 
     // Créer les textures
     SDL_Texture* redRectTexture = textureFromImage(window->renderer, "img/rect_red.png");
@@ -54,10 +58,55 @@ int managePackets(Window* window) {
 
     Node* first = NULL;
     addTemplateToList(&first, window, 1, 1, 1, "Mes paquets");
-    addButtonToList(&first, redRect, red, empty(), NULL, 1, 4);
-    addButtonToList(&first, greenRect, green, empty(), NULL, 1, 4);
-    addButtonToList(&first, blueRect, blue, empty(), NULL, 1, 4);
-    addButtonToList(&first, yellowRect, yellow, empty(), NULL, 1, 4);
+    // addButtonToList(&first, redRect, red, empty(), NULL, 1, 4);
+    // addButtonToList(&first, greenRect, green, empty(), NULL, 1, 4);
+    // addButtonToList(&first, blueRect, blue, empty(), NULL, 1, 4);
+    // addButtonToList(&first, yellowRect, yellow, empty(), NULL, 1, 4);
+
+    for (int i = 0; i < *packetNb; i++){
+        SDL_Texture* textTexture = textureFromMessage(window->renderer, *(packetList + i), setColor("Black"), window->font);
+        States* text = setStates(textTexture, textTexture);
+        switch (i % 4){
+        case 0:
+            addButtonToList(&first, redRect, red, (SDL_Rect){
+                redRect.x + (redRect.w- getTextWidth(*(packetList + i), 50)) / 2,
+                redRect.y + (redRect.h - 50) / 2,
+                getTextWidth(*(packetList + i), 50),
+                50
+                }, text, 1, 4);
+            break;
+
+        case 1:
+            addButtonToList(&first, greenRect, green, (SDL_Rect){
+                greenRect.x + (greenRect.w- getTextWidth(*(packetList + i), 50)) / 2,
+                greenRect.y + (greenRect.h - 50) / 2,
+                getTextWidth(*(packetList + i), 50),
+                50
+                }, text, 1, 4);
+            break;
+
+        case 2:
+            addButtonToList(&first, blueRect, blue, (SDL_Rect){
+                blueRect.x + (blueRect.w- getTextWidth(*(packetList + i), 50)) / 2,
+                blueRect.y + (blueRect.h - 50) / 2,
+                getTextWidth(*(packetList + i), 50),
+                50
+                }, text, 1, 4);
+            break;
+
+        case 3:
+            addButtonToList(&first, yellowRect, yellow, (SDL_Rect){
+                yellowRect.x + (yellowRect.w- getTextWidth(*(packetList + i), 50)) / 2,
+                yellowRect.y + (yellowRect.h - 50) / 2,
+                getTextWidth(*(packetList + i), 50),
+                50
+                }, text, 1, 4);
+            break;
+        
+        default:
+            break;
+        }
+    }
     
     // Boucle principale
     int quit = 0;
