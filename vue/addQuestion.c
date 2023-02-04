@@ -10,7 +10,6 @@
 
 
 int addQuestion(Window* window, char* packetName) {
-    int colorNum = rand() % 4;
 
     // Créer les textures
     SDL_Texture* blueRectTexture = textureFromImage(window->renderer, "img/rect_blue.png");
@@ -19,28 +18,10 @@ int addQuestion(Window* window, char* packetName) {
     SDL_Texture* redRectHoverTexture = textureFromImage(window->renderer, "img/rect_red_hover.png");
     SDL_Texture* greenRectTexture = textureFromImage(window->renderer, "img/rect_green.png");
     SDL_Texture* greenRectHoverTexture = textureFromImage(window->renderer, "img/rect_green_hover.png");
-    SDL_Texture* yellowRectTexture = textureFromImage(window->renderer, "img/rect_yellow.png");
-    SDL_Texture* yellowRectHoverTexture = textureFromImage(window->renderer, "img/rect_yellow_hover.png");
-    
-    SDL_Texture* colorRectTexture = blueRectTexture;
-    SDL_Texture* colorRectHoverTexture = blueRectHoverTexture;
-
-    if (colorNum == 0){
-        colorRectTexture = redRectTexture;
-        colorRectHoverTexture = redRectHoverTexture;
-    } else if (colorNum == 1){
-        colorRectTexture = greenRectTexture;
-        colorRectHoverTexture = greenRectHoverTexture;
-    } else if (colorNum == 2){
-        colorRectTexture = yellowRectTexture;
-        colorRectHoverTexture = yellowRectHoverTexture;
-    }
 
     States* blue = setStates(blueRectTexture, blueRectHoverTexture);
     States* red = setStates(redRectTexture, redRectHoverTexture);
     States* green = setStates(greenRectTexture, greenRectHoverTexture);
-    States* yellow = setStates(yellowRectTexture, yellowRectHoverTexture);
-    States* color = setStates(colorRectTexture, colorRectHoverTexture);
 
 
     // Définir les positions des boutons (x, y, w, h)
@@ -132,11 +113,11 @@ int addQuestion(Window* window, char* packetName) {
 
     Node* first = NULL;
     addTemplateToList(&first, window, 1, 1, 1, "");
-    addButtonToList(&first, questionRect, color, empty(), NULL, 1, 11);
-    addButtonToList(&first, answer1Rect, red, empty(), NULL, 1, 12);
-    addButtonToList(&first, answer2Rect, green, empty(), NULL, 1, 13);
-    addButtonToList(&first, answer3Rect, blue, empty(), NULL, 1, 14);
-    addButtonToList(&first, answer4Rect, yellow, empty(), NULL, 1, 15);
+    addButtonToList(&first, questionRect, blue, empty(), NULL, 1, 11);
+    addButtonToList(&first, answer1Rect, green, empty(), NULL, 1, 12);
+    addButtonToList(&first, answer2Rect, red, empty(), NULL, 1, 13);
+    addButtonToList(&first, answer3Rect, red, empty(), NULL, 1, 14);
+    addButtonToList(&first, answer4Rect, red, empty(), NULL, 1, 15);
 
     SDL_StartTextInput();
     // Boucle principale
