@@ -27,6 +27,8 @@ int managePackets(Window* window) {
     SDL_Texture* blueRectHoverTexture = textureFromImage(window->renderer, "img/rect_blue_hover.png");
     SDL_Texture* yellowRectTexture = textureFromImage(window->renderer, "img/rect_yellow.png");
     SDL_Texture* yellowRectHoverTexture = textureFromImage(window->renderer, "img/rect_yellow_hover.png");
+    SDL_Texture* trashTexture = textureFromImage(window->renderer, "img/trash.png");
+    SDL_Texture* trashHoverTexture = textureFromImage(window->renderer, "img/trash_hover.png");
     
     States* next = setStates(nextTexture, nextHoverTexture);
     States* prev = setStates(prevTexture, prevHoverTexture);
@@ -34,6 +36,7 @@ int managePackets(Window* window) {
     States* green = setStates(greenRectTexture, greenRectHoverTexture);
     States* blue = setStates(blueRectTexture, blueRectHoverTexture);
     States* yellow = setStates(yellowRectTexture, yellowRectHoverTexture);
+    States* trash = setStates(trashTexture, trashHoverTexture);
 
     // Définir les positions des boutons (x, y, w, h)
     SDL_Rect nextRect = {
@@ -80,18 +83,23 @@ int managePackets(Window* window) {
     addButtonToList(&first, prevRect, prev, empty(), NULL, 1, 11);
     addButtonToList(&first, nextRect, next, empty(), NULL, 1, 12);
 
-    int packetNbOnPage = (page < (*packetNb) / 4) ? 4 : (*packetNb) % 4;
     for (int i = 0; i < *packetNb; i++){
         SDL_Texture* textTexture = textureFromMessage(window->renderer, *(packetList + i), setColor("Black"), window->font);
         States* text = setStates(textTexture, textTexture);
         switch (i % 4){
         case 0:
             addButtonToList(&first, redRect, red, (SDL_Rect){
-                redRect.x + (redRect.w- getTextWidth(*(packetList + i), 50)) / 2,
+                redRect.x + (redRect.w - getTextWidth(*(packetList + i), 50)) / 2,
                 redRect.y + (redRect.h - 50) / 2,
                 getTextWidth(*(packetList + i), 50),
-                50
-                }, text, 1, 15 + i);
+                50},
+                text, 1, 15 + i);
+            addButtonToList(&first, (SDL_Rect){
+            redRect.x + redRect.w - TRASH_RECT_WIDTH * 1.5,
+            redRect.y + TRASH_RECT_HEIGHT / 2,
+            TRASH_RECT_WIDTH,
+            TRASH_RECT_HEIGHT
+            }, trash, empty(), NULL, 1, 30 + i);
             break;
 
         case 1:
@@ -101,6 +109,12 @@ int managePackets(Window* window) {
                 getTextWidth(*(packetList + i), 50),
                 50
                 }, text, 1, 15 + i);
+            addButtonToList(&first, (SDL_Rect){
+            greenRect.x + greenRect.w - TRASH_RECT_WIDTH * 1.5,
+            greenRect.y + TRASH_RECT_HEIGHT / 2,
+            TRASH_RECT_WIDTH,
+            TRASH_RECT_HEIGHT
+            }, trash, empty(), NULL, 1, 30 + i);
             break;
 
         case 2:
@@ -110,6 +124,12 @@ int managePackets(Window* window) {
                 getTextWidth(*(packetList + i), 50),
                 50
                 }, text, 1, 15 + i);
+            addButtonToList(&first, (SDL_Rect){
+            blueRect.x + blueRect.w - TRASH_RECT_WIDTH * 1.5,
+            blueRect.y + TRASH_RECT_HEIGHT / 2,
+            TRASH_RECT_WIDTH,
+            TRASH_RECT_HEIGHT
+            }, trash, empty(), NULL, 1, 30 + i);
             break;
 
         case 3:
@@ -119,6 +139,12 @@ int managePackets(Window* window) {
                 getTextWidth(*(packetList + i), 50),
                 50
                 }, text, 1, 15 + i);
+            addButtonToList(&first, (SDL_Rect){
+            yellowRect.x + yellowRect.w - TRASH_RECT_WIDTH * 1.5,
+            yellowRect.y + TRASH_RECT_HEIGHT / 2,
+            TRASH_RECT_WIDTH,
+            TRASH_RECT_HEIGHT
+            }, trash, empty(), NULL, 1, 30 + i);
             break;
         
         default:
@@ -151,14 +177,20 @@ int managePackets(Window* window) {
                                     return current->button.isClickable;
                                 } else if (current->button.isClickable == 11){
                                     if (page > 0){
-                                        printf("page--");
                                         page--;
                                     }
                                 } else if (current->button.isClickable == 12){
                                     if (page < *packetNb / 4){
-                                        printf("page++");
                                         page++;
                                     }
+                                } else {
+                                    if (current->button.isClickable - 30 >= page * 4 && current->button.isClickable - 30 < (page+1) * 4){
+                                        printf("%s\n", deletePacket(*(packetList + current->button.isClickable - 30)));
+                                        return 4;
+                                    } else if (current->button.isClickable - 15 >= page * 4 && current->button.isClickable - 15 < (page+1) * 4){
+                                        printf("15 : %d\n", current->button.isClickable);
+                                    }
+                                    
                                 }
                             }
                             current = current->next;
@@ -189,7 +221,8 @@ int managePackets(Window* window) {
                         display(window->renderer, current->button);
                     }
                 } else {
-                    if (current->button.isClickable - 15 >= page * 4 && current->button.isClickable - 15 < (page+1) * 4){
+                    if ((current->button.isClickable - 15 >= page * 4 && current->button.isClickable - 15 < (page+1) * 4) ||
+                    (current->button.isClickable - 30 >= page * 4 && current->button.isClickable - 30 < (page+1) * 4)) {
                         display(window->renderer, current->button);
                     }
                 }

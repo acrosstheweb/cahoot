@@ -32,6 +32,8 @@
 #define NEXT_RECT_HEIGHT 50
 #define PREV_RECT_WIDTH 25
 #define PREV_RECT_HEIGHT 50
+#define TRASH_RECT_WIDTH 25
+#define TRASH_RECT_HEIGHT 25
 
 Window* create_window();
 

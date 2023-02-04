@@ -108,8 +108,9 @@ char** listPackets(int* packetNb){
     while (fileName != NULL){
         if (*(fileName->d_name) != '.'){
             packetList = realloc(packetList, sizeof(char*) * ((*packetNb) + 1));
-            *(packetList + *packetNb) = malloc(sizeof(char) * (strlen(fileName->d_name) + 1));
-            memcpy(*(packetList + *packetNb), fileName->d_name, strlen(fileName->d_name) + 1);
+            *(packetList + *packetNb) = malloc(sizeof(char) * (strlen(fileName->d_name) - 4));
+            memcpy(*(packetList + *packetNb), fileName->d_name, strlen(fileName->d_name) - 4);
+            *(*(packetList + *packetNb) + strlen(fileName->d_name) - 5) = '\0';
             (*packetNb)++;
         }
         fileName = readdir(rep);
