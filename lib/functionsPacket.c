@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <dirent.h>
 #include "../includes/functionsPacket.h"
 #include <unistd.h>
 
@@ -94,4 +95,24 @@ char* deletePacket(char* packetName)
         }
     }
     return res;
+}
+
+char** listPackets(int* packetNb){
+    char **packetList = NULL;
+    *packetNb = 0;
+    char* directory = "packets/";
+    DIR* rep = NULL;
+    struct dirent* fileName = NULL;
+    rep = opendir(directory);
+    fileName = readdir(rep);
+    while (fileName != NULL){
+        if (*(fileName->d_name) != '.'){
+            packetList = realloc(packetList, sizeof(char*) * ((*packetNb) + 1));
+            *(packetList + *packetNb) = malloc(sizeof(char) * (strlen(fileName->d_name) + 1));
+            memcpy(*(packetList + *packetNb), fileName->d_name, strlen(fileName->d_name) + 1);
+            (*packetNb)++;
+        }
+        fileName = readdir(rep);
+    }
+    return packetList;
 }
