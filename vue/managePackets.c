@@ -180,7 +180,7 @@ int managePackets(Window* window) {
                                         page--;
                                     }
                                 } else if (current->button.isClickable == 12){
-                                    if (page < *packetNb / 4){
+                                    if (page < *packetNb / 48){
                                         page++;
                                     }
                                 } else {
@@ -217,7 +217,7 @@ int managePackets(Window* window) {
                 if (current->button.isClickable <= 10){
                     display(window->renderer, current->button);
                 } else if (current->button.isClickable < 15){
-                    if ((current->button.icon == prev && page > 0) || (current->button.icon == next && page < *packetNb / 4)){
+                    if ((current->button.icon == prev && page > 0) || (current->button.icon == next && page < *packetNb / 4 && *packetNb > 4)){
                         display(window->renderer, current->button);
                     }
                 } else {
