@@ -101,6 +101,10 @@ char** listPackets(int* packetNb){
     char **packetList = NULL;
     *packetNb = 0;
     char* directory = "packets/";
+    struct stat s = {0};
+    if (stat(directory, &s) == -1) {
+        return NULL;
+    }
     DIR* rep = NULL;
     struct dirent* fileName = NULL;
     rep = opendir(directory);
