@@ -6,4 +6,6 @@ void addQuestionToFile(char* packetName, char* question, char* answer1, char* an
 
 char* deletePacket(char* packetName);
 
+char* modifyPacket(char* packetName);
+
 char** listPackets(int* packetNb);

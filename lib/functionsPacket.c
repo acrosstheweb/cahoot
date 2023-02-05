@@ -97,6 +97,22 @@ char* deletePacket(char* packetName)
     return res;
 }
 
+char* modifyPacket(char* packetName){
+    char* res = "";
+    struct stat s = {0};
+    char* directory = "packets/";
+    char* extension = ".json";
+    size_t len = strlen(directory) + strlen(packetName) + strlen(extension);
+
+    char* filePath = malloc(sizeof(char) * (len + 1));
+
+    strcpy(filePath, directory);
+    strcat(filePath, packetName);
+    strcat(filePath, extension);
+
+
+}
+
 char** listPackets(int* packetNb){
     char **packetList = NULL;
     *packetNb = 0;
