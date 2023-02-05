@@ -127,7 +127,7 @@ int addQuestion(Window* window, char* packetName) {
     int activeInput = -1;
 
     Node* first = NULL;
-    addTemplateToList(&first, window, 1, 1, 1, "");
+    addTemplateToList(&first, window, 1, 1, 0, "");
     addButtonToList(&first, questionRect, blue, empty(), NULL, 1, 11);
     addButtonToList(&first, answer1Rect, green, empty(), NULL, 1, 12);
     addButtonToList(&first, answer2Rect, red, empty(), NULL, 1, 13);

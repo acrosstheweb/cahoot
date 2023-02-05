@@ -29,6 +29,10 @@ int managePackets(Window* window) {
     SDL_Texture* yellowRectHoverTexture = textureFromImage(window->renderer, "img/rect_yellow_hover.png");
     SDL_Texture* trashTexture = textureFromImage(window->renderer, "img/trash.png");
     SDL_Texture* trashHoverTexture = textureFromImage(window->renderer, "img/trash_hover.png");
+    SDL_Texture* addTexture = textureFromImage(window->renderer, "img/add.png");
+    SDL_Texture* addHoverTexture = textureFromImage(window->renderer, "img/add_hover.png");
+
+    SDL_Texture* addTextTexture = textureFromMessage(window->renderer, "+", setColor("Black"), window->font);
     
     States* next = setStates(nextTexture, nextHoverTexture);
     States* prev = setStates(prevTexture, prevHoverTexture);
@@ -37,6 +41,8 @@ int managePackets(Window* window) {
     States* blue = setStates(blueRectTexture, blueRectHoverTexture);
     States* yellow = setStates(yellowRectTexture, yellowRectHoverTexture);
     States* trash = setStates(trashTexture, trashHoverTexture);
+    States* add = setStates(addTexture, addHoverTexture);
+    States* addText = setStates(addTextTexture, addTextTexture);
 
     // Définir les positions des boutons (x, y, w, h)
     SDL_Rect nextRect = {
@@ -75,11 +81,24 @@ int managePackets(Window* window) {
         PACKET_RECT_WIDTH,
         PACKET_RECT_HEIGHT
     };
+    SDL_Rect addRect = {
+        SCREEN_WIDTH - SETTINGS_WIDTH - MARGIN,
+        MARGIN,
+        SETTINGS_WIDTH,
+        SETTINGS_HEIGHT
+    };
+    SDL_Rect addTextRect = {
+        addRect.x + (addRect.w - getTextWidth("+", 25)) / 2,
+        addRect.y + (addRect.h - 25) / 2,
+        getTextWidth("+", 25),
+        25
+    };
 
 
 
     Node* first = NULL;
-    addTemplateToList(&first, window, 1, 1, 1, "===MES PAQUETS===");
+    addTemplateToList(&first, window, 1, 1, 0, "===MES PAQUETS===");
+    addButtonToList(&first, addRect, add, addTextRect, addText, 0, 3);
     addButtonToList(&first, prevRect, prev, empty(), NULL, 1, 11);
     addButtonToList(&first, nextRect, next, empty(), NULL, 1, 12);
 

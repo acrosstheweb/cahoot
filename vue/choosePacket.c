@@ -76,7 +76,7 @@ int choosePacket(Window* window, char** packetName) {
 
 
     Node* first = NULL;
-    addTemplateToList(&first, window, 1, 1, 1, "===MES PAQUETS===");
+    addTemplateToList(&first, window, 1, 1, 0, "===MES PAQUETS===");
     addButtonToList(&first, prevRect, prev, empty(), NULL, 1, 11);
     addButtonToList(&first, nextRect, next, empty(), NULL, 1, 12);
 

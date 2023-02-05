@@ -301,9 +301,9 @@ void addTemplateToList(Node** first, Window* window, int displayLogo, int displa
         };
         SDL_Rect menuTextRect = {
             buttonMenuRect.x + buttonMenuRect.w + 10,
-            buttonMenuRect.y,
-            getTextWidth("Menu principal", MENU_HEIGHT),
-            MENU_HEIGHT
+            buttonMenuRect.y - MENU_HEIGHT / 2,
+            getTextWidth("Menu principal", MENU_HEIGHT * 2),
+            MENU_HEIGHT * 2
         };
         addButtonToList(first, buttonMenuRect, menu, menuTextRect, menuText, 0, 10);
     }
