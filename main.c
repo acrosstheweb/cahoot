@@ -10,6 +10,7 @@
 #include "includes/managePackets.h"
 #include "includes/addQuestion.h"
 #include "includes/hosting.h"
+#include "includes/choosePacket.h"
 
 int main() {
     int choice = 10;
@@ -47,7 +48,10 @@ int main() {
 
             case 5:
                 newRenderer(window);
-                choice = hosting(window);
+                choice = choosePacket(window, &packetName);
+                if (choice == 5){
+                    choice = hosting(window, packetName);
+                }
                 break;
 
             case 7:

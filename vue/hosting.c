@@ -7,15 +7,16 @@
 #include "../includes/functionsDisplay.h"
 #include "../includes/functions.h"
 
-int hosting(Window* window) {
+int hosting(Window* window, char* packetName) {
 
     // Créer les textures
     char* ip = getIp();
+    char* packet = malloc(sizeof(char) * (strlen("avec le paquet ") + strlen(packetName) + 1));
+    packet = strcpy(packet, "avec le paquet ");
+    packet = strcat(packet, packetName);
     SDL_Texture* messageTexture = textureFromMessage(window->renderer, "Vous hebergez une partie sur l'adresse suivante:", setColor("Black"), window->font);
     SDL_Texture* ipTexture = textureFromMessage(window->renderer, ip , setColor("Black"), window->font);
-
-    // States* message = setStates(messageTexture, messageTexture);
-    // States* ip = setStates(ipTexture, ipTexture);
+    SDL_Texture* packetTexture = textureFromMessage(window->renderer, packet , setColor("Black"), window->font);
 
     // Définir les positions des boutons (x, y, w, h)
     SDL_Rect messageRect = {
@@ -26,8 +27,14 @@ int hosting(Window* window) {
     };
     SDL_Rect ipRect = {
         (SCREEN_WIDTH - getTextWidth(ip, 50)) / 2,
-        300,
+        275,
         getTextWidth(ip, 50),
+        50
+    };
+    SDL_Rect packetRect = {
+        (SCREEN_WIDTH - getTextWidth(packet, 50)) / 2,
+        350,
+        getTextWidth(packet, 50),
         50
     };
 
@@ -81,6 +88,7 @@ int hosting(Window* window) {
         }
         SDL_RenderCopy(window->renderer, messageTexture, NULL, &messageRect);
         SDL_RenderCopy(window->renderer, ipTexture, NULL, &ipRect);
+        SDL_RenderCopy(window->renderer, packetTexture, NULL, &packetRect);
 
         // Mettre à jour l'affichage
         SDL_RenderPresent(window->renderer);

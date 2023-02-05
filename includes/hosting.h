@@ -4,5 +4,5 @@
 
 #include "struct.h"
 
-int hosting(Window* window);
+int hosting(Window* window, char* packetName);
 #endif
