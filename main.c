@@ -9,6 +9,7 @@
 #include "includes/createPacket.h"
 #include "includes/managePackets.h"
 #include "includes/addQuestion.h"
+#include "includes/hosting.h"
 
 int main() {
     int choice = 10;
@@ -42,6 +43,11 @@ int main() {
             case 4:
                 newRenderer(window);
                 choice = managePackets(window);
+                break;
+
+            case 5:
+                newRenderer(window);
+                choice = hosting(window);
                 break;
 
             case 7:
