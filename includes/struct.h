@@ -40,4 +40,9 @@ struct Node{
     Node* next;
 };
 
+typedef struct {
+    char question[256];
+    char answers[4][256];
+} QuestionData;
+
 #endif
