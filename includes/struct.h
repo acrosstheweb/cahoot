@@ -41,8 +41,8 @@ struct Node{
 };
 
 typedef struct {
-    char question[256];
-    char answers[4][256];
+    char* question;
+    char** answers;
 } QuestionData;
 
 #endif
