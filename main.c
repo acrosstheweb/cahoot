@@ -16,6 +16,8 @@ int main() {
     int choice = 10;
     char* packetName = malloc(sizeof(char*));
     Window* window = create_window();
+    QuestionData* questionData = NULL;
+    int* questionsNb = malloc(sizeof(int));
 
     /*
     0 - menu
@@ -43,7 +45,14 @@ int main() {
 
             case 4:
                 newRenderer(window);
-                choice = managePackets(window);
+                choice = managePackets(window, &questionData, &questionsNb);
+                for (int i = 0; i < *questionsNb; i++){
+                    printf("[%d]\n", i);
+                    printf("Question : %s\n", (questionData)[i].question);
+                    for (int j = 0; j < 4; j++){
+                        printf("\t[%s]\n", (questionData)[i].answers[j]);
+                    }
+                }
                 break;
 
             case 5:

@@ -4,5 +4,5 @@
 
 #include "struct.h"
 
-int managePackets(Window* window);
+int managePackets(Window* window, QuestionData** questionData, int** questionsNb);
 #endif

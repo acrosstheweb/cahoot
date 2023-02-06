@@ -99,7 +99,7 @@ char* deletePacket(char* packetName)
     return res;
 }
 
-void readPacket(char* packetName, QuestionData** questionData, int* questionsNb) {
+void readPacket(char* packetName, QuestionData*** questionData, int*** questionsNb) {
     char* res = "";
     char* filePath = getPacketPath(packetName);
 
@@ -146,29 +146,28 @@ void readPacket(char* packetName, QuestionData** questionData, int* questionsNb)
 
     while (token != NULL) {
         if (strstr(token, "question") != NULL) {
-            *questionData = realloc(*questionData, sizeof(QuestionData) * (questionIndex + 1));
+            **questionData = realloc(**questionData, sizeof(QuestionData) * (questionIndex + 1));
             // On stocke la question
             token = strtok(NULL, "\"");
             token = strtok(NULL, "\"");
-            (*questionData + questionIndex)->question = malloc(sizeof(char) * (strlen(token) + 1));
-            strcpy((*questionData + questionIndex)->question, token);
-            printf("%s\n", (*questionData + questionIndex)->question);
+            (**questionData + questionIndex)->question = malloc(sizeof(char) * (strlen(token) + 1));
+            strcpy((**questionData + questionIndex)->question, token);
         } else if (strstr(token, "answers") != NULL) {
             // On stocke la première réponse
             token = strtok(NULL, "\"");
             token = strtok(NULL, "\"");
             token = strtok(NULL, "\"");
             token = strtok(NULL, "\"");
-            (*questionData + questionIndex)->answers = malloc(sizeof(char*) * 4);
-            (*questionData + questionIndex)->answers[answerIndex] = malloc(sizeof(char) * (strlen(token) + 1));
-            strcpy((*questionData + questionIndex)->answers[answerIndex], token);
+            (**questionData + questionIndex)->answers = malloc(sizeof(char*) * 4);
+            (**questionData + questionIndex)->answers[answerIndex] = malloc(sizeof(char) * (strlen(token) + 1));
+            strcpy((**questionData + questionIndex)->answers[answerIndex], token);
             answerIndex++;
         } else if (strstr(token, "answer") != NULL) {
             // On stocke les autres réponses
             token = strtok(NULL, "\"");
             token = strtok(NULL, "\"");
-            (*questionData + questionIndex)->answers[answerIndex] = malloc(sizeof(char) * (strlen(token) + 1));
-            strcpy((*questionData + questionIndex)->answers[answerIndex], token);
+            (**questionData + questionIndex)->answers[answerIndex] = malloc(sizeof(char) * (strlen(token) + 1));
+            strcpy((**questionData + questionIndex)->answers[answerIndex], token);
             answerIndex++;
         }
         if (answerIndex == 4) {
@@ -180,7 +179,7 @@ void readPacket(char* packetName, QuestionData** questionData, int* questionsNb)
     }
 
     token = strtok(NULL, "{");
-    *questionsNb = questionIndex;
+    ***questionsNb = questionIndex;
 
     free(buffer);
     free(filePath);
