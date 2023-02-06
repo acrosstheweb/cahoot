@@ -11,13 +11,14 @@
 #include "includes/addQuestion.h"
 #include "includes/hosting.h"
 #include "includes/choosePacket.h"
+#include "includes/manageQuestions.h"
 
 int main() {
     int choice = 10;
     char* packetName = malloc(sizeof(char*));
     Window* window = create_window();
     QuestionData* questionData = NULL;
-    int* questionsNb = malloc(sizeof(int));
+    int questionsNb = 0;
 
     /*
     0 - menu
@@ -28,6 +29,7 @@ int main() {
     5 - host game
     6 - join game
     7 - add question
+    8 - modify questions
     */
     do{
         if (choice == 10){
@@ -46,13 +48,6 @@ int main() {
             case 4:
                 newRenderer(window);
                 choice = managePackets(window, &packetName, &questionData, &questionsNb);
-                printf("Packet : %s\n", packetName);
-                for (int i = 0; i < *questionsNb; i++){
-                    printf("Question %d: %s\n", i, (questionData)[i].question);
-                    for (int j = 0; j < 4; j++){
-                        printf("\t[%s]\n", (questionData)[i].answers[j]);
-                    }
-                }
                 break;
 
             case 5:
@@ -65,6 +60,10 @@ int main() {
 
             case 7:
                 choice = addQuestion(window, packetName);
+                break;
+
+            case 8:
+                choice = manageQuestions(window, packetName, questionData, questionsNb);
                 break;
             
             default:

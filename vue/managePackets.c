@@ -8,7 +8,7 @@
 #include "../includes/functionsPacket.h"
 
 
-int managePackets(Window* window, char** packetName, QuestionData** questionData, int** questionsNb) {
+int managePackets(Window* window, char** packetName, QuestionData** questionData, int* questionsNb) {
     int page = 0;
     int* packetNb = malloc(sizeof(int));
     Node* first = NULL;
@@ -205,7 +205,7 @@ int managePackets(Window* window, char** packetName, QuestionData** questionData
                                         page--;
                                     }
                                 } else if (current->button.isClickable == 12){
-                                    if (page < *packetNb / 48){
+                                    if (page < *packetNb / 4){
                                         page++;
                                     }
                                 } else {
@@ -216,6 +216,7 @@ int managePackets(Window* window, char** packetName, QuestionData** questionData
                                         *packetName = realloc(*packetName, strlen(*(packetList + current->button.isClickable - 15)) + 1);
                                         *packetName = strcpy(*packetName, *(packetList + current->button.isClickable - 15));
                                         readPacket(*(packetList + current->button.isClickable - 15), &questionData, &questionsNb);
+                                        return 8;
                                     }
                                     
                                 }

@@ -99,7 +99,7 @@ char* deletePacket(char* packetName)
     return res;
 }
 
-void readPacket(char* packetName, QuestionData*** questionData, int*** questionsNb) {
+void readPacket(char* packetName, QuestionData*** questionData, int** questionsNb) {
     char* res = "";
     char* filePath = getPacketPath(packetName);
 
@@ -116,16 +116,10 @@ void readPacket(char* packetName, QuestionData*** questionData, int*** questions
 
     FILE* filePointer = fopen(filePath, "r");
 
-    // if (stat(directory, &s) == -1) {
-    //     res = "No existing packets, cannot delete any.\n";
-    // } else if (stat(filePath, &s) == -1) {
-    //     res = "Packet doesn't exist, cannot delete it.\n";
-    // } else 
     if (filePointer == NULL) {
         res = "Impossible to open file\n";
         return;
     }
-    // } else {
         // On calcule la taille du fichier
     fseek(filePointer, 0, SEEK_END);
     long size = ftell(filePointer);
@@ -179,13 +173,13 @@ void readPacket(char* packetName, QuestionData*** questionData, int*** questions
     }
 
     token = strtok(NULL, "{");
-    ***questionsNb = questionIndex;
+    **questionsNb = questionIndex;
 
     free(buffer);
     free(filePath);
 }
 
-char* modifyPacket(char* packetName, QuestionData* questionData) {
+char* modifyPacket(char* packetName, QuestionData* questionData, int questionsNb) {
     char* res = "";
     char* filePath = getPacketPath(packetName);
 
@@ -197,23 +191,23 @@ char* modifyPacket(char* packetName, QuestionData* questionData) {
     }
 
     fprintf(filePointer, "[\n");
-    for (int i = 0; i < 10; i++) {
-        fprintf(filePointer, "    {\n");
-        fprintf(filePointer, "        \"question\": \"%s\",\n", (questionData)[i].question);
-        fprintf(filePointer, "        \"answers\": [\n");
+    for (int i = 0; i < questionsNb; i++) {
+        fprintf(filePointer, "\t{\n");
+        fprintf(filePointer, "\t\t\"question\": \"%s\",\n", (questionData)[i].question);
+        fprintf(filePointer, "\t\t\"answers\": [\n");
         for (int j = 0; j < 4; j++) {
-            fprintf(filePointer, "            {\n");
-            fprintf(filePointer, "            \"answer\": \"%s\",\n", (questionData)[i].answers[j]);
-            fprintf(filePointer, "            \"correct\": \"false\"\n");
-            fprintf(filePointer, "            }");
+            fprintf(filePointer, "\t\t\t{\n");
+            fprintf(filePointer, "\t\t\t\"answer\": \"%s\",\n", (questionData)[i].answers[j]);
+            fprintf(filePointer, "\t\t\t\"correct\": \"false\"\n");
+            fprintf(filePointer, "\t\t\t}");
             if (j < 3) {
                 fprintf(filePointer, ",");
             }
             fprintf(filePointer, "\n");
         }
-        fprintf(filePointer, "        ]\n");
-        fprintf(filePointer, "    }");
-        if (i < 9) {
+        fprintf(filePointer, "\t\t]\n");
+        fprintf(filePointer, "\t}");
+        if (i < questionsNb - 1) {
             fprintf(filePointer, ",");
         }
         fprintf(filePointer, "\n");
