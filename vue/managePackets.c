@@ -8,7 +8,7 @@
 #include "../includes/functionsPacket.h"
 
 
-int managePackets(Window* window) {
+int managePackets(Window* window, char** packetName, QuestionData** questionData, int* questionsNb) {
     int page = 0;
     int* packetNb = malloc(sizeof(int));
     Node* first = NULL;
@@ -205,7 +205,7 @@ int managePackets(Window* window) {
                                         page--;
                                     }
                                 } else if (current->button.isClickable == 12){
-                                    if (page < *packetNb / 48){
+                                    if (page < *packetNb / 4){
                                         page++;
                                     }
                                 } else {
@@ -213,7 +213,10 @@ int managePackets(Window* window) {
                                         printf("%s\n", deletePacket(*(packetList + current->button.isClickable - 30)));
                                         return 4;
                                     } else if (current->button.isClickable - 15 >= page * 4 && current->button.isClickable - 15 < (page+1) * 4){
-                                        printf("15 : %d\n", current->button.isClickable);
+                                        *packetName = realloc(*packetName, strlen(*(packetList + current->button.isClickable - 15)) + 1);
+                                        *packetName = strcpy(*packetName, *(packetList + current->button.isClickable - 15));
+                                        readPacket(*(packetList + current->button.isClickable - 15), &questionData, &questionsNb);
+                                        return 8;
                                     }
                                     
                                 }

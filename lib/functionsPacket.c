@@ -4,7 +4,6 @@
 #include <sys/stat.h>
 #include <dirent.h>
 #include "../includes/functionsPacket.h"
-#include "../includes/struct.h"
 #include <unistd.h>
 
 char* getPacketPath(char* packetName){
@@ -100,107 +99,124 @@ char* deletePacket(char* packetName)
     return res;
 }
 
-void readPacket(QuestionData* questionData) {
+void readPacket(char* packetName, QuestionData*** questionData, int** questionsNb) {
     char* res = "";
-    struct stat s = {0};
-    char* directory = "packets/";
-    char* extension = ".json";
-    size_t len = strlen(directory) + strlen(packetName) + strlen(extension);
+    char* filePath = getPacketPath(packetName);
 
-    char* filePath = malloc(sizeof(char) * (len + 1));
+    // struct stat s = {0};
+    // char* directory = "packets/";
+    // char* extension = ".json";
+    // size_t len = strlen(directory) + strlen(packetName) + strlen(extension);
 
-    strcpy(filePath, directory);
-    strcat(filePath, packetName);
-    strcat(filePath, extension);
+    // char* filePath = malloc(sizeof(char) * (len + 1));
+
+    // strcpy(filePath, directory);
+    // strcat(filePath, packetName);
+    // strcat(filePath, extension);
 
     FILE* filePointer = fopen(filePath, "r");
 
-    if (stat(directory, &s) == -1) {
-        res = "No existing packets, cannot delete any.\n";
-    } else if (stat(filePath, &s) == -1) {
-        res = "Packet doesn't exist, cannot delete it.\n";
-    } else if (filePointer == NULL) {
+    if (filePointer == NULL) {
         res = "Impossible to open file\n";
-    } else {
+        return;
+    }
         // On calcule la taille du fichier
-        fseek(filePointer, 0, SEEK_END);
-        long size = ftell(filePointer);
-        fseek(filePointer, 0, SEEK_SET);
+    fseek(filePointer, 0, SEEK_END);
+    long size = ftell(filePointer);
+    fseek(filePointer, 0, SEEK_SET);
 
-        // On alloue de la mémoire pour stocker le contenu du fichier
-        char* buffer = (char *) malloc(size + 1);
-        fread(buffer, size, 1, filePointer);
-        buffer[size] = "\0";
+    // On alloue de la mémoire pour stocker le contenu du fichier
+    char* buffer = (char *) malloc(size + 1);
+    fread(buffer, size, 1, filePointer);
+    buffer[size] = '\0';
 
-        fclose(filePointer);
+    fclose(filePointer);
 
-        // On parse le contenu du fichier pour stocker les données dans la structure
-        QuestionData questionsOriginal[10]; // nombre de question max
-        char* ptr = strtok(buffer, "{");
-        int questionIndex = 0;
-        int answerIndex = 0;
-        while (ptr != NULL) {
-            char* token = strtok(ptr, ":");
-            if (strstr(token, "question") != NULL) {
-                // On stocke la question
-                token = strtok(NULL, "\"");
-                strcpy(questionsOriginal[questionIndex].question, token);
-            } else if (strstr(token, "answer") != NULL) {
-                // On stocke les réponses
-                token = strtok(NULL, ":");
-                strcpy(questionsOriginal[questionIndex].answers[answerIndex], token);
-                answerIndex++;
-            } else if (strstr(token, "{") != NULL) {
-                // Fin d'une question, on réinitialise le compteur de réponse
-                questionIndex++;
-                answerIndex = 0;
-            }
+    // On parse le contenu du fichier pour stocker les données dans la structure
+    QuestionData* questionsOriginal; // ~~nombre de question max~~ pointeur vers la première question
+    char* token = strtok(buffer, "\"");
+    int questionIndex = 0;
+    int answerIndex = 0;
+
+    while (token != NULL) {
+        if (strstr(token, "question") != NULL) {
+            **questionData = realloc(**questionData, sizeof(QuestionData) * (questionIndex + 1));
+            // On stocke la question
+            token = strtok(NULL, "\"");
+            token = strtok(NULL, "\"");
+            (**questionData + questionIndex)->question = malloc(sizeof(char) * (strlen(token) + 1));
+            strcpy((**questionData + questionIndex)->question, token);
+        } else if (strstr(token, "answers") != NULL) {
+            // On stocke la première réponse
+            token = strtok(NULL, "\"");
+            token = strtok(NULL, "\"");
+            token = strtok(NULL, "\"");
+            token = strtok(NULL, "\"");
+            (**questionData + questionIndex)->answers = malloc(sizeof(char*) * 4);
+            (**questionData + questionIndex)->answers[answerIndex] = malloc(sizeof(char) * (strlen(token) + 1));
+            strcpy((**questionData + questionIndex)->answers[answerIndex], token);
+            answerIndex++;
+        } else if (strstr(token, "answer") != NULL) {
+            // On stocke les autres réponses
+            token = strtok(NULL, "\"");
+            token = strtok(NULL, "\"");
+            (**questionData + questionIndex)->answers[answerIndex] = malloc(sizeof(char) * (strlen(token) + 1));
+            strcpy((**questionData + questionIndex)->answers[answerIndex], token);
+            answerIndex++;
         }
-
-        ptr = strtok(NULL, "{");
-
-        free(buffer);
-        free(filePath);
-
-        *questionData = questionsOriginal;
- }
-
-char* modifyPacket(char* packetName, QuestionData* questionData) {
-        // Réécriture du fichier JSON avec les modification
-        filePointer = fopen(filePath, "w");
-        if (filePointer == NULL) {
-            res = "Impossible to open file\n";
-            break;
+        if (answerIndex == 4) {
+            // Fin d'une question, on réinitialise le compteur de réponse
+            questionIndex++;
+            answerIndex = 0;
         }
+        token = strtok(NULL, "\"");
+    }
 
-        fprintf(filePointer, "[\n");
-        for (int i = 0; i < 10; i++) {
-            fprintf(filePointer, "    {\n");
-            fprintf(filePointer, "        \"question\": \"%s\",\n", *(questionData + i).question);
-            fprintf(filePointer, "        \"answers\": [\n");
-            for (int j = 0; j < 4; j++) {
-                fprintf(filePointer, "            {\n");
-                fprintf(filePointer, "            \"answer\": \"%s\",\n", *(questionData + i).answers[j]);
-                fprintf(filePointer, "            \"correct\": \"false\"\n");
-                fprintf(filePointer, "            }");
-                if (j < 3) {
-                    fprintf(filePointer, ",");
-                }
-                fprintf(filePointer, "\n");
-            }
-            fprintf(filePointer, "        ]\n");
-            fprintf(filePointer, "    }");
-            if (i < 9) {
+    token = strtok(NULL, "{");
+    **questionsNb = questionIndex;
+
+    free(buffer);
+    free(filePath);
+}
+
+char* modifyPacket(char* packetName, QuestionData* questionData, int questionsNb) {
+    char* res = "";
+    char* filePath = getPacketPath(packetName);
+
+    // Réécriture du fichier JSON avec les modification
+    FILE* filePointer = fopen(filePath, "w");
+    if (filePointer == NULL) {
+        res = "Impossible to open file\n";
+        return res;
+    }
+
+    fprintf(filePointer, "[\n");
+    for (int i = 0; i < questionsNb; i++) {
+        fprintf(filePointer, "\t{\n");
+        fprintf(filePointer, "\t\t\"question\": \"%s\",\n", (questionData)[i].question);
+        fprintf(filePointer, "\t\t\"answers\": [\n");
+        for (int j = 0; j < 4; j++) {
+            fprintf(filePointer, "\t\t\t{\n");
+            fprintf(filePointer, "\t\t\t\"answer\": \"%s\",\n", (questionData)[i].answers[j]);
+            fprintf(filePointer, "\t\t\t\"correct\": \"false\"\n");
+            fprintf(filePointer, "\t\t\t}");
+            if (j < 3) {
                 fprintf(filePointer, ",");
             }
             fprintf(filePointer, "\n");
         }
-        fprintf(filePointer, "]");
+        fprintf(filePointer, "\t\t]\n");
+        fprintf(filePointer, "\t}");
+        if (i < questionsNb - 1) {
+            fprintf(filePointer, ",");
+        }
+        fprintf(filePointer, "\n");
+    }
+    fprintf(filePointer, "]");
 
-        fclose(filePointer);
+    fclose(filePointer);
 
-
-    } // fin du else
+    return res;
 
 }
 
@@ -208,6 +224,10 @@ char** listPackets(int* packetNb){
     char **packetList = NULL;
     *packetNb = 0;
     char* directory = "packets/";
+    struct stat s = {0};
+    if (stat(directory, &s) == -1) {
+        return NULL;
+    }
     DIR* rep = NULL;
     struct dirent* fileName = NULL;
     rep = opendir(directory);

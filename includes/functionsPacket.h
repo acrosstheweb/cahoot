@@ -1,3 +1,5 @@
+#include "struct.h"
+
 char* getPacketPath(char* packetName);
 
 FILE* createPacketFile(char* packetName);
@@ -6,8 +8,8 @@ void addQuestionToFile(char* packetName, char* question, char* answer1, char* an
 
 char* deletePacket(char* packetName);
 
-void readPacket(QuestionData* questionData);
+void readPacket(char* packetName, QuestionData*** questionData, int** questionsNb);
 
-char* modifyPacket(char* packetName, QuestionData* questionData);
+char* modifyPacket(char* packetName, QuestionData* questionData, int questionsNb);
 
 char** listPackets(int* packetNb);
