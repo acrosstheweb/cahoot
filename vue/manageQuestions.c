@@ -233,15 +233,16 @@ int manageQuestions(Window* window, char* packetName, QuestionData* questionData
                                         return 8;
                                     }
                                 }  else if (current->button.isClickable == 17){
-                                    //TODO: suppression d'une question
-                                    return 10;
+                                    deleteQuestion(&questionData, &questionsNb, activeQuestion);
+                                    modifyPacket(packetName, questionData, questionsNb);
+                                    return 8;
                                 } else if (current->button.isClickable == 18){
                                     if (activeQuestion > 0){
-                                        strcpy(questionData[activeQuestion].question, questionText);
-                                        strcpy(questionData[activeQuestion].answers[0], answer1Text);
-                                        strcpy(questionData[activeQuestion].answers[1], answer2Text);
-                                        strcpy(questionData[activeQuestion].answers[2], answer3Text);
-                                        strcpy(questionData[activeQuestion].answers[3], answer4Text);
+                                        // strcpy(questionData[activeQuestion].question, questionText);
+                                        // strcpy(questionData[activeQuestion].answers[0], answer1Text);
+                                        // strcpy(questionData[activeQuestion].answers[1], answer2Text);
+                                        // strcpy(questionData[activeQuestion].answers[2], answer3Text);
+                                        // strcpy(questionData[activeQuestion].answers[3], answer4Text);
                                         activeQuestion--;
                                         strcpy(questionText, questionData[activeQuestion].question);
                                         strcpy(answer1Text, questionData[activeQuestion].answers[0]);
@@ -251,11 +252,11 @@ int manageQuestions(Window* window, char* packetName, QuestionData* questionData
                                     }
                                 } else if (current->button.isClickable == 19){
                                     if (activeQuestion < questionsNb - 1){
-                                        strcpy(questionData[activeQuestion].question, questionText);
-                                        strcpy(questionData[activeQuestion].answers[0], answer1Text);
-                                        strcpy(questionData[activeQuestion].answers[1], answer2Text);
-                                        strcpy(questionData[activeQuestion].answers[2], answer3Text);
-                                        strcpy(questionData[activeQuestion].answers[3], answer4Text);
+                                        // strcpy(questionData[activeQuestion].question, questionText);
+                                        // strcpy(questionData[activeQuestion].answers[0], answer1Text);
+                                        // strcpy(questionData[activeQuestion].answers[1], answer2Text);
+                                        // strcpy(questionData[activeQuestion].answers[2], answer3Text);
+                                        // strcpy(questionData[activeQuestion].answers[3], answer4Text);
                                         activeQuestion++;
                                         strcpy(questionText, questionData[activeQuestion].question);
                                         strcpy(answer1Text, questionData[activeQuestion].answers[0]);

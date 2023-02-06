@@ -12,4 +12,6 @@ void readPacket(char* packetName, QuestionData*** questionData, int** questionsN
 
 char* modifyPacket(char* packetName, QuestionData* questionData, int questionsNb);
 
+void deleteQuestion(QuestionData** questionData, int* questionsNb, int questionToDelete);
+
 char** listPackets(int* packetNb);
