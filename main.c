@@ -45,10 +45,10 @@ int main() {
 
             case 4:
                 newRenderer(window);
-                choice = managePackets(window, &questionData, &questionsNb);
+                choice = managePackets(window, &packetName, &questionData, &questionsNb);
+                printf("Packet : %s\n", packetName);
                 for (int i = 0; i < *questionsNb; i++){
-                    printf("[%d]\n", i);
-                    printf("Question : %s\n", (questionData)[i].question);
+                    printf("Question %d: %s\n", i, (questionData)[i].question);
                     for (int j = 0; j < 4; j++){
                         printf("\t[%s]\n", (questionData)[i].answers[j]);
                     }
