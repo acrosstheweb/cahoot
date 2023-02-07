@@ -22,12 +22,54 @@ unsigned char nb_servers = 0; // tah l'opti de faire un unsigned char (0 à 255)
 pthread_mutex_t thread_lock;
 
 int main(){
+    
+    search_ips();
+    // servers_list est alimenté
 
-	search_ips();
+    printf("\n\n%d serveur(s) trouvés : \n\n", nb_servers);
+    for(int j = 0; j < nb_servers; j++){
+        printf("\t>>>[%d] %s\n", j+1, servers_list[j]);
+    }
+
+    // TODO: Choix du serveur à laisser au client ....
+    int serv_choice; 
+    printf("A quel serveur se connecter [nombre] : \n>>> ");
+    scanf("%d", &serv_choice);
+
+    serv_choice--; // adapter à index d'une liste
+
+    int server_socket = socket(AF_INET, SOCK_STREAM, 0);
+	if(server_socket < 0){
+		printf("Error creating the socket");
+		exit(EXIT_FAILURE);
+	}
+
+    struct sockaddr_in server_address;
+	server_address.sin_family = AF_INET;
+	server_address.sin_port = htons(13337);
+	server_address.sin_addr.s_addr = inet_addr(servers_list[serv_choice]);
+
+    // CONNEXION
+	if(connect(server_socket, (struct sockaddr*) &server_address, sizeof(server_address)) == -1){
+		printf("Cannot connect to remote server socket\n");
+		return 1;
+	}
+
+    char serv_msg[256];
+	if( recv(server_socket, &serv_msg, sizeof(serv_msg), 0) != -1){
+	    printf("The server sent the data : \n\t %s\n", serv_msg);
+    }
+
+    close(server_socket);
+    printf("Ciao");
 
 	return 0;
 }
 
+/**
+ * Liste les adresses ip qui écoutent sur le port 13337 
+ * 
+*/
 void search_ips(){
 
 	char ip_addr[INET_ADDRSTRLEN], tmp_ip_base[INET_ADDRSTRLEN];
@@ -71,10 +113,6 @@ void search_ips(){
 		}
     }
 
-    printf("\n\n%d serveur(s) trouvés : \n\n", nb_servers);
-    for(int j = 0; j < nb_servers; j++){
-        printf("\t>>> %s\n", servers_list[j]);
-    }
     pthread_mutex_destroy(&thread_lock);
 
     return; // stop fonction, car la fin des threads dure +2 min
@@ -105,8 +143,8 @@ void* ip_handler(void* arg){
     serv_addr.sin_port = htons(PORT);
     serv_addr.sin_addr.s_addr = inet_addr(ip_addr);
 
-    if (connect(sock_fd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) == 0){ 
-        // Incrémenter la variable `thread_lock` de manière sécurisée avec un verrou
+    if (connect(sock_fd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) == 0){
+        // Incrémenter la variable `nb_servers` de manière sécurisée avec un verrou
         printf("\n\nServeur trouvé à l'adresse : %s:%d\n\n", ip_addr, PORT);
         pthread_mutex_lock(&thread_lock);
         servers_list = realloc(servers_list, sizeof(char*) * (nb_servers + 1));

@@ -5,3 +5,4 @@ cmake-build-debug
 main
 packets
 CMakeLists.txt
+.vscode

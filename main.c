@@ -39,6 +39,10 @@ int main() {
         switch (choice) {
             case 1:
                 break;
+                            
+            case 2:
+                choice = 1;
+                break;
             
             case 3:
                 newRenderer(window);
