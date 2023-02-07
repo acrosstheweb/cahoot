@@ -45,4 +45,9 @@ typedef struct {
     char** answers;
 } QuestionData;
 
+typedef struct {
+    int maxConnections;
+    char* packetPath;
+} Conf;
+
 #endif
