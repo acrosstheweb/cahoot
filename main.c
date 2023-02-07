@@ -16,8 +16,8 @@
 
 int main() {
 
-    Conf* config = malloc(sizeof(Conf));
-    initiateConfig(config);
+    Conf config;
+    readConfig(&config);
 
     int choice = 10;
     char* packetName = malloc(sizeof(char*));
