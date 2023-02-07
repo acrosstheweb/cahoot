@@ -1,0 +1,4 @@
+{
+  "max_connection": 4,
+  "packetPath": "./packets/"
+}
