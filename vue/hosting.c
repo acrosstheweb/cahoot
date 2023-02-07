@@ -6,6 +6,9 @@
 #include "../includes/hosting.h"
 #include "../includes/functionsDisplay.h"
 #include "../includes/functions.h"
+#include "../includes/functionsNetwork.h"
+
+#define MAX_CLIENTS 2
 
 int hosting(Window* window, char* packetName) {
 
@@ -38,7 +41,7 @@ int hosting(Window* window, char* packetName) {
         50
     };
 
-
+    startServer(MAX_CLIENTS, ip);
 
     Node* first = NULL;
     addTemplateToList(&first, window, 1, 0, 0, "");
@@ -86,9 +89,12 @@ int hosting(Window* window, char* packetName) {
                 current = current->next;
             }while (current != first);
         }
-        SDL_RenderCopy(window->renderer, messageTexture, NULL, &messageRect);
-        SDL_RenderCopy(window->renderer, ipTexture, NULL, &ipRect);
-        SDL_RenderCopy(window->renderer, packetTexture, NULL, &packetRect);
+        
+        
+        SDL_RenderCopy(window->renderer, messageTexture, NULL, &messageRect); // Affichage de "Vous hebergez...""
+        SDL_RenderCopy(window->renderer, ipTexture, NULL, &ipRect); // Affichage de l'ip
+        SDL_RenderCopy(window->renderer, packetTexture, NULL, &packetRect); // Affichage du packet séléctionné
+
 
         // Mettre à jour l'affichage
         SDL_RenderPresent(window->renderer);
