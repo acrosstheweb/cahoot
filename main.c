@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include "includes/struct.h"
 #include "includes/functionsDisplay.h"
+#include "includes/functions.h"
 #include "includes/functionsPacket.h"
 #include "includes/menu.h"
 #include "includes/createPacket.h"
@@ -14,6 +15,10 @@
 #include "includes/manageQuestions.h"
 
 int main() {
+
+    Conf* config = malloc(sizeof(Conf));
+    initiateConfig(config);
+
     int choice = 10;
     char* packetName = malloc(sizeof(char*));
     Window* window = create_window();
