@@ -221,10 +221,12 @@ char* modifyPacket(char* packetName, QuestionData* questionData, int questionsNb
 }
 
 void deleteQuestion(QuestionData** questionData, int* questionsNb, int questionToDelete) {
-    for (int i = questionToDelete; i < (*questionsNb) - 1; i++){
-        strcpy((*questionData)[i].question, (*questionData)[i + 1].question);
-        for (int j = 0; j < 4; j++){
-            strcpy((*questionData)[i].answers[j], (*questionData)[i + 1].answers[j]);
+    if (questionToDelete < *questionsNb){
+        for (int i = questionToDelete; i < (*questionsNb) - 1; i++){
+            strcpy((*questionData)[i].question, (*questionData)[i + 1].question);
+            for (int j = 0; j < 4; j++){
+                strcpy((*questionData)[i].answers[j], (*questionData)[i + 1].answers[j]);
+            }
         }
     }
     (*questionsNb)--;
