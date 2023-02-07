@@ -9,19 +9,21 @@
 #include <pthread.h> // pthread_create
 #include "../includes/functionsNetwork.h"
 
-typedef struct {
-    int client_id;
-    int sock_fd;
-} thread_args_t;
-
 /**
  * Permet de lancer le serveur de jeu sur le port 13337
  *
  * @param max_clients
  * @return
  */
-int startServer(int max_clients, char* serv_lan_ip){
-    int port = 13337;
+void* startServer(void* arg){
+    Server_Args* args = (Server_Args*) arg;
+	
+	char serv_lan_ip[INET_ADDRSTRLEN];
+	
+	int max_clients = args->max_clients;
+	strcpy(serv_lan_ip, args->ip);
+    
+	int port = 13337;
 	int clients[max_clients], response_read;
 	char* response = malloc(sizeof(char) * 1024);
 	char** responses = malloc(sizeof(char*) * max_clients);
@@ -67,7 +69,7 @@ int startServer(int max_clients, char* serv_lan_ip){
 
 	// On crée les threads qui éxecuteront la fonction client_handler
 	pthread_t threads[max_clients];
-	thread_args_t thread_args[max_clients];
+	Client_Args thread_args[max_clients];
 
 	for (int c = 0; c < max_clients; c++) {
 		thread_args[c].client_id = c;
@@ -80,12 +82,16 @@ int startServer(int max_clients, char* serv_lan_ip){
 
 	// Fin des threads
 	for (int c = 0; c < max_clients; c++) {
+		printf("Thread client %d eteint", c);
 		pthread_join(threads[c], NULL);
 	}
 
+	if(close(server_socket) == -1){
+		printf("Erreur fermeture socket n°%d -> %s", errno, strerror(errno));
+	}
 	printf("\nGoodbye\n");
 
-	return 0;
+	return NULL;
 }
 
 /**
@@ -95,7 +101,7 @@ int startServer(int max_clients, char* serv_lan_ip){
  * @return
  */
 void* client_handler(void* arg){
-    thread_args_t* args = (thread_args_t*) arg;
+    Client_Args* args = (Client_Args*) arg;
     int client_id = args->client_id;
     int sock_fd = args->sock_fd;
 	char buffer[1024] = {0};

@@ -7,6 +7,7 @@
 #include "../includes/functionsDisplay.h"
 #include "../includes/functions.h"
 #include "../includes/functionsNetwork.h"
+#include <pthread.h> // pthread_create
 
 #define MAX_CLIENTS 2
 
@@ -41,7 +42,16 @@ int hosting(Window* window, char* packetName) {
         50
     };
 
-    startServer(MAX_CLIENTS, ip);
+    pthread_t threadServer;
+	Server_Args server_args;
+
+    server_args.max_clients = MAX_CLIENTS;
+    strcpy(server_args.ip, ip);
+    
+    if (pthread_create(&threadServer, NULL, startServer, &server_args) != 0) {
+        perror("pthread_create failed");
+        exit(EXIT_FAILURE);
+    }
 
     Node* first = NULL;
     addTemplateToList(&first, window, 1, 0, 0, "");
@@ -99,5 +109,8 @@ int hosting(Window* window, char* packetName) {
         // Mettre à jour l'affichage
         SDL_RenderPresent(window->renderer);
     }
+    // Fin du thread
+    pthread_join(threadServer, NULL);
+
     return 1;
 }
