@@ -29,3 +29,44 @@ char* stringFromArray(char array[]){
     strcat(res, '\0');
     return res;
 }
+
+void initiateConfig(Conf* conf) {
+    char* filePath = "./config.json";
+
+    FILE* filePointer = fopen(filePath, "r");
+
+    if (filePointer == NULL) {
+        printf("Impossible to open file\n");
+        return;
+    }
+    // On calcule la taille du fichier
+    fseek(filePointer, 0, SEEK_END);
+    long size = ftell(filePointer);
+    fseek(filePointer, 0, SEEK_SET);
+
+    // On alloue de la mémoire pour stocker le contenu du fichier
+    char* buffer = (char *) malloc(size + 1);
+    fread(buffer, size, 1, filePointer);
+    buffer[size] = '\0';
+
+    fclose(filePointer);
+
+    char* token = strtok(buffer, "\"");
+    token = strtok(NULL, "\"");
+
+    //printf("%s\n", token);
+
+    if (strstr(token, "max_connection") != NULL) {
+        token = strtok(NULL, "\n: ,");
+        sscanf(token, "%d", &conf->maxConnections); // permet de convertir la chaine de caractère 4 en un entier dans la variable dest
+    }
+
+    token = strtok(NULL, "\"");
+    token = strtok(NULL, "\"");
+
+    if (strstr(token, "packetPath") != NULL) {
+        token = strtok(NULL, "\"");
+        token = strtok(NULL, "\"");
+        conf->packetPath = token;
+    }
+}
