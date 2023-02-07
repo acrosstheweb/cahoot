@@ -30,7 +30,7 @@ char* stringFromArray(char array[]){
     return res;
 }
 
-void initiateConfig(Conf* conf) {
+void readConfig(Conf* conf) {
     char* filePath = "./config.json";
 
     FILE* filePointer = fopen(filePath, "r");
@@ -56,17 +56,18 @@ void initiateConfig(Conf* conf) {
 
     //printf("%s\n", token);
 
-    if (strstr(token, "max_connection") != NULL) {
-        token = strtok(NULL, "\n: ,");
-        sscanf(token, "%d", &conf->maxConnections); // permet de convertir la chaine de caractère 4 en un entier dans la variable dest
-    }
-
-    token = strtok(NULL, "\"");
-    token = strtok(NULL, "\"");
-
-    if (strstr(token, "packetPath") != NULL) {
-        token = strtok(NULL, "\"");
-        token = strtok(NULL, "\"");
-        conf->packetPath = token;
+    while (token != NULL) {
+        if (strstr(token, "max_connection") != NULL) {
+            token = strtok(NULL, "\n: ,");
+            sscanf(token, "%d", &conf->maxConnections); // permet de convertir la chaine de caractère 4 en un entier dans la variable dest
+            token = strtok(NULL, "\"");
+            token = strtok(NULL, "\"");
+        } else if (strstr(token, "packetPath") != NULL) {
+            token = strtok(NULL, "\"");
+            token = strtok(NULL, "\"");
+            conf->packetPath = token;
+            token = strtok(NULL, "\"");
+            token = strtok(NULL, "\"");
+        }
     }
 }
