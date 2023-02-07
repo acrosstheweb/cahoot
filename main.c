@@ -67,6 +67,10 @@ int main() {
                 }
                 break;
 
+            case 6:
+                choice = client(window);
+                break;
+
             case 7:
                 choice = addQuestion(window, packetName);
                 break;

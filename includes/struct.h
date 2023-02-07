@@ -50,4 +50,9 @@ typedef struct {
     char* packetPath;
 } Conf;
 
+typedef struct {
+    char thread_ip_addr[INET_ADDRSTRLEN];
+    int thread_sock_fd;
+} thread_args_t;
+
 #endif

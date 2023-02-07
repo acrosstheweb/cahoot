@@ -1,17 +1,38 @@
-// TODO: cleanup on leave function to free all resources in array
+#include <arpa/inet.h>
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
-#include "../includes/functionsDisplay.h"
-#include "../includes/functionsPacket.h"
+#include "../includes/functionsNetwork.h"
+#include "../includes/struct.h"
+
+#define PORT 13337
+
+void search_ips();
+void* ip_handler(void* arg);
 
 
-int choosePacket(Window* window, char** packetName) {
-    char** packetList = NULL;
-    int* packetNb = malloc(sizeof(int));
-    packetList = listPackets(packetNb);
+char** servers_list = NULL; // Tableau qui contiendra les adresses ip des serveurs trouvés sur le LAN
+unsigned char nb_servers = 0; // tah l'opti de faire un unsigned char (0 à 255)
+pthread_mutex_t thread_lock;
+
+int client(Window* window){
+    
+    search_ips();
+    // servers_list est alimenté
+
+    // printf("\n\n%d serveur(s) trouvés : \n\n", nb_servers);
+    // for(int j = 0; j < nb_servers; j++){
+    //     printf("\t>>>[%d] %s\n", j+1, servers_list[j]);
+    // }
+
+    // // TODO: Choix du serveur à laisser au client ....
+    // int serv_choice; 
+    // printf("A quel serveur se connecter [nombre] : \n>>> ");
+    // scanf("%d", &serv_choice);
+
+    // serv_choice--; // adapter à index d'une liste
+
+
     int page = 0;
 
     // Créer les textures
@@ -76,46 +97,46 @@ int choosePacket(Window* window, char** packetName) {
 
 
     Node* first = NULL;
-    addTemplateToList(&first, window, 1, 1, 0, "===MES PAQUETS===");
+    addTemplateToList(&first, window, 1, 1, 0, "===SERVEURS DISPONIBLES===");
     addButtonToList(&first, prevRect, prev, empty(), NULL, 1, 11);
     addButtonToList(&first, nextRect, next, empty(), NULL, 1, 12);
 
-    for (int i = 0; i < *packetNb; i++){
-        SDL_Texture* textTexture = textureFromMessage(window->renderer, *(packetList + i), setColor("Black"), window->font);
+    for (int i = 0; i < nb_servers; i++){
+        SDL_Texture* textTexture = textureFromMessage(window->renderer, *(servers_list + i), setColor("Black"), window->font);
         States* text = setStates(textTexture, textTexture);
         switch (i % 4){
         case 0:
             addButtonToList(&first, redRect, red, (SDL_Rect){
-                redRect.x + (redRect.w - getTextWidth(*(packetList + i), 50)) / 2,
+                redRect.x + (redRect.w - getTextWidth(*(servers_list + i), 50)) / 2,
                 redRect.y + (redRect.h - 50) / 2,
-                getTextWidth(*(packetList + i), 50),
+                getTextWidth(*(servers_list + i), 50),
                 50},
                 text, 1, 15 + i);
             break;
 
         case 1:
             addButtonToList(&first, greenRect, green, (SDL_Rect){
-                greenRect.x + (greenRect.w- getTextWidth(*(packetList + i), 50)) / 2,
+                greenRect.x + (greenRect.w- getTextWidth(*(servers_list + i), 50)) / 2,
                 greenRect.y + (greenRect.h - 50) / 2,
-                getTextWidth(*(packetList + i), 50),
+                getTextWidth(*(servers_list + i), 50),
                 50
                 }, text, 1, 15 + i);
             break;
 
         case 2:
             addButtonToList(&first, blueRect, blue, (SDL_Rect){
-                blueRect.x + (blueRect.w- getTextWidth(*(packetList + i), 50)) / 2,
+                blueRect.x + (blueRect.w- getTextWidth(*(servers_list + i), 50)) / 2,
                 blueRect.y + (blueRect.h - 50) / 2,
-                getTextWidth(*(packetList + i), 50),
+                getTextWidth(*(servers_list + i), 50),
                 50
                 }, text, 1, 15 + i);
             break;
 
         case 3:
             addButtonToList(&first, yellowRect, yellow, (SDL_Rect){
-                yellowRect.x + (yellowRect.w- getTextWidth(*(packetList + i), 50)) / 2,
+                yellowRect.x + (yellowRect.w- getTextWidth(*(servers_list + i), 50)) / 2,
                 yellowRect.y + (yellowRect.h - 50) / 2,
-                getTextWidth(*(packetList + i), 50),
+                getTextWidth(*(servers_list + i), 50),
                 50
                 }, text, 1, 15 + i);
             break;
@@ -153,13 +174,12 @@ int choosePacket(Window* window, char** packetName) {
                                         page--;
                                     }
                                 } else if (current->button.isClickable == 12){
-                                    if (page < *packetNb / 4){
+                                    if (page < nb_servers / 4){
                                         page++;
                                     }
                                 } else if (current->button.isClickable - 15 >= page * 4 && current->button.isClickable - 15 < (page+1) * 4){
-                                    *packetName = realloc(*packetName, sizeof(char) * (strlen(*(packetList + current->button.isClickable - 15)) + 1));
-                                    memcpy(*packetName, *(packetList + current->button.isClickable - 15), strlen(*(packetList + current->button.isClickable - 15)) + 1);
-                                    return 5;
+                                    connectToServer(*(packetList + current->button.isClickable - 15) - 1);
+                                    return 10;
                                 }
                             }
                             current = current->next;
@@ -177,7 +197,7 @@ int choosePacket(Window* window, char** packetName) {
         SDL_RenderClear(window->renderer);
 
         if (page == 0){
-        } else if (page == (*packetNb) / 4){
+        } else if (page == (nb_servers) / 4){
 
         }
 
@@ -186,7 +206,7 @@ int choosePacket(Window* window, char** packetName) {
                 if (current->button.isClickable <= 10){
                     display(window->renderer, current->button);
                 } else if (current->button.isClickable < 15){
-                    if ((current->button.icon == prev && page > 0) || (current->button.icon == next && page < *packetNb / 4 && *packetNb > 4)){
+                    if ((current->button.icon == prev && page > 0) || (current->button.icon == next && page < nb_servers / 4 && nb_servers > 4)){
                         display(window->renderer, current->button);
                     }
                 } else {
