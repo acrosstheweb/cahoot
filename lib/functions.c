@@ -31,13 +31,14 @@ char* stringFromArray(char array[]){
     return res;
 }
 
-void readConfig(Conf* conf) {
+char* readConfig(Conf* conf) {
+    char* res = "";
     char* filePath = "./config.json";
 
     FILE* filePointer = fopen(filePath, "r");
 
     if (filePointer == NULL) {
-        printf("Impossible to open file\n");
+        res = "Impossible to open file\n";
         return;
     }
     // On calcule la taille du fichier
@@ -63,12 +64,42 @@ void readConfig(Conf* conf) {
             sscanf(token, "%d", &conf->maxConnections); // permet de convertir la chaine de caractère 4 en un entier dans la variable dest
             token = strtok(NULL, "\"");
             token = strtok(NULL, "\"");
-        } else if (strstr(token, "packetPath") != NULL) {
+        } else if (strstr(token, "packet_path") != NULL) {
             token = strtok(NULL, "\"");
             token = strtok(NULL, "\"");
             conf->packetPath = token;
             token = strtok(NULL, "\"");
             token = strtok(NULL, "\"");
+        } else if (strstr(token, "packet_path") != NULL) {
+            token = strtok(NULL, "\"");
+            token = strtok(NULL, "\"");
+            conf->ip_base = token;
+            token = strtok(NULL, "\"");
+            token = strtok(NULL, "\"");
         }
     }
+
+    return res;
+}
+
+char* modifyConfig(Conf* conf) {
+    char* res = "";
+    char* filePath = "./config.json";
+
+    FILE* filePointer = fopen(filePath, "w");
+
+    if (filePointer == NULL) {
+        res = "Impossible to open file\n";
+        return;
+    }
+
+    fprintf(filePointer, "{\n");
+    fprintf(filePointer, "\t\"max_connections\" : %d,\n", conf->maxConnections);
+    fprintf(filePointer, "\t\"packet_path\" : \"%s\",\n", conf->packetPath);
+    fprintf(filePointer, "\t\"ip_base\" : \"%s\",\n", conf->ip_base);
+    fprintf(filePointer, "}");
+
+    fclose(filePointer);
+
+    return res;
 }
