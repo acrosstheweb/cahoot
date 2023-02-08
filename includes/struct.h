@@ -47,7 +47,7 @@ typedef struct {
 } QuestionData;
 
 typedef struct {
-    int maxConnections;
+    char* maxConnections;
     char* packetPath;
     char* ip_base;
 } Conf;

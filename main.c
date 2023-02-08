@@ -15,12 +15,11 @@
 #include "includes/choosePacket.h"
 #include "includes/manageQuestions.h"
 #include "includes/client.h"
+#include "includes/settings.h"
 
 int main() {
 
-    Conf config;
-    readConfig(&config);
-
+    Conf* conf = readConfig();
     int choice = 10;
     char* packetName = malloc(sizeof(char*));
     Window* window = create_window();
@@ -48,7 +47,7 @@ int main() {
                 break;
                             
             case 2:
-                choice = 1;
+                choice = settings(window, &conf);
                 break;
             
             case 3:

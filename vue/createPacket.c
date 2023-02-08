@@ -10,6 +10,11 @@
 
 
 int createPacket(Window* window, char** packetName) {
+    SDL_Texture* cat = textureFromImage(window->renderer, "img/button1.png");
+    goodTry(window, cat);
+    return 10;
+    
+
     int colorNum = rand() % 4;
 
     char* subtitleText = "15 caracteres max.";

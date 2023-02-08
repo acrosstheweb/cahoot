@@ -9,7 +9,7 @@
 #include "../includes/functions.h"
 
 
-int addQuestion(Window* window, char* packetName) {
+int settings(Window* window, Conf** conf) {
 
     // Créer les textures
     SDL_Texture* blueRectTexture = textureFromImage(window->renderer, "img/rect_blue.png");
@@ -20,6 +20,9 @@ int addQuestion(Window* window, char* packetName) {
     SDL_Texture* greenRectHoverTexture = textureFromImage(window->renderer, "img/rect_green_hover.png");
 
     SDL_Texture* validateTexture = textureFromMessage(window->renderer, "Enregistrer", setColor("Black"), window->font);
+    SDL_Texture* pathTexture = textureFromMessage(window->renderer, "Packets path : ", setColor("Black"), window->font);
+    SDL_Texture* ipTexture = textureFromMessage(window->renderer, "IP base : ", setColor("Black"), window->font);
+    SDL_Texture* maxConnectionsTexture = textureFromMessage(window->renderer, "Maximum connections when hosting : ", setColor("Black"), window->font);
 
     States* blue = setStates(blueRectTexture, blueRectHoverTexture);
     States* red = setStates(redRectTexture, redRectHoverTexture);
@@ -28,70 +31,46 @@ int addQuestion(Window* window, char* packetName) {
 
 
     // Définir les positions des boutons (x, y, w, h)
-    SDL_Rect questionRect = {
-        (SCREEN_WIDTH - PACKET_RECT_WIDTH) / 2,
-        SCREEN_HEIGHT / 2 - PACKET_RECT_HEIGHT - 25,
-        QUESTION_RECT_WIDTH,
-        QUESTION_RECT_HEIGHT
-    };
-    SDL_Rect questionInputRect = {
-        0,
-        0,
+    SDL_Rect pathRect = {
+        175,
         200,
+        getTextWidth("Packets path : ", 50),
         50
     };
-    SDL_Rect answer1Rect = {
-        questionRect.x,
-        questionRect.y + PACKET_RECT_HEIGHT + MARGIN / 2,
-        ANSWER_RECT_WIDTH,
-        ANSWER_RECT_HEIGHT
-    };
-    SDL_Rect answer1InputRect = {
-        0,
-        0,
+    SDL_Rect pathInputRect = {
+        pathRect.x + pathRect.w + MARGIN,
+        200,
         100,
-        25
+        50
     };
-    SDL_Rect answer2Rect = {
-        questionRect.x + ANSWER_RECT_WIDTH + MARGIN / 2,
-        questionRect.y + PACKET_RECT_HEIGHT + MARGIN / 2,
-        ANSWER_RECT_WIDTH,
-        ANSWER_RECT_HEIGHT
+    SDL_Rect ipRect = {
+        175,
+        275,
+        getTextWidth("IP base : ", 50),
+        50
     };
-    SDL_Rect answer2InputRect = {
-        0,
-        0,
+    SDL_Rect ipInputRect = {
+        ipRect.x + ipRect.w + MARGIN,
+        275,
         100,
-        25
+        50
     };
-    SDL_Rect answer3Rect = {
-        questionRect.x,
-        answer1Rect.y + ANSWER_RECT_HEIGHT + MARGIN / 2,
-        ANSWER_RECT_WIDTH,
-        ANSWER_RECT_HEIGHT
+    SDL_Rect maxConnectionsRect = {
+        175,
+        350,
+        getTextWidth("Maximum connections when hosting : ", 50),
+        50
     };
-    SDL_Rect answer3InputRect = {
-        0,
-        0,
+    SDL_Rect maxConnectionsInputRect = {
+        maxConnectionsRect.x + maxConnectionsRect.w + MARGIN,
+        350,
         100,
-        25
-    };
-    SDL_Rect answer4Rect = {
-        questionRect.x + ANSWER_RECT_WIDTH + MARGIN / 2,
-        answer1Rect.y + ANSWER_RECT_HEIGHT + MARGIN / 2,
-        ANSWER_RECT_WIDTH,
-        ANSWER_RECT_HEIGHT
-    };
-    SDL_Rect answer4InputRect = {
-        0,
-        0,
-        100,
-        25
+        50
     };
     SDL_Rect validateRect = {
-        questionRect.x,
-        answer3Rect.y + ANSWER_RECT_HEIGHT + MARGIN / 2,
-        QUESTION_RECT_WIDTH,
+        (SCREEN_WIDTH - 300) / 2,
+        SCREEN_HEIGHT - 200,
+        300,
         50
     };
     SDL_Rect validateTextRect = {
@@ -107,33 +86,25 @@ int addQuestion(Window* window, char* packetName) {
     char answer3Text[MAX_LEN + 1] = "";
     char answer4Text[MAX_LEN + 1] = "";
 
-    TextInput inputs[5];
-    inputs[0].refRect = questionRect;
-    inputs[0].inputRect = questionInputRect;
-    inputs[0].text = questionText;
-    inputs[1].refRect = answer1Rect;
-    inputs[1].inputRect = answer1InputRect;
-    inputs[1].text = answer1Text;
-    inputs[2].refRect = answer2Rect;
-    inputs[2].inputRect = answer2InputRect;
-    inputs[2].text = answer2Text;
-    inputs[3].refRect = answer3Rect;
-    inputs[3].inputRect = answer3InputRect;
-    inputs[3].text = answer3Text;
-    inputs[4].refRect = answer4Rect;
-    inputs[4].inputRect = answer4InputRect;
-    inputs[4].text = answer4Text;
+    TextInput inputs[3];
+    inputs[0].refRect = pathRect;
+    inputs[0].inputRect = pathInputRect;
+    inputs[0].text = (*conf)->packetPath;
+    inputs[1].refRect = ipRect;
+    inputs[1].inputRect = ipInputRect;
+    inputs[1].text = (*conf)->ip_base;
+    inputs[2].refRect = maxConnectionsRect;
+    inputs[2].inputRect = maxConnectionsInputRect;
+    inputs[2].text = (*conf)->maxConnections;
 
     int activeInput = -1;
 
     Node* first = NULL;
     addTemplateToList(&first, window, 1, 1, 0, "");
-    addButtonToList(&first, questionRect, blue, empty(), NULL, 1, 11);
-    addButtonToList(&first, answer1Rect, green, empty(), NULL, 1, 12);
-    addButtonToList(&first, answer2Rect, red, empty(), NULL, 1, 13);
-    addButtonToList(&first, answer3Rect, red, empty(), NULL, 1, 14);
-    addButtonToList(&first, answer4Rect, red, empty(), NULL, 1, 15);
-    addButtonToList(&first, validateRect, green, validateTextRect, validate, 1, 16);
+    addButtonToList(&first, pathRect, NULL, empty(), NULL, 1, 11);
+    addButtonToList(&first, ipRect, NULL, empty(), NULL, 1, 12);
+    addButtonToList(&first, maxConnectionsRect, NULL, empty(), NULL, 1, 13);
+    addButtonToList(&first, validateRect, green, validateTextRect, validate, 1, 15);
 
     SDL_StartTextInput();
     // Boucle principale
@@ -160,11 +131,11 @@ int addQuestion(Window* window, char* packetName) {
                             if (current->button.isHovered && current->button.isClickable){
                                 if (current->button.isClickable <= 10){
                                     return current->button.isClickable;
-                                } else if (current->button.isClickable <= 15){
+                                } else if (current->button.isClickable < 15){
                                     activeInput = current->button.isClickable - 11;
-                                }  else if (strlen(questionText) > 0 && strlen(answer1Text) > 0 && strlen(answer2Text) > 0 && strlen(answer3Text) > 0 && strlen(answer4Text) > 0) {
-                                    addQuestionToFile(packetName, questionText, answer1Text, answer2Text, answer3Text, answer4Text);
-                                    return 7;
+                                }  else if (strlen((*conf)->ip_base) > 0 && strlen((*conf)->packetPath) > 0 && strlen((*conf)->maxConnections) > 0) {
+                                    modifyConfig(*conf);
+                                    return 10;
                                 }
                             }
                             current = current->next;
@@ -193,9 +164,9 @@ int addQuestion(Window* window, char* packetName) {
                                 }
                             }
                         } else if ((e.key.keysym.sym == SDLK_RETURN || e.key.keysym.sym == SDLK_KP_ENTER) &&
-                        strlen(questionText) > 0 && strlen(answer1Text) > 0 && strlen(answer2Text) > 0 && strlen(answer3Text) > 0 && strlen(answer4Text) > 0) {
-                            addQuestionToFile(packetName, questionText, answer1Text, answer2Text, answer3Text, answer4Text);
-                            return 7;
+                        strlen((*conf)->ip_base) > 0 && strlen((*conf)->packetPath) > 0 && strlen((*conf)->maxConnections) > 0) {
+                            modifyConfig(*conf);
+                            return 10;
                         } else if (e.key.keysym.sym == SDLK_TAB && (e.key.keysym.mod & KMOD_SHIFT)) {
                             activeInput--;
                             if (activeInput == -1){
@@ -203,7 +174,7 @@ int addQuestion(Window* window, char* packetName) {
                             }
                         } else if (e.key.keysym.sym == SDLK_TAB) {
                             activeInput++;
-                            if (activeInput == 5){
+                            if (activeInput == 3){
                                 activeInput = 0;
                             }
                         }
@@ -215,9 +186,8 @@ int addQuestion(Window* window, char* packetName) {
                     break;
 
                 case SDL_TEXTINPUT:
-                    if (activeInput >= 0 && activeInput < 5) {
+                    if (activeInput >= 0 && activeInput < 3) {
                         if (strlen(inputs[activeInput].text) == 0){
-
                             strcpy(inputs[activeInput].text, e.text.text);
                         } else {
                             strcat(inputs[activeInput].text, e.text.text);
@@ -235,15 +205,19 @@ int addQuestion(Window* window, char* packetName) {
         SDL_SetRenderDrawColor(window->renderer, 0xF1, 0xFA, 0xEE, 0xFF);
         SDL_RenderClear(window->renderer);
 
+        SDL_RenderCopy(window->renderer, pathTexture, NULL, &pathRect);
+        SDL_RenderCopy(window->renderer, ipTexture, NULL, &ipRect);
+        SDL_RenderCopy(window->renderer, maxConnectionsTexture, NULL, &maxConnectionsRect);
+
+        for (int i = 0; i < 3; i++){
+            updateInputText(window, inputs[i].text, inputs[i].refRect, inputs[i].inputRect, 1);
+        }
+
         if (first != NULL) {
             do {
                 display(window->renderer, current->button);
                 current = current->next;
             }while (current != first);
-        }
-
-        for (int i = 0; i < 5; i++){
-            updateInputText(window, inputs[i].text, inputs[i].refRect, inputs[i].inputRect, 0);
         }
         
         // Mettre à jour l'affichage

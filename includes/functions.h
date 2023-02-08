@@ -8,8 +8,8 @@ int check(char* packetName, char* forbidden, int len);
 
 char* stringFromArray(char array[]);
 
-char* readConfig(Conf* conf);
+Conf* readConfig();
 
-char* modifyConfig(Con* conf);
+char* modifyConfig(Conf* conf);
 
 #endif

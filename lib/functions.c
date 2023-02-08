@@ -31,15 +31,19 @@ char* stringFromArray(char array[]){
     return res;
 }
 
-char* readConfig(Conf* conf) {
-    char* res = "";
+Conf* readConfig() {
+    Conf* conf = malloc(sizeof(Conf));
+    if (!conf){
+        printf("Malloc error while reading conf\n");
+        return NULL;
+    }
     char* filePath = "./config.json";
 
     FILE* filePointer = fopen(filePath, "r");
 
     if (filePointer == NULL) {
-        res = "Impossible to open file\n";
-        return;
+        printf("Impossible to open file\n");
+        return NULL;
     }
     // On calcule la taille du fichier
     fseek(filePointer, 0, SEEK_END);
@@ -61,25 +65,25 @@ char* readConfig(Conf* conf) {
     while (token != NULL) {
         if (strstr(token, "max_connection") != NULL) {
             token = strtok(NULL, "\n: ,");
-            sscanf(token, "%d", &conf->maxConnections); // permet de convertir la chaine de caractère 4 en un entier dans la variable dest
-            token = strtok(NULL, "\"");
-            token = strtok(NULL, "\"");
+            conf->maxConnections = malloc(sizeof(char) * (strlen(token) + 1));
+            strcpy(conf->maxConnections, token);
         } else if (strstr(token, "packet_path") != NULL) {
             token = strtok(NULL, "\"");
             token = strtok(NULL, "\"");
-            conf->packetPath = token;
+            conf->packetPath = malloc(sizeof(char) * (strlen(token) + 1));
+            strcpy(conf->packetPath, token);
+        } else if (strstr(token, "ip_base") != NULL) {
             token = strtok(NULL, "\"");
             token = strtok(NULL, "\"");
-        } else if (strstr(token, "packet_path") != NULL) {
-            token = strtok(NULL, "\"");
-            token = strtok(NULL, "\"");
-            conf->ip_base = token;
-            token = strtok(NULL, "\"");
-            token = strtok(NULL, "\"");
+            conf->ip_base = malloc(sizeof(char) * (strlen(token) + 1));
+            strcpy(conf->ip_base, token);
         }
+        token = strtok(NULL, "\"");
+        token = strtok(NULL, "\"");
     }
 
-    return res;
+
+    return conf;
 }
 
 char* modifyConfig(Conf* conf) {
@@ -90,11 +94,11 @@ char* modifyConfig(Conf* conf) {
 
     if (filePointer == NULL) {
         res = "Impossible to open file\n";
-        return;
+        return res;
     }
 
     fprintf(filePointer, "{\n");
-    fprintf(filePointer, "\t\"max_connections\" : %d,\n", conf->maxConnections);
+    fprintf(filePointer, "\t\"max_connections\" : %s,\n", conf->maxConnections);
     fprintf(filePointer, "\t\"packet_path\" : \"%s\",\n", conf->packetPath);
     fprintf(filePointer, "\t\"ip_base\" : \"%s\",\n", conf->ip_base);
     fprintf(filePointer, "}");

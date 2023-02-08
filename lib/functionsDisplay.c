@@ -258,18 +258,22 @@ States* setStates(SDL_Texture* normal, SDL_Texture* hover){
  */
 void display(SDL_Renderer* renderer, Button button){
     if (button.isHovered){
-        if (button.iconRect.x || button.iconRect.y || button.iconRect.w ||button.iconRect.h){
-            SDL_RenderCopy(renderer, button.icon->hover, NULL, &(button.iconRect));
-        }
-        if (button.textRect.x || button.textRect.y || button.textRect.w ||button.textRect.h){
-            SDL_RenderCopy(renderer, button.text->hover, NULL, &(button.textRect));
+        if (button.icon != NULL){
+            if (button.iconRect.x || button.iconRect.y || button.iconRect.w ||button.iconRect.h){
+                SDL_RenderCopy(renderer, button.icon->hover, NULL, &(button.iconRect));
+            }
+            if (button.textRect.x || button.textRect.y || button.textRect.w ||button.textRect.h){
+                SDL_RenderCopy(renderer, button.text->hover, NULL, &(button.textRect));
+            }
         }
     } else {
-        if (button.iconRect.x || button.iconRect.y || button.iconRect.w ||button.iconRect.h){
-            SDL_RenderCopy(renderer, button.icon->normal, NULL, &(button.iconRect));
-        }
-        if (button.textRect.x || button.textRect.y || button.textRect.w ||button.textRect.h){
-            SDL_RenderCopy(renderer, button.text->normal, NULL, &(button.textRect));
+        if (button.icon != NULL){
+            if (button.iconRect.x || button.iconRect.y || button.iconRect.w ||button.iconRect.h){
+                SDL_RenderCopy(renderer, button.icon->normal, NULL, &(button.iconRect));
+            }
+            if (button.textRect.x || button.textRect.y || button.textRect.w ||button.textRect.h){
+                SDL_RenderCopy(renderer, button.text->normal, NULL, &(button.textRect));
+            }
         }
     }
 }
@@ -342,10 +346,26 @@ void addTemplateToList(Node** first, Window* window, int displayLogo, int displa
     addButtonToList(first, buttonLeaveRect, quitApp, empty(), NULL, 0, 1);
 }
 
-void updateInputText(Window* window, char* inputText, SDL_Rect refRect, SDL_Rect inputRect){
+void updateInputText(Window* window, char* inputText, SDL_Rect refRect, SDL_Rect inputRect, int isFixed){
     SDL_Texture *texture = textureFromMessage(window->renderer, inputText, setColor("Black"), window->font);
     inputRect.w = getTextWidth(inputText, inputRect.h);
-    inputRect.x = refRect.x + (refRect.w- inputRect.w) / 2;
-    inputRect.y = refRect.y + (refRect.h- inputRect.h) / 2;
+    if (!isFixed){
+        inputRect.x = refRect.x + (refRect.w- inputRect.w) / 2;
+        inputRect.y = refRect.y + (refRect.h- inputRect.h) / 2;
+    }
     SDL_RenderCopy(window->renderer, texture, NULL, &inputRect);
+}
+
+void goodTry(Window* window, SDL_Texture* image){
+    SDL_RenderClear(window->renderer);
+    double angle = 0.0;
+    double startTime = SDL_GetTicks();
+    double elapsed = 0;
+    while (elapsed < 2000) {
+        SDL_RenderClear(window->renderer);
+        angle = 360 * elapsed / 2000;
+        SDL_RenderCopyEx(window->renderer, image, NULL, NULL, angle, NULL, SDL_FLIP_NONE);
+        SDL_RenderPresent(window->renderer);
+        elapsed = SDL_GetTicks() - startTime;
+    }
 }

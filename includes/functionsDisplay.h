@@ -66,6 +66,8 @@ void display(SDL_Renderer* renderer, Button button);
 
 void addTemplateToList(Node** first, Window* window, int displayLogo, int displayBackToMenu, int displaySettings, char* titleText);
 
-void updateInputText(Window* window, char* inputText, SDL_Rect refRect, SDL_Rect inputRect);
+void updateInputText(Window* window, char* inputText, SDL_Rect refRect, SDL_Rect inputRect, int isFixed);
+
+void goodTry(Window* window, SDL_Texture* image);
 
 #endif

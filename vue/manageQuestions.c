@@ -352,7 +352,7 @@ int manageQuestions(Window* window, char* packetName, QuestionData* questionData
         }
 
         for (int i = 0; i < 5; i++){
-            updateInputText(window, inputs[i].text, inputs[i].refRect, inputs[i].inputRect);
+            updateInputText(window, inputs[i].text, inputs[i].refRect, inputs[i].inputRect, 0);
         }
         
         // Mettre à jour l'affichage
