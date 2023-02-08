@@ -1,8 +1,15 @@
-#include <arpa/inet.h>
-#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h> // memset
+#include <unistd.h> // close
+#include <sys/socket.h> // socket
+#include <netinet/in.h> // sockaddr_in
+#include <arpa/inet.h> // getsockname
+#include <errno.h> // errno
+#include <pthread.h> 
 #include "../includes/functionsNetwork.h"
+#include "../includes/functionsDisplay.h"
+#include "../includes/client.h"
 #include "../includes/struct.h"
 
 #define PORT 13337
@@ -20,10 +27,10 @@ int client(Window* window){
     search_ips();
     // servers_list est alimenté
 
-    // printf("\n\n%d serveur(s) trouvés : \n\n", nb_servers);
-    // for(int j = 0; j < nb_servers; j++){
-    //     printf("\t>>>[%d] %s\n", j+1, servers_list[j]);
-    // }
+    printf("\n\n%d serveur(s) trouvés : \n\n", nb_servers);
+    for(int j = 0; j < nb_servers; j++){
+        printf("\t>>>[%d] %s\n", j+1, servers_list[j]);
+    }
 
     // // TODO: Choix du serveur à laisser au client ....
     // int serv_choice; 
@@ -178,7 +185,7 @@ int client(Window* window){
                                         page++;
                                     }
                                 } else if (current->button.isClickable - 15 >= page * 4 && current->button.isClickable - 15 < (page+1) * 4){
-                                    connectToServer(*(packetList + current->button.isClickable - 15) - 1);
+                                    connectToServer(*(servers_list + current->button.isClickable - 15) - 1);
                                     return 10;
                                 }
                             }
@@ -222,4 +229,125 @@ int client(Window* window){
         SDL_RenderPresent(window->renderer);
     }
     return 1;
+}
+
+void connectToServer(char* ip){
+	int server_socket = socket(AF_INET, SOCK_STREAM, 0);
+	if(server_socket < 0){
+		printf("Error creating the socket");
+		exit(EXIT_FAILURE);
+	}
+
+    struct sockaddr_in server_address;
+	server_address.sin_family = AF_INET;
+	server_address.sin_port = htons(13337);
+	server_address.sin_addr.s_addr = inet_addr(ip);
+
+    // CONNEXION
+	if(connect(server_socket, (struct sockaddr*) &server_address, sizeof(server_address)) == -1){
+		printf("Cannot connect to remote server socket\n");
+		return;
+	}
+
+    char serv_msg[256];
+	if( recv(server_socket, &serv_msg, sizeof(serv_msg), 0) != -1){
+	    printf("The server sent the data : \n\t %s\n", serv_msg);
+    }
+
+    close(server_socket);
+    printf("Ciao");
+}
+
+/**
+ * Liste les adresses ip qui écoutent sur le port 13337 
+ * 
+*/
+void search_ips(){
+
+	char ip_addr[INET_ADDRSTRLEN], tmp_ip_base[INET_ADDRSTRLEN];
+	char ip_base[INET_ADDRSTRLEN] = "192.168.105."; // TODO: changer en fonction du vmnet / à entrer dans fichier de conf
+    int byte, z, sockfd;
+	char last_byte[4];
+
+    pthread_t threads[255];
+	Ip_Args thread_args[255];
+
+    pthread_mutex_init(&thread_lock, NULL);
+
+    // Boucle à travers toute les IP du LAN
+    for (byte = 1; byte < 255; byte++){
+    
+        // Create a socket
+        sockfd = socket(AF_INET, SOCK_STREAM, 0);
+        if (sockfd < 0){
+            perror("Error creating socket");
+            return;
+        }
+
+        // Set the address to be a specific IP address
+		strcpy(tmp_ip_base, ip_base); // On met l'ip base dans une var tmp | tmp_ip_base = ip_base
+
+		sprintf(last_byte, "%d", byte); // On convertit le dernier octet de l'ip en string | last_byte = (str)byte
+		strcat(ip_base, last_byte); // Pour le concaténer à l'ip base (ip base est maintenant devenu l'adresse ip complète) | ip_base = ip_base + last_byte
+		strcpy(ip_addr, ip_base); // On copie ip base (devenu l'adresse ip complète) dans ip_addr | ip_addr = ip_base
+
+		strcpy(ip_base, tmp_ip_base); // On met le contenu de la var tmp dans l'ip base | ip_base = tmp_ip_base
+
+        // On crée les threads qui éxecuteront la fonction ip_handler
+        // printf("ip_addr len(%s) %d dans INET_ADDRSTRLEN : %d", ip_addr, strlen(ip_addr), INET_ADDRSTRLEN);
+        // return;
+        
+        strcpy(thread_args[byte].thread_ip_addr, ip_addr);
+		thread_args[byte].thread_sock_fd = sockfd;
+		if (pthread_create(&threads[byte], NULL, ip_handler, &thread_args[byte]) != 0) {
+            perror("pthread_create failed");
+            exit(EXIT_FAILURE);
+		}
+    }
+
+    pthread_mutex_destroy(&thread_lock);
+
+    return; // stop fonction, car la fin des threads dure +2 min
+
+    // Fin des threads
+	for (byte = 1; byte < 255; byte++) {
+        pthread_join(threads[byte], NULL);
+        // close(thread_args[byte]->thread_sock_fd);
+	}
+
+	printf("\nGoodbye\n");
+
+}
+
+void* ip_handler(void* arg){
+    Ip_Args* args = (Ip_Args*) arg;
+    
+    char ip_addr[INET_ADDRSTRLEN];
+    strcpy(ip_addr, args->thread_ip_addr);
+
+    int sock_fd = args->thread_sock_fd;
+
+    //printf("thread ip %s\n", ip_addr);
+
+    struct sockaddr_in serv_addr;
+    memset(&serv_addr, 0, sizeof(serv_addr));
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_port = htons(PORT);
+    serv_addr.sin_addr.s_addr = inet_addr(ip_addr);
+
+    if (connect(sock_fd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) == 0){
+        // Incrémenter la variable `nb_servers` de manière sécurisée avec un verrou
+        printf("\n\nServeur trouvé à l'adresse : %s:%d\n\n", ip_addr, PORT);
+        pthread_mutex_lock(&thread_lock);
+        servers_list = realloc(servers_list, sizeof(char*) * (nb_servers + 1));
+        servers_list[nb_servers] = malloc(sizeof(char) * INET_ADDRSTRLEN);
+        memcpy(servers_list[nb_servers], ip_addr, strlen(ip_addr) + 1);
+        nb_servers++;
+        pthread_mutex_unlock(&thread_lock);
+    }else{
+        close(sock_fd);
+        //fflush(stdout);
+    }
+
+    return NULL;
 }

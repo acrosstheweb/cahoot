@@ -8,6 +8,7 @@
         "sdl_image.h": "c",
         "window.h": "c",
         "sdl.h": "c",
-        "functionsdisplay.h": "c"
+        "functionsdisplay.h": "c",
+        "functionsnetwork.h": "c"
     }
 }

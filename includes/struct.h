@@ -4,6 +4,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <netinet/in.h> // sockaddr_in
 
 #define MAX_LEN 15
 
@@ -53,6 +54,6 @@ typedef struct {
 typedef struct {
     char thread_ip_addr[INET_ADDRSTRLEN];
     int thread_sock_fd;
-} thread_args_t;
+} Ip_Args;
 
 #endif

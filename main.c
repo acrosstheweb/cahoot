@@ -3,9 +3,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "includes/struct.h"
-#include "includes/functionsDisplay.h"
 #include "includes/functions.h"
+#include "includes/functionsDisplay.h"
 #include "includes/functionsPacket.h"
+#include "includes/functionsNetwork.h"
 #include "includes/menu.h"
 #include "includes/createPacket.h"
 #include "includes/managePackets.h"
@@ -13,6 +14,7 @@
 #include "includes/hosting.h"
 #include "includes/choosePacket.h"
 #include "includes/manageQuestions.h"
+#include "includes/client.h"
 
 int main() {
 

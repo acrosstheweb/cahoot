@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "../includes/functions.h"
 
 /**
  * Permet de vérifier que le nom d'un paquet ne contient pas de caractères interdits
