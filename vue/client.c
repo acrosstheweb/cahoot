@@ -185,7 +185,7 @@ int client(Window* window){
                                         page++;
                                     }
                                 } else if (current->button.isClickable - 15 >= page * 4 && current->button.isClickable - 15 < (page+1) * 4){
-                                    connectToServer(*(servers_list + current->button.isClickable - 15) - 1);
+                                    connectToServer(*(servers_list + current->button.isClickable - 15));
                                     return 10;
                                 }
                             }
@@ -245,7 +245,7 @@ void connectToServer(char* ip){
 
     // CONNEXION
 	if(connect(server_socket, (struct sockaddr*) &server_address, sizeof(server_address)) == -1){
-		printf("Cannot connect to remote server socket\n");
+		printf("Cannot connect to remote server socket : err n°%d : %s\n", errno , strerror(errno));
 		return;
 	}
 
