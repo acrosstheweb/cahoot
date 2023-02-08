@@ -68,12 +68,14 @@ void* startServer(void* arg){
 	}
 
 	// On crée les threads qui éxecuteront la fonction client_handler
+	printf("creation thread ?");
 	pthread_t threads[max_clients];
 	Client_Args thread_args[max_clients];
 
 	for (int c = 0; c < max_clients; c++) {
 		thread_args[c].client_id = c;
 		thread_args[c].sock_fd = clients[c];
+		thread_args[c].game_packet = 
 		if (pthread_create(&threads[c], NULL, client_handler, &thread_args[c]) != 0) {
 				perror("pthread_create failed");
 				exit(EXIT_FAILURE);
@@ -102,19 +104,26 @@ void* startServer(void* arg){
  */
 void* client_handler(void* arg){
     Client_Args* args = (Client_Args*) arg;
+
     int client_id = args->client_id;
     int sock_fd = args->sock_fd;
-	char buffer[1024] = {0};
-	
-    while (1) {
+	int nb_questions = args->nb_questions;
+	QuestionData* game_packet = args->game_packet;
+
+	char buffer[256] = {0};
+
+    for(int q_index = 0; q_index < nb_questions; q_index++) {
     	// Envoie la question au client
-		char* question = "What is your name?\n";
-		send(sock_fd, question, strlen(question)+1, 0);
+		send(sock_fd, game_packet->question, strlen(game_packet->question)+1, 0);
 
     	// Reçoit sa réponse
-    	int valread = read(sock_fd, buffer, 1024);
+    	int valread = read(sock_fd, buffer, 256);
     	printf("Client %d: %s", client_id, buffer);
     }
+	char quit_signal[18] = "tah_la_deconnexion";
+	send(sock_fd, quit_signal, strlen(quit_signal)+1, 0);
+	
+	close(args->sock_fd);
 
 	fflush(stdout);
 

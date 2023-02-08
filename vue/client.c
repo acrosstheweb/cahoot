@@ -6,7 +6,7 @@
 #include <netinet/in.h> // sockaddr_in
 #include <arpa/inet.h> // getsockname
 #include <errno.h> // errno
-#include <pthread.h> 
+#include <pthread.h>
 #include "../includes/functionsNetwork.h"
 #include "../includes/functionsDisplay.h"
 #include "../includes/client.h"
@@ -185,7 +185,7 @@ int client(Window* window){
                                         page++;
                                     }
                                 } else if (current->button.isClickable - 15 >= page * 4 && current->button.isClickable - 15 < (page+1) * 4){
-                                    connectToServer(*(servers_list + current->button.isClickable - 15));
+                                    connectToServer(*(servers_list + current->button.isClickable - 15)); // mascarade
                                     return 10;
                                 }
                             }
@@ -249,13 +249,24 @@ void connectToServer(char* ip){
 		return;
 	}
 
-    char serv_msg[256];
-	if( recv(server_socket, &serv_msg, sizeof(serv_msg), 0) != -1){
-	    printf("The server sent the data : \n\t %s\n", serv_msg);
-    }
+    while(1){
+        char serv_msg[256];
+        char rep[256];
+        if( recv(server_socket, &serv_msg, sizeof(serv_msg), 0) != -1){
+            if(strcmp(serv_msg, "tah_la_deconnexion")){
+                close(server_socket);
+                printf("Ciao");
+                break; // return; ?
+            }
+            printf("Question : %s\n", serv_msg);
+            printf("\n\t Reponse : \n");
 
-    close(server_socket);
-    printf("Ciao");
+            printf("Quel est votre tah dernier mot ?\n\t>>> ");
+            scanf("%s", &rep);
+    		send(server_socket, rep, strlen(rep)+1, 0);
+        }
+    }
+    
 }
 
 /**
@@ -265,7 +276,7 @@ void connectToServer(char* ip){
 void search_ips(){
 
 	char ip_addr[INET_ADDRSTRLEN], tmp_ip_base[INET_ADDRSTRLEN];
-	char ip_base[INET_ADDRSTRLEN] = "192.168.105."; // TODO: changer en fonction du vmnet / à entrer dans fichier de conf
+	char ip_base[INET_ADDRSTRLEN] = "192.168.42."; // TODO: changer en fonction du vmnet / à entrer dans fichier de conf
     int byte, z, sockfd;
 	char last_byte[4];
 

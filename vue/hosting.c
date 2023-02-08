@@ -44,6 +44,9 @@ int hosting(Window* window, char* packetName) {
 
     pthread_t threadServer;
 	Server_Args server_args;
+    QuestionData** packet_to_play;
+    readPacket(packetName, QuestionData*** questionData, int** questionsNb)
+    // PK QuestionData***
 
     server_args.max_clients = MAX_CLIENTS;
     strcpy(server_args.ip, ip);
