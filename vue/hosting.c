@@ -46,14 +46,14 @@ int hosting(Window* window, char* packetName) {
 
     pthread_t threadServer;
 	Server_Args server_args;
-    QuestionData** packet_to_play;
-    int* questionNb;
+    QuestionData** packet_to_play = malloc(sizeof(QuestionData*));
+    int* questionNb = malloc(sizeof(int));
     readPacket(packetName, &packet_to_play, &questionNb);
-    // PK QuestionData***
 
     server_args.max_clients = MAX_CLIENTS;
     strcpy(server_args.ip, ip);
     server_args.game_packet = packet_to_play;
+    server_args.nb_questions = *questionNb;
 
     if (pthread_create(&threadServer, NULL, startServer, &server_args) != 0) {
         perror("pthread_create failed");
@@ -61,7 +61,7 @@ int hosting(Window* window, char* packetName) {
     }
 
     Node* first = NULL;
-    addTemplateToList(&first, window, 1, 0, 0, "");
+    addTemplateToList(&first, window, 1, 1, 0, "");
     
     // Boucle principale
     int quit = 0;
@@ -117,7 +117,9 @@ int hosting(Window* window, char* packetName) {
         SDL_RenderPresent(window->renderer);
     }
     // Fin du thread
-    pthread_join(threadServer, NULL);
+    if (pthread_join(threadServer, NULL) == 0){
+        printf("pthread_join\n");
+    }
 
     return 1;
 }

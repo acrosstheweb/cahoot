@@ -6,7 +6,7 @@
 typedef struct {
     int client_id;
     int sock_fd;
-    QuestionData* game_packet; // packet
+    QuestionData** game_packet; // packet
     int nb_questions;
 } Client_Args;
 

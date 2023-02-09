@@ -253,16 +253,16 @@ void connectToServer(char* ip){
         char serv_msg[256];
         char rep[256];
         if( recv(server_socket, &serv_msg, sizeof(serv_msg), 0) != -1){
-            if(strcmp(serv_msg, "tah_la_deconnexion")){
+            if(strcmp(serv_msg, "tah_la_deconnexion") == 0){
                 close(server_socket);
                 printf("Ciao");
                 break; // return; ?
             }
             printf("Question : %s\n", serv_msg);
-            printf("\n\t Reponse : \n");
 
             printf("Quel est votre tah dernier mot ?\n\t>>> ");
-            scanf("%s", &rep);
+            scanf("%[^\n]s", rep);
+            getchar();
     		send(server_socket, rep, strlen(rep)+1, 0);
         }
     }
@@ -276,7 +276,7 @@ void connectToServer(char* ip){
 void search_ips(){
 
 	char ip_addr[INET_ADDRSTRLEN], tmp_ip_base[INET_ADDRSTRLEN];
-	char ip_base[INET_ADDRSTRLEN] = "192.168.42."; // TODO: changer en fonction du vmnet / à entrer dans fichier de conf
+	char ip_base[INET_ADDRSTRLEN] = "192.168.105."; // TODO: changer en fonction du vmnet / à entrer dans fichier de conf
     int byte, z, sockfd;
 	char last_byte[4];
 

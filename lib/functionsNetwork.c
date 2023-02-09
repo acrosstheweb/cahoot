@@ -27,12 +27,12 @@ void* startServer(void* arg){
 	int clients[max_clients], response_read;
 	char* response = malloc(sizeof(char) * 1024);
 	char** responses = malloc(sizeof(char*) * max_clients);
-	char* serv_welcome_msg = "Welcome to Cards server";
+	char* serv_welcome_msg = "Welcome to Cards server\n";
 
 	// Verif que la création du socket est OK
 	int server_socket = socket(AF_INET, SOCK_STREAM, 0);
 	if(server_socket < 0){
-		printf("Error creating the socket");
+		printf("Error creating the socket\n");
 		exit(EXIT_FAILURE);
 	}
 
@@ -43,13 +43,13 @@ void* startServer(void* arg){
 
 	// Verif que l'attribution du port est OK
 	if(bind(server_socket, (struct sockaddr*) &server_address, sizeof(server_address)) < 0){
-		printf("Failed to bind a port to the server ip");
+		printf("Failed to bind a port to the server ip\n");
 		exit(EXIT_FAILURE);
 	}
 
 	// Verif que l'écoute des requêtes est OK
 	if(listen(server_socket, max_clients) < 0){
-		printf("Failed to listen");
+		printf("Failed to listen\n");
 		exit(EXIT_FAILURE);
 	}
 
@@ -68,28 +68,29 @@ void* startServer(void* arg){
 	}
 
 	// On crée les threads qui éxecuteront la fonction client_handler
-	printf("creation thread ?");
+	printf("creation thread ?\n");
 	pthread_t threads[max_clients];
 	Client_Args thread_args[max_clients];
 
 	for (int c = 0; c < max_clients; c++) {
 		thread_args[c].client_id = c;
 		thread_args[c].sock_fd = clients[c];
-		thread_args[c].game_packet = NULL;
+		thread_args[c].game_packet = args->game_packet;
+		thread_args[c].nb_questions = args->nb_questions;
 		if (pthread_create(&threads[c], NULL, client_handler, &thread_args[c]) != 0) {
-				perror("pthread_create failed");
-				exit(EXIT_FAILURE);
+			perror("pthread_create failed\n");
+			exit(EXIT_FAILURE);
 		}
 	}
 
 	// Fin des threads
 	for (int c = 0; c < max_clients; c++) {
-		printf("Thread client %d eteint", c);
+		printf("Thread client %d eteint\n", c);
 		pthread_join(threads[c], NULL);
 	}
 
 	if(close(server_socket) == -1){
-		printf("Erreur fermeture socket n°%d -> %s", errno, strerror(errno));
+		printf("Erreur fermeture socket n°%d -> %s\n", errno, strerror(errno));
 	}
 	printf("\nGoodbye\n");
 
@@ -108,13 +109,14 @@ void* client_handler(void* arg){
     int client_id = args->client_id;
     int sock_fd = args->sock_fd;
 	int nb_questions = args->nb_questions;
-	QuestionData* game_packet = args->game_packet;
+	QuestionData** game_packet = args->game_packet;
 
 	char buffer[256] = {0};
 
     for(int q_index = 0; q_index < nb_questions; q_index++) {
+		printf("jaaj\n");
     	// Envoie la question au client
-		send(sock_fd, game_packet->question, strlen(game_packet->question)+1, 0);
+		send(sock_fd, (*game_packet + q_index)->question, strlen((*game_packet + q_index)->question)+1, 0);
 
     	// Reçoit sa réponse
     	int valread = read(sock_fd, buffer, 256);
