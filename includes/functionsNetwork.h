@@ -13,7 +13,8 @@ typedef struct {
 typedef struct {
 	int max_clients;
 	char ip[16]; // INET_ADDRSTRLEN
-
+    QuestionData** game_packet; // packet
+    int nb_questions;
 } Server_Args;
 
 void* client_handler(void* arg);

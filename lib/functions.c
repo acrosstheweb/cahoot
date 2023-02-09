@@ -100,7 +100,7 @@ char* modifyConfig(Conf* conf) {
     fprintf(filePointer, "{\n");
     fprintf(filePointer, "\t\"max_connections\" : %s,\n", conf->maxConnections);
     fprintf(filePointer, "\t\"packet_path\" : \"%s\",\n", conf->packetPath);
-    fprintf(filePointer, "\t\"ip_base\" : \"%s\",\n", conf->ip_base);
+    fprintf(filePointer, "\t\"ip_base\" : \"%s\"\n", conf->ip_base);
     fprintf(filePointer, "}");
 
     fclose(filePointer);

@@ -75,7 +75,7 @@ void* startServer(void* arg){
 	for (int c = 0; c < max_clients; c++) {
 		thread_args[c].client_id = c;
 		thread_args[c].sock_fd = clients[c];
-		thread_args[c].game_packet = 
+		thread_args[c].game_packet = NULL;
 		if (pthread_create(&threads[c], NULL, client_handler, &thread_args[c]) != 0) {
 				perror("pthread_create failed");
 				exit(EXIT_FAILURE);

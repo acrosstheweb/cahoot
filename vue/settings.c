@@ -79,12 +79,6 @@ int settings(Window* window, Conf** conf) {
         getTextWidth("Enregistrer", 25),
         25
     };
-    
-    char questionText[MAX_LEN + 1] = "";
-    char answer1Text[MAX_LEN + 1] = "";
-    char answer2Text[MAX_LEN + 1] = "";
-    char answer3Text[MAX_LEN + 1] = "";
-    char answer4Text[MAX_LEN + 1] = "";
 
     TextInput inputs[3];
     inputs[0].refRect = pathRect;
@@ -134,6 +128,10 @@ int settings(Window* window, Conf** conf) {
                                 } else if (current->button.isClickable < 15){
                                     activeInput = current->button.isClickable - 11;
                                 }  else if (strlen((*conf)->ip_base) > 0 && strlen((*conf)->packetPath) > 0 && strlen((*conf)->maxConnections) > 0) {
+                                    if (inputs[0].text[strlen(inputs[0].text) - 1] != '/'){
+                                        inputs[activeInput].text[strlen(inputs[activeInput].text) - 1] = '\0';
+                                        strcat(inputs[0].text, "/\0");
+                                    }
                                     modifyConfig(*conf);
                                     return 10;
                                 }
@@ -165,6 +163,10 @@ int settings(Window* window, Conf** conf) {
                             }
                         } else if ((e.key.keysym.sym == SDLK_RETURN || e.key.keysym.sym == SDLK_KP_ENTER) &&
                         strlen((*conf)->ip_base) > 0 && strlen((*conf)->packetPath) > 0 && strlen((*conf)->maxConnections) > 0) {
+                            if (inputs[0].text[strlen(inputs[0].text) - 1] != '/'){
+                                inputs[activeInput].text[strlen(inputs[activeInput].text) - 1] = '\0';
+                                strcat(inputs[0].text, "/\0");
+                            }
                             modifyConfig(*conf);
                             return 10;
                         } else if (e.key.keysym.sym == SDLK_TAB && (e.key.keysym.mod & KMOD_SHIFT)) {
@@ -186,7 +188,12 @@ int settings(Window* window, Conf** conf) {
                     break;
 
                 case SDL_TEXTINPUT:
-                    if (activeInput >= 0 && activeInput < 3) {
+                    if ((activeInput == 2 && (*(e.text.text) >= '0' && *(e.text.text) <= '9')) || 
+                    (activeInput == 1 && ((*(e.text.text) >= '0' && *(e.text.text) <= '9') || *(e.text.text) == '.')) || 
+                    (activeInput == 0 && strlen(inputs[0].text) < 20 && ((*(e.text.text) >= '0' && *(e.text.text) <= '9') || (*(e.text.text) >= 'a' && *(e.text.text) <= 'z') || (*(e.text.text) >= 'A' && *(e.text.text) <= 'Z') || *(e.text.text) == '-' || *(e.text.text) == '_' || *(e.text.text) == '.' || *(e.text.text) == '/'))){
+                        if (activeInput == 0){
+                            inputs[activeInput].text[strlen(inputs[activeInput].text)] = '\0';
+                        }
                         if (strlen(inputs[activeInput].text) == 0){
                             strcpy(inputs[activeInput].text, e.text.text);
                         } else {

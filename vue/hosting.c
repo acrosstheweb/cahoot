@@ -8,6 +8,8 @@
 #include "../includes/functions.h"
 #include "../includes/functionsNetwork.h"
 #include <pthread.h> // pthread_create
+#include "../includes/functionsPacket.h"
+
 
 #define MAX_CLIENTS 2
 
@@ -45,12 +47,14 @@ int hosting(Window* window, char* packetName) {
     pthread_t threadServer;
 	Server_Args server_args;
     QuestionData** packet_to_play;
-    readPacket(packetName, QuestionData*** questionData, int** questionsNb)
+    int* questionNb;
+    readPacket(packetName, &packet_to_play, &questionNb);
     // PK QuestionData***
 
     server_args.max_clients = MAX_CLIENTS;
     strcpy(server_args.ip, ip);
-    
+    server_args.game_packet = packet_to_play;
+
     if (pthread_create(&threadServer, NULL, startServer, &server_args) != 0) {
         perror("pthread_create failed");
         exit(EXIT_FAILURE);
