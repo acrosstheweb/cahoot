@@ -11,6 +11,7 @@
 #include "../includes/functionsDisplay.h"
 #include "../includes/client.h"
 #include "../includes/struct.h"
+#include "../includes/play.h"
 #include "../includes/menu.h"
 
 #define PORT 13337
@@ -183,7 +184,7 @@ int client(Window* window, char** network_ip_base){
                                         page++;
                                     }
                                 } else if (current->button.returnValue - 15 >= page * 4 && current->button.returnValue - 15 < (page+1) * 4){
-                                    connectToServer(*(servers_list + current->button.returnValue - 15)); // mascarade
+                                    connectToServer(&window, *(servers_list + current->button.returnValue - 15)); // mascarade
                                     return 10;
                                 }
                             }
@@ -229,7 +230,7 @@ int client(Window* window, char** network_ip_base){
     return 1;
 }
 
-void connectToServer(char* ip){
+void connectToServer(Window** window, char* ip){
 	int server_socket = socket(AF_INET, SOCK_STREAM, 0);
 	if(server_socket < 0){
 		printf("Error creating the socket");
@@ -247,24 +248,34 @@ void connectToServer(char* ip){
 		return;
 	}
 
+    int rep;
+    int counter = 0;
+    int max_char = 256;
+    int serial_size = (sizeof(char) * 16) + (sizeof(char*) * 4);
+
+    char buffer[serial_size];
+
     while(1){
-        char serv_msg[256];
-        char rep[256];
-        if( recv(server_socket, &serv_msg, sizeof(serv_msg), 0) != -1){
-            if(strcmp(serv_msg, "tah_la_deconnexion") == 0){
+        if(recv(server_socket, &buffer, serial_size, 0) != -1){
+
+            if(strcmp(buffer, "tah_la_deconnexion") == 0){
                 close(server_socket);
-                printf("Ciao");
+                printf("Ciao\n");
                 break; // return; ?
             }
-            printf("Question : %s\n", serv_msg);
 
-            printf("Quel est votre tah dernier mot ?\n\t>>> ");
-            scanf("%[^\n]s", rep);
-            getchar();
-    		send(server_socket, rep, strlen(rep)+1, 0);
+            printf("sizeof(buffer) = %d\n", sizeof(buffer));
+            printf("%d\n", counter);
+            QuestionData* questionData = deserializeQuestionData(buffer);
+            rep = play(*window, questionData);
+            rep = rep-11;
+            rep = htonl(rep);
+            send(server_socket, &rep, sizeof(rep), 0);
+            rep = ntohl(rep);
+        } else {
+            printf("Ce cas existe ?\n");
         }
     }
-    
 }
 
 /**

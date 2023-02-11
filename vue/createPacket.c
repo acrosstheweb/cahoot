@@ -10,11 +10,6 @@
 
 
 int createPacket(Window* window, char** packetName) {
-    SDL_Texture* cat = textureFromImage(window->renderer, "img/button1.png");
-    goodTry(window, cat);
-    return 10;
-    
-
     int colorNum = rand() % 4;
 
     char* subtitleText = "15 caracteres max.";
@@ -124,13 +119,14 @@ int createPacket(Window* window, char** packetName) {
                     break;
 
                 case SDL_TEXTINPUT:
-                    if (strlen(inputText) == 0){
-
-                        strcpy(inputText, e.text.text);
-                    } else {
-                        strcat(inputText, e.text.text);
+                    if (strlen(inputText) < 20 && ((*(e.text.text) >= '0' && *(e.text.text) <= '9') || (*(e.text.text) >= 'a' && *(e.text.text) <= 'z') || (*(e.text.text) >= 'A' && *(e.text.text) <= 'Z') || *(e.text.text) == '-' || *(e.text.text) == '_' || *(e.text.text) == '.' || *(e.text.text) == '/')){
+                        if (strlen(inputText) == 0){
+                            strcpy(inputText, e.text.text);
+                        } else {
+                            strcat(inputText, e.text.text);
+                        }
+                        textAdded = 1;
                     }
-                    textAdded = 1;
                     break;
 
                 case SDL_QUIT:

@@ -103,17 +103,6 @@ void readPacket(char* packetName, QuestionData*** questionData, int** questionsN
     char* res = "";
     char* filePath = getPacketPath(packetName);
 
-    // struct stat s = {0};
-    // char* directory = "packets/";
-    // char* extension = ".json";
-    // size_t len = strlen(directory) + strlen(packetName) + strlen(extension);
-
-    // char* filePath = malloc(sizeof(char) * (len + 1));
-
-    // strcpy(filePath, directory);
-    // strcat(filePath, packetName);
-    // strcat(filePath, extension);
-
     FILE* filePointer = fopen(filePath, "r");
 
     if (filePointer == NULL) {
@@ -133,7 +122,6 @@ void readPacket(char* packetName, QuestionData*** questionData, int** questionsN
     fclose(filePointer);
 
     // On parse le contenu du fichier pour stocker les données dans la structure
-    QuestionData* questionsOriginal; // ~~nombre de question max~~ pointeur vers la première question
     char* token = strtok(buffer, "\"");
     int questionIndex = 0;
     int answerIndex = 0;

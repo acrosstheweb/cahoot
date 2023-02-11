@@ -70,4 +70,6 @@ void updateInputText(Window* window, char* inputText, SDL_Rect refRect, SDL_Rect
 
 void goodTry(Window* window, SDL_Texture* image);
 
+void bye(Window* window);
+
 #endif

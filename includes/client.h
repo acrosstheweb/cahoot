@@ -6,7 +6,7 @@
 
 int client(Window* window, char** network_ip_base);
 
-void connectToServer(char* ip);
+void connectToServer(Window** window, char* ip);
 
 void search_ips(char* network_ip_base);
 

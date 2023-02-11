@@ -357,6 +357,9 @@ void updateInputText(Window* window, char* inputText, SDL_Rect refRect, SDL_Rect
     SDL_RenderCopy(window->renderer, texture, NULL, &inputRect);
 }
 
+/*SDL_Texture* cat = textureFromImage(window->renderer, "img/button1.png");
+    goodTry(window, cat);
+    return 10;*/
 void goodTry(Window* window, SDL_Texture* image){
     SDL_RenderClear(window->renderer);
     double angle = 0.0;
@@ -366,6 +369,22 @@ void goodTry(Window* window, SDL_Texture* image){
         SDL_RenderClear(window->renderer);
         angle = 360 * elapsed / 2000;
         SDL_RenderCopyEx(window->renderer, image, NULL, NULL, angle, NULL, SDL_FLIP_NONE);
+        SDL_RenderPresent(window->renderer);
+        elapsed = SDL_GetTicks() - startTime;
+    }
+}
+
+void bye(Window* window){
+    double startTime = SDL_GetTicks();
+    double elapsed = 0;
+    while (elapsed < 1500) {
+        SDL_RenderClear(window->renderer);
+        SDL_Texture *texture = textureFromMessage(window->renderer, "Bye :)", setColor("Black"), window->font);
+        SDL_RenderCopy(window->renderer, texture, NULL, &((SDL_Rect){
+        (SCREEN_WIDTH - getTextWidth("Bye :)", 50)) / 2,
+        (SCREEN_HEIGHT- 50) / 2,
+        getTextWidth("Bye :)", 50),
+        50}));
         SDL_RenderPresent(window->renderer);
         elapsed = SDL_GetTicks() - startTime;
     }

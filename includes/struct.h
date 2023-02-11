@@ -57,4 +57,19 @@ typedef struct {
     int thread_sock_fd;
 } Ip_Args;
 
+typedef struct {
+    int client_id;
+    int sock_fd;
+    int nb_questions;
+    int good_answers;
+    QuestionData** game_packet; // packet
+} Client_Args;
+
+typedef struct {
+	int max_clients;
+	char ip[16]; // INET_ADDRSTRLEN
+    int nb_questions;
+    QuestionData** game_packet; // packet
+} Server_Args;
+
 #endif

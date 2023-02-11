@@ -62,10 +62,11 @@ int main() {
 
             case MENU_HOST_GAME:
                 newRenderer(window);
-                choice = choosePacket(window, &packetName);
-                if (choice == MENU_HOST_GAME){
-                    choice = hosting(window, packetName);
-                }
+                choice = managePackets(window, &packetName, &questionData, &questionsNb);
+                // choice = choosePacket(window, &packetName);
+                // if (choice == 5){
+                choice = hosting(window, packetName, questionData, questionsNb);
+                // }
                 break;
 
             case MENU_JOIN_GAME:

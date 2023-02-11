@@ -13,7 +13,7 @@
 
 #define MAX_CLIENTS 2
 
-int hosting(Window* window, char* packetName) {
+int hosting(Window* window, char* packetName, QuestionData* packet_to_play, int questionsNb) {
 
     // Créer les textures
     char* ip = getIp();
@@ -46,14 +46,23 @@ int hosting(Window* window, char* packetName) {
 
     pthread_t threadServer;
 	Server_Args server_args;
-    QuestionData** packet_to_play = malloc(sizeof(QuestionData*));
-    int* questionNb = malloc(sizeof(int));
-    readPacket(packetName, &packet_to_play, &questionNb);
+    // QuestionData* questionData = NULL;
+    // QuestionData** packet_to_play = malloc(sizeof(QuestionData*));
+    // packet_to_play = &questionData;
+    // printf("sizeof packet_to_play before : %d\n", sizeof(packet_to_play));
+    // int* questionNb = malloc(sizeof(int));
+    // readPacket(packetName, &packet_to_play, &questionsNb);
+    // printf("nb_packets after : %d\n", *questionsNb);
+    // printf("sizeof packet_to_play after : %d\n", sizeof(packet_to_play));
+
+    for (int i = 0; i < questionsNb; i++){
+		printf("Question %d : %s\n", i, packet_to_play[i].question);
+	}
 
     server_args.max_clients = MAX_CLIENTS;
     strcpy(server_args.ip, ip);
-    server_args.game_packet = packet_to_play;
-    server_args.nb_questions = *questionNb;
+    server_args.game_packet = &packet_to_play;
+    server_args.nb_questions = questionsNb;
 
     if (pthread_create(&threadServer, NULL, startServer, &server_args) != 0) {
         perror("pthread_create failed");
@@ -84,6 +93,12 @@ int hosting(Window* window, char* packetName) {
                     if (first != NULL) {
                         do {
                             if (current->button.isHovered && current->button.returnValue){
+                                if (current->button.returnValue == 1 || current->button.returnValue == 10){
+                                    // Fin du thread
+                                    if (pthread_join(threadServer, NULL) == 0){
+                                        printf("Thread Serveur éteint\n");
+                                    }
+                                }
                                 return current->button.returnValue;
                             }
                             current = current->next;
@@ -115,10 +130,6 @@ int hosting(Window* window, char* packetName) {
 
         // Mettre à jour l'affichage
         SDL_RenderPresent(window->renderer);
-    }
-    // Fin du thread
-    if (pthread_join(threadServer, NULL) == 0){
-        printf("pthread_join\n");
     }
 
     return 1;
