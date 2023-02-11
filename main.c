@@ -69,7 +69,7 @@ int main() {
                 break;
 
             case 6:
-                choice = client(window);
+                choice = client(window, &conf->ip_base);
                 break;
 
             case 7:
