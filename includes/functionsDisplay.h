@@ -45,7 +45,7 @@ SDL_Rect empty();
 
 SDL_Color setColor(char* name);
 // void addButtonToList(Node** first, Button *button); ?
-void addButtonToList(Node** first, SDL_Rect iconRect, States* icon, SDL_Rect textRect, States* text, int isOption, int isClickable);
+void addButtonToList(Node** first, SDL_Rect iconRect, States* icon, SDL_Rect textRect, States* text, int isOption, int returnValue);
 
 void checkHover(Node* first, int mouseX, int mouseY);
 

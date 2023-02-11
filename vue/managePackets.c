@@ -4,6 +4,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
+#include "../includes/menu.h"
 #include "../includes/functionsDisplay.h"
 #include "../includes/functionsPacket.h"
 
@@ -36,7 +37,7 @@ int managePackets(Window* window, char** packetName, QuestionData** questionData
         getTextWidth("+", 25),
         25
     };
-    addButtonToList(&first, addRect, add, addTextRect, addText, 0, 3);
+    addButtonToList(&first, addRect, add, addTextRect, addText, 0, MENU_CREATE_PACKET);
 
     // Créer les textures
     SDL_Texture* nextTexture = textureFromImage(window->renderer, "img/next.png");
@@ -197,25 +198,25 @@ int managePackets(Window* window, char** packetName, QuestionData** questionData
                     checkHover(first, x, y);
                     if (first != NULL) {
                         do {
-                            if (current->button.isHovered && current->button.isClickable){
-                                if (current->button.isClickable <= 10){
-                                    return current->button.isClickable;
-                                } else if (current->button.isClickable == 11){
+                            if (current->button.isHovered && current->button.returnValue){
+                                if (current->button.returnValue <= 10){
+                                    return current->button.returnValue;
+                                } else if (current->button.returnValue == 11){
                                     if (page > 0){
                                         page--;
                                     }
-                                } else if (current->button.isClickable == 12){
+                                } else if (current->button.returnValue == 12){
                                     if (page < *packetNb / 4){
                                         page++;
                                     }
                                 } else {
-                                    if (current->button.isClickable - 30 >= page * 4 && current->button.isClickable - 30 < (page+1) * 4){
-                                        printf("%s\n", deletePacket(*(packetList + current->button.isClickable - 30)));
+                                    if (current->button.returnValue - 30 >= page * 4 && current->button.returnValue - 30 < (page+1) * 4){
+                                        printf("%s\n", deletePacket(*(packetList + current->button.returnValue - 30)));
                                         return 4;
-                                    } else if (current->button.isClickable - 15 >= page * 4 && current->button.isClickable - 15 < (page+1) * 4){
-                                        *packetName = realloc(*packetName, strlen(*(packetList + current->button.isClickable - 15)) + 1);
-                                        *packetName = strcpy(*packetName, *(packetList + current->button.isClickable - 15));
-                                        readPacket(*(packetList + current->button.isClickable - 15), &questionData, &questionsNb);
+                                    } else if (current->button.returnValue - 15 >= page * 4 && current->button.returnValue - 15 < (page+1) * 4){
+                                        *packetName = realloc(*packetName, strlen(*(packetList + current->button.returnValue - 15)) + 1);
+                                        *packetName = strcpy(*packetName, *(packetList + current->button.returnValue - 15));
+                                        readPacket(*(packetList + current->button.returnValue - 15), &questionData, &questionsNb);
                                         return 8;
                                     }
                                     
@@ -243,15 +244,15 @@ int managePackets(Window* window, char** packetName, QuestionData** questionData
 
         if (first != NULL) {
             do {
-                if (current->button.isClickable <= 10){
+                if (current->button.returnValue <= 10){
                     display(window->renderer, current->button);
-                } else if (current->button.isClickable < 15){
+                } else if (current->button.returnValue < 15){
                     if ((current->button.icon == prev && page > 0) || (current->button.icon == next && page < *packetNb / 4 && *packetNb > 4)){
                         display(window->renderer, current->button);
                     }
                 } else {
-                    if ((current->button.isClickable - 15 >= page * 4 && current->button.isClickable - 15 < (page+1) * 4) ||
-                    (current->button.isClickable - 30 >= page * 4 && current->button.isClickable - 30 < (page+1) * 4)) {
+                    if ((current->button.returnValue - 15 >= page * 4 && current->button.returnValue - 15 < (page+1) * 4) ||
+                    (current->button.returnValue - 30 >= page * 4 && current->button.returnValue - 30 < (page+1) * 4)) {
                         display(window->renderer, current->button);
                     }
                 }

@@ -5,6 +5,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
 #include "../includes/struct.h"
+#include "../includes/menu.h"
 #include "../includes/functionsDisplay.h"
 
 Window* create_window() {
@@ -88,7 +89,7 @@ SDL_Color setColor(char* name){
  * @param textRect
  * @param text
  */
-void addButtonToList(Node** first, SDL_Rect iconRect, States* icon, SDL_Rect textRect, States* text, int isOption, int isClickable){
+void addButtonToList(Node** first, SDL_Rect iconRect, States* icon, SDL_Rect textRect, States* text, int isOption, int returnValue){
     Node* node = malloc(sizeof(Node));
     node->button.isHovered = 0;
     node->button.iconRect= iconRect;
@@ -96,7 +97,7 @@ void addButtonToList(Node** first, SDL_Rect iconRect, States* icon, SDL_Rect tex
     node->button.textRect = textRect;
     node->button.text = text;
     node->button.isOption = isOption;
-    node->button.isClickable = isClickable;
+    node->button.returnValue = returnValue;
     node->next = *first;
  
     if (*first != NULL) {
@@ -309,7 +310,7 @@ void addTemplateToList(Node** first, Window* window, int displayLogo, int displa
             getTextWidth("Menu principal", MENU_HEIGHT * 2),
             MENU_HEIGHT * 2
         };
-        addButtonToList(first, buttonMenuRect, menu, menuTextRect, menuText, 0, 10);
+        addButtonToList(first, buttonMenuRect, menu, menuTextRect, menuText, 0, TO_MENU);
     }
     if (displaySettings){
         SDL_Texture* buttonSettingsTexture = textureFromImage(window->renderer, "img/settings.png");
@@ -321,7 +322,7 @@ void addTemplateToList(Node** first, Window* window, int displayLogo, int displa
             SETTINGS_WIDTH,
             SETTINGS_HEIGHT
         };
-        addButtonToList(first, buttonSettingsRect, settings, empty(), NULL, 0, 2);
+        addButtonToList(first, buttonSettingsRect, settings, empty(), NULL, 0, TO_SETTINGS);
     }
     
     SDL_Texture* titleTexture = textureFromMessage(window->renderer, titleText, setColor("Black"), window->font);
@@ -343,7 +344,7 @@ void addTemplateToList(Node** first, Window* window, int displayLogo, int displa
         LEAVE_WIDTH,
         LEAVE_HEIGHT
     };
-    addButtonToList(first, buttonLeaveRect, quitApp, empty(), NULL, 0, 1);
+    addButtonToList(first, buttonLeaveRect, quitApp, empty(), NULL, 0, QUIT_WINDOW);
 }
 
 void updateInputText(Window* window, char* inputText, SDL_Rect refRect, SDL_Rect inputRect, int isFixed){

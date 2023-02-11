@@ -145,20 +145,20 @@ int choosePacket(Window* window, char** packetName) {
                     checkHover(first, x, y);
                     if (first != NULL) {
                         do {
-                            if (current->button.isHovered && current->button.isClickable){
-                                if (current->button.isClickable <= 10){
-                                    return current->button.isClickable;
-                                } else if (current->button.isClickable == 11){
+                            if (current->button.isHovered && current->button.returnValue){
+                                if (current->button.returnValue <= 10){
+                                    return current->button.returnValue;
+                                } else if (current->button.returnValue == 11){
                                     if (page > 0){
                                         page--;
                                     }
-                                } else if (current->button.isClickable == 12){
+                                } else if (current->button.returnValue == 12){
                                     if (page < *packetNb / 4){
                                         page++;
                                     }
-                                } else if (current->button.isClickable - 15 >= page * 4 && current->button.isClickable - 15 < (page+1) * 4){
-                                    *packetName = realloc(*packetName, sizeof(char) * (strlen(*(packetList + current->button.isClickable - 15)) + 1));
-                                    memcpy(*packetName, *(packetList + current->button.isClickable - 15), strlen(*(packetList + current->button.isClickable - 15)) + 1);
+                                } else if (current->button.returnValue - 15 >= page * 4 && current->button.returnValue - 15 < (page+1) * 4){
+                                    *packetName = realloc(*packetName, sizeof(char) * (strlen(*(packetList + current->button.returnValue - 15)) + 1));
+                                    memcpy(*packetName, *(packetList + current->button.returnValue - 15), strlen(*(packetList + current->button.returnValue - 15)) + 1);
                                     return 5;
                                 }
                             }
@@ -183,14 +183,14 @@ int choosePacket(Window* window, char** packetName) {
 
         if (first != NULL) {
             do {
-                if (current->button.isClickable <= 10){
+                if (current->button.returnValue <= 10){
                     display(window->renderer, current->button);
-                } else if (current->button.isClickable < 15){
+                } else if (current->button.returnValue < 15){
                     if ((current->button.icon == prev && page > 0) || (current->button.icon == next && page < *packetNb / 4 && *packetNb > 4)){
                         display(window->renderer, current->button);
                     }
                 } else {
-                    if (current->button.isClickable - 15 >= page * 4 && current->button.isClickable - 15 < (page+1) * 4) {
+                    if (current->button.returnValue - 15 >= page * 4 && current->button.returnValue - 15 < (page+1) * 4) {
                         display(window->renderer, current->button);
                     }
                 }

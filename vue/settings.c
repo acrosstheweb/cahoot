@@ -122,11 +122,11 @@ int settings(Window* window, Conf** conf) {
                     checkHover(first, x, y);
                     if (first != NULL) {
                         do {
-                            if (current->button.isHovered && current->button.isClickable){
-                                if (current->button.isClickable <= 10){
-                                    return current->button.isClickable;
-                                } else if (current->button.isClickable < 15){
-                                    activeInput = current->button.isClickable - 11;
+                            if (current->button.isHovered && current->button.returnValue){
+                                if (current->button.returnValue <= 10){
+                                    return current->button.returnValue;
+                                } else if (current->button.returnValue < 15){
+                                    activeInput = current->button.returnValue - 11;
                                 }  else if (strlen((*conf)->ip_base) > 0 && strlen((*conf)->packetPath) > 0 && strlen((*conf)->maxConnections) > 0) {
                                     if (inputs[0].text[strlen(inputs[0].text) - 1] != '/'){
                                         inputs[activeInput].text[strlen(inputs[activeInput].text) - 1] = '\0';

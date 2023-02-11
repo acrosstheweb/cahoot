@@ -170,19 +170,19 @@ int client(Window* window, char** network_ip_base){
                     checkHover(first, x, y);
                     if (first != NULL) {
                         do {
-                            if (current->button.isHovered && current->button.isClickable){
-                                if (current->button.isClickable <= 10){
-                                    return current->button.isClickable;
-                                } else if (current->button.isClickable == 11){
+                            if (current->button.isHovered && current->button.returnValue){
+                                if (current->button.returnValue <= 10){
+                                    return current->button.returnValue;
+                                } else if (current->button.returnValue == 11){
                                     if (page > 0){
                                         page--;
                                     }
-                                } else if (current->button.isClickable == 12){
+                                } else if (current->button.returnValue == 12){
                                     if (page < nb_servers / 4){
                                         page++;
                                     }
-                                } else if (current->button.isClickable - 15 >= page * 4 && current->button.isClickable - 15 < (page+1) * 4){
-                                    connectToServer(*(servers_list + current->button.isClickable - 15)); // mascarade
+                                } else if (current->button.returnValue - 15 >= page * 4 && current->button.returnValue - 15 < (page+1) * 4){
+                                    connectToServer(*(servers_list + current->button.returnValue - 15)); // mascarade
                                     return 10;
                                 }
                             }
@@ -207,14 +207,14 @@ int client(Window* window, char** network_ip_base){
 
         if (first != NULL) {
             do {
-                if (current->button.isClickable <= 10){
+                if (current->button.returnValue <= 10){
                     display(window->renderer, current->button);
-                } else if (current->button.isClickable < 15){
+                } else if (current->button.returnValue < 15){
                     if ((current->button.icon == prev && page > 0) || (current->button.icon == next && page < nb_servers / 4 && nb_servers > 4)){
                         display(window->renderer, current->button);
                     }
                 } else {
-                    if (current->button.isClickable - 15 >= page * 4 && current->button.isClickable - 15 < (page+1) * 4) {
+                    if (current->button.returnValue - 15 >= page * 4 && current->button.returnValue - 15 < (page+1) * 4) {
                         display(window->renderer, current->button);
                     }
                 }

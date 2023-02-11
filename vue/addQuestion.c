@@ -4,6 +4,7 @@
 #include <time.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include "../includes/menu.h"
 #include "../includes/functionsDisplay.h"
 #include "../includes/functionsPacket.h"
 #include "../includes/functions.h"
@@ -157,14 +158,14 @@ int addQuestion(Window* window, char* packetName) {
                     checkHover(first, x, y);
                     if (first != NULL) {
                         do {
-                            if (current->button.isHovered && current->button.isClickable){
-                                if (current->button.isClickable <= 10){
-                                    return current->button.isClickable;
-                                } else if (current->button.isClickable <= 15){
-                                    activeInput = current->button.isClickable - 11;
+                            if (current->button.isHovered && current->button.returnValue){
+                                if (current->button.returnValue <= 10){
+                                    return current->button.returnValue;
+                                } else if (current->button.returnValue <= 15){
+                                    activeInput = current->button.returnValue - 11;
                                 }  else if (strlen(questionText) > 0 && strlen(answer1Text) > 0 && strlen(answer2Text) > 0 && strlen(answer3Text) > 0 && strlen(answer4Text) > 0) {
                                     addQuestionToFile(packetName, questionText, answer1Text, answer2Text, answer3Text, answer4Text);
-                                    return 7;
+                                    return ADD_QUESTION;
                                 }
                             }
                             current = current->next;
@@ -195,7 +196,7 @@ int addQuestion(Window* window, char* packetName) {
                         } else if ((e.key.keysym.sym == SDLK_RETURN || e.key.keysym.sym == SDLK_KP_ENTER) &&
                         strlen(questionText) > 0 && strlen(answer1Text) > 0 && strlen(answer2Text) > 0 && strlen(answer3Text) > 0 && strlen(answer4Text) > 0) {
                             addQuestionToFile(packetName, questionText, answer1Text, answer2Text, answer3Text, answer4Text);
-                            return 7;
+                            return ADD_QUESTION;
                         } else if (e.key.keysym.sym == SDLK_TAB && (e.key.keysym.mod & KMOD_SHIFT)) {
                             activeInput--;
                             if (activeInput == -1){

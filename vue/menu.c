@@ -85,10 +85,10 @@ int menu(Window* window) {
 
     Node* first = NULL;
     addTemplateToList(&first, window, 1, 0, 1, "===MENU===");
-    addButtonToList(&first, buttoncreatePacketRect, select, buttoncreatePacketTextRect, createPacketText, 1, 3);
-    addButtonToList(&first, buttonmanagePacketRect, select, buttonmanagePacketTextRect, managePacketText, 1, 4);
-    addButtonToList(&first, buttonhostGameRect, select, buttonhostGameTextRect, hostGameText, 1, 5);
-    addButtonToList(&first, buttonjoinGameRect, select, buttonjoinGameTextRect, joinGameText, 1, 6);
+    addButtonToList(&first, buttoncreatePacketRect, select, buttoncreatePacketTextRect, createPacketText, 1, MENU_CREATE_PACKET);
+    addButtonToList(&first, buttonmanagePacketRect, select, buttonmanagePacketTextRect, managePacketText, 1, MENU_MANAGE_PACKET);
+    addButtonToList(&first, buttonhostGameRect, select, buttonhostGameTextRect, hostGameText, 1, MENU_HOST_GAME);
+    addButtonToList(&first, buttonjoinGameRect, select, buttonjoinGameTextRect, joinGameText, 1, MENU_JOIN_GAME);
 
     // Boucle principale
     int quit = 0;
@@ -110,8 +110,8 @@ int menu(Window* window) {
                     checkHover(first, x, y);
                     if (first != NULL) {
                         do {
-                            if (current->button.isHovered && current->button.isClickable){
-                                return current->button.isClickable;
+                            if (current->button.isHovered && current->button.returnValue){
+                                return current->button.returnValue;
                             }
                             current = current->next;
                         }while (current != first);

@@ -4,6 +4,7 @@
 #include <time.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include "../includes/menu.h"
 #include "../includes/functionsDisplay.h"
 #include "../includes/functionsPacket.h"
 #include "../includes/functions.h"
@@ -184,7 +185,7 @@ int manageQuestions(Window* window, char* packetName, QuestionData* questionData
 
     Node* first = NULL;
     addTemplateToList(&first, window, 1, 1, 0, "");
-    addButtonToList(&first, addRect, add, addTextRect, addText, 0, 7);
+    addButtonToList(&first, addRect, add, addTextRect, addText, 0, ADD_QUESTION);
     addButtonToList(&first, questionRect, blue, empty(), NULL, 1, 11);
     addButtonToList(&first, answer1Rect, green, empty(), NULL, 1, 12);
     addButtonToList(&first, answer2Rect, red, empty(), NULL, 1, 13);
@@ -217,12 +218,12 @@ int manageQuestions(Window* window, char* packetName, QuestionData* questionData
                     checkHover(first, x, y);
                     if (first != NULL) {
                         do {
-                            if (current->button.isHovered && current->button.isClickable){
-                                if (current->button.isClickable <= 10){
-                                    return current->button.isClickable;
-                                } else if (current->button.isClickable <= 15){
-                                    activeInput = current->button.isClickable - 11;
-                                }  else if (current->button.isClickable == 16){
+                            if (current->button.isHovered && current->button.returnValue){
+                                if (current->button.returnValue <= 10){
+                                    return current->button.returnValue;
+                                } else if (current->button.returnValue <= 15){
+                                    activeInput = current->button.returnValue - 11;
+                                }  else if (current->button.returnValue == 16){
                                     if (strlen(questionText) > 0 && strlen(answer1Text) > 0 && strlen(answer2Text) > 0 && strlen(answer3Text) > 0 && strlen(answer4Text) > 0) {
                                         strcpy(questionData[activeQuestion].question, questionText);
                                         strcpy(questionData[activeQuestion].answers[0], answer1Text);
@@ -232,11 +233,11 @@ int manageQuestions(Window* window, char* packetName, QuestionData* questionData
                                         modifyPacket(packetName, questionData, questionsNb);
                                         return 8;
                                     }
-                                }  else if (current->button.isClickable == 17){
+                                }  else if (current->button.returnValue == 17){
                                     deleteQuestion(&questionData, &questionsNb, activeQuestion);
                                     modifyPacket(packetName, questionData, questionsNb);
                                     return 8;
-                                } else if (current->button.isClickable == 18){
+                                } else if (current->button.returnValue == 18){
                                     if (activeQuestion > 0){
                                         // strcpy(questionData[activeQuestion].question, questionText);
                                         // strcpy(questionData[activeQuestion].answers[0], answer1Text);
@@ -250,7 +251,7 @@ int manageQuestions(Window* window, char* packetName, QuestionData* questionData
                                         strcpy(answer3Text, questionData[activeQuestion].answers[2]);
                                         strcpy(answer4Text, questionData[activeQuestion].answers[3]);
                                     }
-                                } else if (current->button.isClickable == 19){
+                                } else if (current->button.returnValue == 19){
                                     if (activeQuestion < questionsNb - 1){
                                         // strcpy(questionData[activeQuestion].question, questionText);
                                         // strcpy(questionData[activeQuestion].answers[0], answer1Text);
@@ -340,7 +341,7 @@ int manageQuestions(Window* window, char* packetName, QuestionData* questionData
 
         if (first != NULL) {
             do {
-                if (current->button.isClickable < 18){
+                if (current->button.returnValue < 18){
                     display(window->renderer, current->button);
                 } else {
                     if ((current->button.icon == prev && activeQuestion > 0) || (current->button.icon == next && activeQuestion < questionsNb - 1)){

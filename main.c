@@ -43,24 +43,24 @@ int main() {
         }
 
         switch (choice) {
-            case 1:
+            case QUIT_WINDOW:
                 break;
                             
             case 2:
                 choice = settings(window, &conf);
                 break;
             
-            case 3:
+            case MENU_CREATE_PACKET:
                 newRenderer(window);
                 choice = createPacket(window, &packetName);
                 break;
 
-            case 4:
+            case MENU_MANAGE_PACKET:
                 newRenderer(window);
                 choice = managePackets(window, &packetName, &questionData, &questionsNb);
                 break;
 
-            case 5:
+            case MENU_HOST_GAME:
                 newRenderer(window);
                 choice = choosePacket(window, &packetName);
                 if (choice == 5){
@@ -68,7 +68,7 @@ int main() {
                 }
                 break;
 
-            case 6:
+            case MENU_JOIN_GAME:
                 choice = client(window, &conf->ip_base);
                 break;
 

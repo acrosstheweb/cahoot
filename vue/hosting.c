@@ -83,8 +83,8 @@ int hosting(Window* window, char* packetName) {
                     checkHover(first, x, y);
                     if (first != NULL) {
                         do {
-                            if (current->button.isHovered && current->button.isClickable){
-                                return current->button.isClickable;
+                            if (current->button.isHovered && current->button.returnValue){
+                                return current->button.returnValue;
                             }
                             current = current->next;
                         }while (current != first);
