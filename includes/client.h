@@ -4,11 +4,11 @@
 
 #include "struct.h"
 
-int client(Window* window);
+int client(Window* window, char** network_ip_base);
 
 void connectToServer(char* ip);
 
-void search_ips();
+void search_ips(char* network_ip_base);
 
 void* ip_handler(void* arg);
 
