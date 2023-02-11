@@ -11,6 +11,7 @@
 #include "../includes/functionsDisplay.h"
 #include "../includes/client.h"
 #include "../includes/struct.h"
+#include "../includes/menu.h"
 
 #define PORT 13337
 
@@ -171,7 +172,7 @@ int client(Window* window, char** network_ip_base){
                     if (first != NULL) {
                         do {
                             if (current->button.isHovered && current->button.returnValue){
-                                if (current->button.returnValue <= 10){
+                                if (current->button.returnValue <= TO_MENU){
                                     return current->button.returnValue;
                                 } else if (current->button.returnValue == 11){
                                     if (page > 0){

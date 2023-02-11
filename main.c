@@ -63,7 +63,7 @@ int main() {
             case MENU_HOST_GAME:
                 newRenderer(window);
                 choice = choosePacket(window, &packetName);
-                if (choice == 5){
+                if (choice == MENU_HOST_GAME){
                     choice = hosting(window, packetName);
                 }
                 break;

@@ -7,6 +7,7 @@
 #include "../includes/functionsDisplay.h"
 #include "../includes/functionsPacket.h"
 #include "../includes/functions.h"
+#include "../includes/menu.h"
 
 
 int settings(Window* window, Conf** conf) {
@@ -123,7 +124,7 @@ int settings(Window* window, Conf** conf) {
                     if (first != NULL) {
                         do {
                             if (current->button.isHovered && current->button.returnValue){
-                                if (current->button.returnValue <= 10){
+                                if (current->button.returnValue <= TO_MENU){
                                     return current->button.returnValue;
                                 } else if (current->button.returnValue < 15){
                                     activeInput = current->button.returnValue - 11;
@@ -133,7 +134,7 @@ int settings(Window* window, Conf** conf) {
                                         strcat(inputs[0].text, "/\0");
                                     }
                                     modifyConfig(*conf);
-                                    return 10;
+                                    return TO_MENU;
                                 }
                             }
                             current = current->next;
@@ -168,7 +169,7 @@ int settings(Window* window, Conf** conf) {
                                 strcat(inputs[0].text, "/\0");
                             }
                             modifyConfig(*conf);
-                            return 10;
+                            return TO_MENU;
                         } else if (e.key.keysym.sym == SDLK_TAB && (e.key.keysym.mod & KMOD_SHIFT)) {
                             activeInput--;
                             if (activeInput == -1){

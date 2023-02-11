@@ -159,7 +159,7 @@ int addQuestion(Window* window, char* packetName) {
                     if (first != NULL) {
                         do {
                             if (current->button.isHovered && current->button.returnValue){
-                                if (current->button.returnValue <= 10){
+                                if (current->button.returnValue <= TO_MENU){
                                     return current->button.returnValue;
                                 } else if (current->button.returnValue <= 15){
                                     activeInput = current->button.returnValue - 11;

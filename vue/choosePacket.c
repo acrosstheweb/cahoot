@@ -4,6 +4,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
+#include "../includes/menu.h"
 #include "../includes/functionsDisplay.h"
 #include "../includes/functionsPacket.h"
 
@@ -146,7 +147,7 @@ int choosePacket(Window* window, char** packetName) {
                     if (first != NULL) {
                         do {
                             if (current->button.isHovered && current->button.returnValue){
-                                if (current->button.returnValue <= 10){
+                                if (current->button.returnValue <= TO_MENU){
                                     return current->button.returnValue;
                                 } else if (current->button.returnValue == 11){
                                     if (page > 0){
@@ -159,7 +160,7 @@ int choosePacket(Window* window, char** packetName) {
                                 } else if (current->button.returnValue - 15 >= page * 4 && current->button.returnValue - 15 < (page+1) * 4){
                                     *packetName = realloc(*packetName, sizeof(char) * (strlen(*(packetList + current->button.returnValue - 15)) + 1));
                                     memcpy(*packetName, *(packetList + current->button.returnValue - 15), strlen(*(packetList + current->button.returnValue - 15)) + 1);
-                                    return 5;
+                                    return MENU_HOST_GAME;
                                 }
                             }
                             current = current->next;
