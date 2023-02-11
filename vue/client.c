@@ -14,17 +14,14 @@
 
 #define PORT 13337
 
-void search_ips();
-void* ip_handler(void* arg);
-
-
 char** servers_list = NULL; // Tableau qui contiendra les adresses ip des serveurs trouvés sur le LAN
 unsigned char nb_servers = 0; // tah l'opti de faire un unsigned char (0 à 255)
 pthread_mutex_t thread_lock;
 
-int client(Window* window){
-    
-    search_ips();
+int client(Window* window, char** network_ip_base){
+
+
+    search_ips(*network_ip_base);
     // servers_list est alimenté
 
     printf("\n\n%d serveur(s) trouvés : \n\n", nb_servers);
@@ -273,12 +270,15 @@ void connectToServer(char* ip){
  * Liste les adresses ip qui écoutent sur le port 13337 
  * 
 */
-void search_ips(){
+void search_ips(char* network_ip_base){
 
 	char ip_addr[INET_ADDRSTRLEN], tmp_ip_base[INET_ADDRSTRLEN];
-	char ip_base[INET_ADDRSTRLEN] = "192.168.105."; // TODO: changer en fonction du vmnet / à entrer dans fichier de conf
+	char ip_base[INET_ADDRSTRLEN];
+    strcpy(ip_base, network_ip_base); // TODO: changer en fonction du vmnet / à entrer dans fichier de conf
     int byte, z, sockfd;
 	char last_byte[4];
+
+    printf("Recherche sur le subnet %sxxx", ip_base);
 
     pthread_t threads[255];
 	Ip_Args thread_args[255];
