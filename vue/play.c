@@ -10,23 +10,23 @@
 #include "../includes/play.h"
 
 
-int play(Window* window, QuestionData* questionData) {
+int play(Window*** window, QuestionData* questionData) {
 
     // Créer les textures
-    SDL_Texture* blueRectTexture = textureFromImage(window->renderer, "img/rect_blue.png");
-    SDL_Texture* blueRectHoverTexture = textureFromImage(window->renderer, "img/rect_blue_hover.png");
-    SDL_Texture* redRectTexture = textureFromImage(window->renderer, "img/rect_red.png");
-    SDL_Texture* redRectHoverTexture = textureFromImage(window->renderer, "img/rect_red_hover.png");
-    SDL_Texture* greenRectTexture = textureFromImage(window->renderer, "img/rect_green.png");
-    SDL_Texture* greenRectHoverTexture = textureFromImage(window->renderer, "img/rect_green_hover.png");
-    SDL_Texture* yellowRectTexture = textureFromImage(window->renderer, "img/rect_yellow.png");
-    SDL_Texture* yellowRectHoverTexture = textureFromImage(window->renderer, "img/rect_yellow_hover.png");
+    SDL_Texture* blueRectTexture = textureFromImage((**window)->renderer, "img/rect_blue.png");
+    SDL_Texture* blueRectHoverTexture = textureFromImage((**window)->renderer, "img/rect_blue_hover.png");
+    SDL_Texture* redRectTexture = textureFromImage((**window)->renderer, "img/rect_red.png");
+    SDL_Texture* redRectHoverTexture = textureFromImage((**window)->renderer, "img/rect_red_hover.png");
+    SDL_Texture* greenRectTexture = textureFromImage((**window)->renderer, "img/rect_green.png");
+    SDL_Texture* greenRectHoverTexture = textureFromImage((**window)->renderer, "img/rect_green_hover.png");
+    SDL_Texture* yellowRectTexture = textureFromImage((**window)->renderer, "img/rect_yellow.png");
+    SDL_Texture* yellowRectHoverTexture = textureFromImage((**window)->renderer, "img/rect_yellow_hover.png");
 
-    SDL_Texture* questionTexture = textureFromMessage(window->renderer, questionData->question, setColor("Black"), window->font);
-    SDL_Texture* answer1Texture = textureFromMessage(window->renderer, questionData->answers[0], setColor("Black"), window->font);   
-    SDL_Texture* answer2Texture = textureFromMessage(window->renderer, questionData->answers[1], setColor("Black"), window->font);
-    SDL_Texture* answer3Texture = textureFromMessage(window->renderer, questionData->answers[2], setColor("Black"), window->font);
-    SDL_Texture* answer4Texture = textureFromMessage(window->renderer, questionData->answers[3], setColor("Black"), window->font);
+    SDL_Texture* questionTexture = textureFromMessage((**window)->renderer, questionData->question, setColor("Black"), (**window)->font);
+    SDL_Texture* answer1Texture = textureFromMessage((**window)->renderer, questionData->answers[0], setColor("Black"), (**window)->font);   
+    SDL_Texture* answer2Texture = textureFromMessage((**window)->renderer, questionData->answers[1], setColor("Black"), (**window)->font);
+    SDL_Texture* answer3Texture = textureFromMessage((**window)->renderer, questionData->answers[2], setColor("Black"), (**window)->font);
+    SDL_Texture* answer4Texture = textureFromMessage((**window)->renderer, questionData->answers[3], setColor("Black"), (**window)->font);
 
     States* blue = setStates(blueRectTexture, blueRectHoverTexture);
     States* red = setStates(redRectTexture, redRectHoverTexture);
@@ -101,7 +101,7 @@ int play(Window* window, QuestionData* questionData) {
     };
 
     Node* first = NULL;
-    addTemplateToList(&first, window, 1, 0, 0, "");
+    addTemplateToList(&first, (**window), 1, 0, 0, "");
     addButtonToList(&first, questionRect, yellow, questionTextRect, question, 0, 0); // Question
     addButtonToList(&first, answer1Rect, red, answer1TextRect, answer1, 1, 11); 
     addButtonToList(&first, answer2Rect, green, answer2TextRect, answer2, 1, 12);
@@ -147,11 +147,18 @@ int play(Window* window, QuestionData* questionData) {
 
         // Effacer l'écran
         SDL_free(clipboard);
-        SDL_SetRenderDrawColor(window->renderer, 0xF1, 0xFA, 0xEE, 0xFF);
-        SDL_RenderClear(window->renderer);
+        SDL_SetRenderDrawColor((**window)->renderer, 0xF1, 0xFA, 0xEE, 0xFF);
+        SDL_RenderClear((**window)->renderer);
+
+        if (first != NULL) {
+            do {
+                display((**window)->renderer, current->button);
+                current = current->next;
+            }while (current != first);
+        }
         
         // Mettre à jour l'affichage
-        SDL_RenderPresent(window->renderer);
+        SDL_RenderPresent((**window)->renderer);
     }
     return 1;
 }

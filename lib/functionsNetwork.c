@@ -126,18 +126,10 @@ void* client_handler(void* arg){
 	int valread = 0;
 
     for(int q_index = 0; q_index < nb_questions; q_index++) {
-    	// printf("jaaj\n");
-		// send(sock_fd, (*game_packet + q_index)->question, strlen((*game_packet + q_index)->question) + 1, 0); // Envoie la question au client
-		// printf("question [%d] sent\n", q_index);
-		// send(sock_fd, (*game_packet + q_index)->answers[0], strlen((*game_packet + q_index)->answers[0]) + 1, 0); // Envoie la premiere reponse
-		// send(sock_fd, (*game_packet + q_index)->answers[1], strlen((*game_packet + q_index)->answers[1]) + 1, 0);
-		// send(sock_fd, (*game_packet + q_index)->answers[2], strlen((*game_packet + q_index)->answers[2]) + 1, 0);
-		// send(sock_fd, (*game_packet + q_index)->answers[3], strlen((*game_packet + q_index)->answers[3]) + 1, 0);
-		
 		int serial_size = (sizeof(char) * 16) + (sizeof(char*) * 4);
 		char* serialized = malloc(sizeof(char) * serial_size);
-		serialized = serializeQuestionData(game_packet[q_index]);
-		printf("*(game_packet + q_index)->question : %s\n", game_packet[q_index]->question);
+		serialized = serializeQuestionData(*game_packet + q_index);
+		
 
 		send(sock_fd, serialized, serial_size, 0);
     	

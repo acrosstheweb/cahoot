@@ -257,23 +257,18 @@ void connectToServer(Window** window, char* ip){
 
     while(1){
         if(recv(server_socket, &buffer, serial_size, 0) != -1){
-
             if(strcmp(buffer, "tah_la_deconnexion") == 0){
                 close(server_socket);
                 printf("Ciao\n");
                 break; // return; ?
             }
 
-            printf("sizeof(buffer) = %d\n", sizeof(buffer));
-            printf("%d\n", counter);
             QuestionData* questionData = deserializeQuestionData(buffer);
-            rep = play(*window, questionData);
+            rep = play(&window, questionData);
             rep = rep-11;
             rep = htonl(rep);
             send(server_socket, &rep, sizeof(rep), 0);
             rep = ntohl(rep);
-        } else {
-            printf("Ce cas existe ?\n");
         }
     }
 }

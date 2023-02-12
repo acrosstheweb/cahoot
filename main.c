@@ -44,6 +44,7 @@ int main() {
 
         switch (choice) {
             case QUIT_WINDOW:
+                bye(window);
                 break;
                             
             case 2:

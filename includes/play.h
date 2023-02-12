@@ -4,6 +4,6 @@
 
 #include "struct.h"
 
-int play(Window* window, QuestionData* questionData);
+int play(Window*** window, QuestionData* questionData);
 
 #endif
