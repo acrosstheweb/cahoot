@@ -231,6 +231,7 @@ int client(Window* window, char** network_ip_base){
 }
 
 void connectToServer(Window** window, char* ip){
+    printf("in connectToServer\n");
 	int server_socket = socket(AF_INET, SOCK_STREAM, 0);
 	if(server_socket < 0){
 		printf("Error creating the socket");
@@ -246,7 +247,9 @@ void connectToServer(Window** window, char* ip){
 	if(connect(server_socket, (struct sockaddr*) &server_address, sizeof(server_address)) == -1){
 		printf("Cannot connect to remote server socket : err n°%d : %s\n", errno , strerror(errno));
 		return;
-	}
+	}else{
+        printf("tah ?\n");
+    }
 
     int rep;
     int counter = 0;
@@ -257,13 +260,14 @@ void connectToServer(Window** window, char* ip){
 
     while(1){
         if(recv(server_socket, &buffer, serial_size, 0) != -1){
-            if(strcmp(buffer, "tah_la_deconnexion") == 0){
-                close(server_socket);
+            QuestionData* questionData = deserializeQuestionData(buffer);
+
+            if(strcmp(questionData->question, "tah_la_deconnexion") == 0){
                 printf("Ciao\n");
-                break; // return; ?
+                close(server_socket);
+                return;
             }
 
-            QuestionData* questionData = deserializeQuestionData(buffer);
             rep = play(&window, questionData);
             rep = rep-11;
             rep = htonl(rep);
@@ -284,8 +288,6 @@ void search_ips(char* network_ip_base){
     strcpy(ip_base, network_ip_base); // TODO: changer en fonction du vmnet / à entrer dans fichier de conf
     int byte, z, sockfd;
 	char last_byte[4];
-
-    printf("Recherche sur le subnet %sxxx", ip_base);
 
     pthread_t threads[255];
 	Ip_Args thread_args[255];

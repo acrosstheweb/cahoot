@@ -11,10 +11,7 @@
 #include "../includes/functionsPacket.h"
 
 
-#define MAX_CLIENTS 2
-
-int hosting(Window* window, char* packetName, QuestionData* packet_to_play, int questionsNb) {
-
+int hosting(Window* window, char* packetName, QuestionData* packet_to_play, int questionsNb, char* maxClients) {
     // Créer les textures
     char* ip = getIp();
     char* packet = malloc(sizeof(char) * (strlen("avec le paquet ") + strlen(packetName) + 1));
@@ -23,6 +20,10 @@ int hosting(Window* window, char* packetName, QuestionData* packet_to_play, int 
     SDL_Texture* messageTexture = textureFromMessage(window->renderer, "Vous hebergez une partie sur l'adresse suivante:", setColor("Black"), window->font);
     SDL_Texture* ipTexture = textureFromMessage(window->renderer, ip , setColor("Black"), window->font);
     SDL_Texture* packetTexture = textureFromMessage(window->renderer, packet , setColor("Black"), window->font);
+    int nbConnected = 0;
+    char* nbConnectedString = malloc(sizeof(char) * (strlen(maxClients) + 1));
+    char* connected = malloc(sizeof(char) * (strlen("Clients connectes:  / ") + strlen(maxClients) * 2 + 1));
+
 
     // Définir les positions des boutons (x, y, w, h)
     SDL_Rect messageRect = {
@@ -43,23 +44,18 @@ int hosting(Window* window, char* packetName, QuestionData* packet_to_play, int 
         getTextWidth(packet, 50),
         50
     };
+    SDL_Rect messageConnectionsRect = {
+        0, //defini plus tard
+        450,
+        0, //defini plus tard
+        50
+    };
 
     pthread_t threadServer;
 	Server_Args server_args;
-    // QuestionData* questionData = NULL;
-    // QuestionData** packet_to_play = malloc(sizeof(QuestionData*));
-    // packet_to_play = &questionData;
-    // printf("sizeof packet_to_play before : %d\n", sizeof(packet_to_play));
-    // int* questionNb = malloc(sizeof(int));
-    // readPacket(packetName, &packet_to_play, &questionsNb);
-    // printf("nb_packets after : %d\n", *questionsNb);
-    // printf("sizeof packet_to_play after : %d\n", sizeof(packet_to_play));
 
-    for (int i = 0; i < questionsNb; i++){
-		printf("Question %d : %s\n", i, packet_to_play[i].question);
-	}
-
-    server_args.max_clients = MAX_CLIENTS;
+    server_args.clients = &nbConnected;
+    server_args.max_clients = atoi(maxClients);
     strcpy(server_args.ip, ip);
     server_args.game_packet = &packet_to_play;
     server_args.nb_questions = questionsNb;
@@ -99,6 +95,7 @@ int hosting(Window* window, char* packetName, QuestionData* packet_to_play, int 
                                         printf("Thread Serveur éteint\n");
                                     }
                                 }
+                                bye(window);
                                 return current->button.returnValue;
                             }
                             current = current->next;
@@ -121,11 +118,20 @@ int hosting(Window* window, char* packetName, QuestionData* packet_to_play, int 
                 current = current->next;
             }while (current != first);
         }
-        
-        
+
+        sprintf(nbConnectedString, "%d", nbConnected);
+        connected = strcpy(connected, "Clients connectes: ");
+        connected = strcat(connected, nbConnectedString);
+        connected = strcat(connected, " / ");
+        connected = strcat(connected, maxClients);
+        SDL_Texture* messageConnectionsTexture = textureFromMessage(window->renderer, connected, setColor("Black"), window->font);
+        messageConnectionsRect.x = (SCREEN_WIDTH - getTextWidth(connected, 50)) / 2;
+        messageConnectionsRect.w = getTextWidth(connected, 50);
+
         SDL_RenderCopy(window->renderer, messageTexture, NULL, &messageRect); // Affichage de "Vous hebergez...""
         SDL_RenderCopy(window->renderer, ipTexture, NULL, &ipRect); // Affichage de l'ip
         SDL_RenderCopy(window->renderer, packetTexture, NULL, &packetRect); // Affichage du packet séléctionné
+        SDL_RenderCopy(window->renderer, messageConnectionsTexture, NULL, &messageConnectionsRect); // Affichage de "Clients connectes:"
 
 
         // Mettre à jour l'affichage

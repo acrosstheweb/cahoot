@@ -47,7 +47,7 @@ int play(Window*** window, QuestionData* questionData) {
     };
     SDL_Rect questionTextRect = {
         questionRect.x + (questionRect.w - getTextWidth(questionData->question, 50) ) / 2,
-        questionRect.y + (questionRect.h + 50) / 2,
+        questionRect.y + (questionRect.h - 50) / 2,
         getTextWidth(questionData->question, 50),
         50
     };
@@ -59,8 +59,8 @@ int play(Window*** window, QuestionData* questionData) {
     };
     SDL_Rect answer1TextRect = {
         answer1Rect.x + (answer1Rect.w - getTextWidth(questionData->answers[0], 25)) / 2,
-        answer1Rect.y + (answer1Rect.h + 25) / 2,
-        100,
+        answer1Rect.y + (answer1Rect.h - 25) / 2,
+        getTextWidth(questionData->question, 25),
         25
     };
     SDL_Rect answer2Rect = {
@@ -71,8 +71,8 @@ int play(Window*** window, QuestionData* questionData) {
     };
     SDL_Rect answer2TextRect = {
         answer2Rect.x + (answer2Rect.w - getTextWidth(questionData->answers[1], 25)) / 2,
-        answer2Rect.y + (answer2Rect.h + 25) / 2,
-        100,
+        answer2Rect.y + (answer2Rect.h - 25) / 2,
+        getTextWidth(questionData->question, 25),
         25
     };
     SDL_Rect answer3Rect = {
@@ -83,8 +83,8 @@ int play(Window*** window, QuestionData* questionData) {
     };
     SDL_Rect answer3TextRect = {
         answer3Rect.x + (answer3Rect.w - getTextWidth(questionData->answers[2], 25)) / 2,
-        answer3Rect.y + (answer3Rect.h + 25) / 2,
-        100,
+        answer3Rect.y + (answer3Rect.h - 25) / 2,
+        getTextWidth(questionData->question, 25),
         25
     };
     SDL_Rect answer4Rect = {
@@ -94,9 +94,9 @@ int play(Window*** window, QuestionData* questionData) {
         ANSWER_RECT_HEIGHT
     };
     SDL_Rect answer4TextRect = {
-        answer4Rect.x + (answer4Rect.w - getTextWidth(questionData->answers[3], 50)) / 2,
-        answer4Rect.y + (answer4Rect.h + 25) / 2,
-        100,
+        answer4Rect.x + (answer4Rect.w - getTextWidth(questionData->answers[3], 25)) / 2,
+        answer4Rect.y + (answer4Rect.h - 25) / 2,
+        getTextWidth(questionData->question, 25),
         25
     };
 

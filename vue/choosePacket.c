@@ -9,11 +9,16 @@
 #include "../includes/functionsPacket.h"
 
 
-int choosePacket(Window* window, char** packetName) {
-    char** packetList = NULL;
-    int* packetNb = malloc(sizeof(int));
-    packetList = listPackets(packetNb);
+int choosePacket(Window* window, char** packetName, QuestionData** questionData, int *questionsNb) {
     int page = 0;
+    int* packetNb = malloc(sizeof(int));
+    Node* first = NULL;
+    char** packetList = NULL;
+    packetList = listPackets(packetNb);
+
+    SDL_Texture* errorTexture = NULL;
+
+    addTemplateToList(&first, window, 1, 1, 0, "===MES PAQUETS===");
 
     // Créer les textures
     SDL_Texture* nextTexture = textureFromImage(window->renderer, "img/next.png");
@@ -36,94 +41,95 @@ int choosePacket(Window* window, char** packetName) {
     States* blue = setStates(blueRectTexture, blueRectHoverTexture);
     States* yellow = setStates(yellowRectTexture, yellowRectHoverTexture);
 
-    // Définir les positions des boutons (x, y, w, h)
-    SDL_Rect nextRect = {
-        SCREEN_WIDTH - MARGIN - NEXT_RECT_WIDTH,
-        (SCREEN_HEIGHT - NEXT_RECT_HEIGHT) / 2,
-        NEXT_RECT_WIDTH,
-        NEXT_RECT_HEIGHT
-    };
-    SDL_Rect prevRect = {
-        MARGIN,
-        (SCREEN_HEIGHT - PREV_RECT_HEIGHT) / 2,
-        PREV_RECT_WIDTH,
-        PREV_RECT_HEIGHT
-    };
-    SDL_Rect redRect = {
-        PACKET_RECT_STARTX + MARGIN / 4,
-        PACKET_RECT_STARTY + MARGIN / 2,
-        PACKET_RECT_WIDTH,
-        PACKET_RECT_HEIGHT
-    };
-    SDL_Rect greenRect = {
-        PACKET_RECT_ENDX - PACKET_RECT_WIDTH - MARGIN / 4,
-        PACKET_RECT_STARTY + MARGIN / 2,
-        PACKET_RECT_WIDTH,
-        PACKET_RECT_HEIGHT
-    };
-    SDL_Rect blueRect = {
-        PACKET_RECT_STARTX + MARGIN / 4,
-        PACKET_RECT_ENDY -PACKET_RECT_HEIGHT-MARGIN,
-        PACKET_RECT_WIDTH,
-        PACKET_RECT_HEIGHT
-    };
-    SDL_Rect yellowRect = {
-        PACKET_RECT_ENDX - PACKET_RECT_WIDTH - MARGIN / 4,
-        PACKET_RECT_ENDY - PACKET_RECT_HEIGHT - MARGIN,
-        PACKET_RECT_WIDTH,
-        PACKET_RECT_HEIGHT
-    };
+    if (packetList != NULL){
+        // Définir les positions des boutons (x, y, w, h)
+        SDL_Rect nextRect = {
+            SCREEN_WIDTH - MARGIN - NEXT_RECT_WIDTH,
+            (SCREEN_HEIGHT - NEXT_RECT_HEIGHT) / 2,
+            NEXT_RECT_WIDTH,
+            NEXT_RECT_HEIGHT
+        };
+        SDL_Rect prevRect = {
+            MARGIN,
+            (SCREEN_HEIGHT - PREV_RECT_HEIGHT) / 2,
+            PREV_RECT_WIDTH,
+            PREV_RECT_HEIGHT
+        };
+        SDL_Rect redRect = {
+            PACKET_RECT_STARTX + MARGIN / 4,
+            PACKET_RECT_STARTY + MARGIN / 2,
+            PACKET_RECT_WIDTH,
+            PACKET_RECT_HEIGHT
+        };
+        SDL_Rect greenRect = {
+            PACKET_RECT_ENDX - PACKET_RECT_WIDTH - MARGIN / 4,
+            PACKET_RECT_STARTY + MARGIN / 2,
+            PACKET_RECT_WIDTH,
+            PACKET_RECT_HEIGHT
+        };
+        SDL_Rect blueRect = {
+            PACKET_RECT_STARTX + MARGIN / 4,
+            PACKET_RECT_ENDY -PACKET_RECT_HEIGHT-MARGIN,
+            PACKET_RECT_WIDTH,
+            PACKET_RECT_HEIGHT
+        };
+        SDL_Rect yellowRect = {
+            PACKET_RECT_ENDX - PACKET_RECT_WIDTH - MARGIN / 4,
+            PACKET_RECT_ENDY - PACKET_RECT_HEIGHT - MARGIN,
+            PACKET_RECT_WIDTH,
+            PACKET_RECT_HEIGHT
+        };
 
 
+        addButtonToList(&first, prevRect, prev, empty(), NULL, 1, 11);
+        addButtonToList(&first, nextRect, next, empty(), NULL, 1, 12);
 
-    Node* first = NULL;
-    addTemplateToList(&first, window, 1, 1, 0, "===MES PAQUETS===");
-    addButtonToList(&first, prevRect, prev, empty(), NULL, 1, 11);
-    addButtonToList(&first, nextRect, next, empty(), NULL, 1, 12);
+        for (int i = 0; i < *packetNb; i++){
+            SDL_Texture* textTexture = textureFromMessage(window->renderer, *(packetList + i), setColor("Black"), window->font);
+            States* text = setStates(textTexture, textTexture);
+            switch (i % 4){
+            case 0:
+                addButtonToList(&first, redRect, red, (SDL_Rect){
+                    redRect.x + (redRect.w - getTextWidth(*(packetList + i), 50)) / 2,
+                    redRect.y + (redRect.h - 50) / 2,
+                    getTextWidth(*(packetList + i), 50),
+                    50},
+                    text, 1, 15 + i);
+                break;
 
-    for (int i = 0; i < *packetNb; i++){
-        SDL_Texture* textTexture = textureFromMessage(window->renderer, *(packetList + i), setColor("Black"), window->font);
-        States* text = setStates(textTexture, textTexture);
-        switch (i % 4){
-        case 0:
-            addButtonToList(&first, redRect, red, (SDL_Rect){
-                redRect.x + (redRect.w - getTextWidth(*(packetList + i), 50)) / 2,
-                redRect.y + (redRect.h - 50) / 2,
-                getTextWidth(*(packetList + i), 50),
-                50},
-                text, 1, 15 + i);
-            break;
+            case 1:
+                addButtonToList(&first, greenRect, green, (SDL_Rect){
+                    greenRect.x + (greenRect.w- getTextWidth(*(packetList + i), 50)) / 2,
+                    greenRect.y + (greenRect.h - 50) / 2,
+                    getTextWidth(*(packetList + i), 50),
+                    50
+                    }, text, 1, 15 + i);
+                break;
 
-        case 1:
-            addButtonToList(&first, greenRect, green, (SDL_Rect){
-                greenRect.x + (greenRect.w- getTextWidth(*(packetList + i), 50)) / 2,
-                greenRect.y + (greenRect.h - 50) / 2,
-                getTextWidth(*(packetList + i), 50),
-                50
-                }, text, 1, 15 + i);
-            break;
+            case 2:
+                addButtonToList(&first, blueRect, blue, (SDL_Rect){
+                    blueRect.x + (blueRect.w- getTextWidth(*(packetList + i), 50)) / 2,
+                    blueRect.y + (blueRect.h - 50) / 2,
+                    getTextWidth(*(packetList + i), 50),
+                    50
+                    }, text, 1, 15 + i);
+                break;
 
-        case 2:
-            addButtonToList(&first, blueRect, blue, (SDL_Rect){
-                blueRect.x + (blueRect.w- getTextWidth(*(packetList + i), 50)) / 2,
-                blueRect.y + (blueRect.h - 50) / 2,
-                getTextWidth(*(packetList + i), 50),
-                50
-                }, text, 1, 15 + i);
-            break;
-
-        case 3:
-            addButtonToList(&first, yellowRect, yellow, (SDL_Rect){
-                yellowRect.x + (yellowRect.w- getTextWidth(*(packetList + i), 50)) / 2,
-                yellowRect.y + (yellowRect.h - 50) / 2,
-                getTextWidth(*(packetList + i), 50),
-                50
-                }, text, 1, 15 + i);
-            break;
-        
-        default:
-            break;
+            case 3:
+                addButtonToList(&first, yellowRect, yellow, (SDL_Rect){
+                    yellowRect.x + (yellowRect.w- getTextWidth(*(packetList + i), 50)) / 2,
+                    yellowRect.y + (yellowRect.h - 50) / 2,
+                    getTextWidth(*(packetList + i), 50),
+                    50
+                    }, text, 1, 15 + i);
+                break;
+            
+            default:
+                break;
+            }
         }
+    } else {
+        errorTexture = textureFromMessage(window->renderer, "Vous n'avez aucun paquet pour l'instant", setColor("Black"), window->font);
     }
     
     // Boucle principale
@@ -158,9 +164,10 @@ int choosePacket(Window* window, char** packetName) {
                                         page++;
                                     }
                                 } else if (current->button.returnValue - 15 >= page * 4 && current->button.returnValue - 15 < (page+1) * 4){
-                                    *packetName = realloc(*packetName, sizeof(char) * (strlen(*(packetList + current->button.returnValue - 15)) + 1));
-                                    memcpy(*packetName, *(packetList + current->button.returnValue - 15), strlen(*(packetList + current->button.returnValue - 15)) + 1);
-                                    return MENU_HOST_GAME;
+                                    *packetName = realloc(*packetName, strlen(*(packetList + current->button.returnValue - 15)) + 1);
+                                    *packetName = strcpy(*packetName, *(packetList + current->button.returnValue - 15));
+                                    readPacket(*(packetList + current->button.returnValue - 15), &questionData, &questionsNb);
+                                    return 8;
                                 }
                             }
                             current = current->next;
@@ -177,9 +184,10 @@ int choosePacket(Window* window, char** packetName) {
         SDL_SetRenderDrawColor(window->renderer, 0xF1, 0xFA, 0xEE, 0xFF);
         SDL_RenderClear(window->renderer);
 
-        if (page == 0){
-        } else if (page == (*packetNb) / 4){
-
+        if (packetList == NULL){
+            SDL_RenderCopy(window->renderer, errorTexture, NULL, &((SDL_Rect){
+            (SCREEN_WIDTH - getTextWidth("Vous n'avez aucun paquet pour l'instant", 50)) / 2, (SCREEN_HEIGHT - 50) / 2,
+            getTextWidth("Vous n'avez aucun paquet pour l'instant", 50), 50}));
         }
 
         if (first != NULL) {
@@ -190,10 +198,8 @@ int choosePacket(Window* window, char** packetName) {
                     if ((current->button.icon == prev && page > 0) || (current->button.icon == next && page < *packetNb / 4 && *packetNb > 4)){
                         display(window->renderer, current->button);
                     }
-                } else {
-                    if (current->button.returnValue - 15 >= page * 4 && current->button.returnValue - 15 < (page+1) * 4) {
-                        display(window->renderer, current->button);
-                    }
+                } else if (current->button.returnValue - 15 >= page * 4 && current->button.returnValue - 15 < (page+1) * 4) {
+                    display(window->renderer, current->button);
                 }
                 current = current->next;
             }while (current != first);

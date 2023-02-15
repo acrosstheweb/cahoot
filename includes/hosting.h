@@ -4,6 +4,6 @@
 
 #include "struct.h"
 
-int hosting(Window* window, char* packetName, QuestionData* packet_to_play, int questionsNb);
+int hosting(Window* window, char* packetName, QuestionData* packet_to_play, int questionsNb, char* maxClients);
 
 #endif

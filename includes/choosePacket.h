@@ -3,6 +3,6 @@
 
 #include "struct.h"
 
-int choosePacket(Window* window, char** packetName);
+int choosePacket(Window* window, char** packetName, QuestionData** questionData, int *questionsNb);
 
 #endif

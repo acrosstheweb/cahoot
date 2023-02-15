@@ -21,7 +21,7 @@ void* startServer(void* arg){
 	
 	char serv_lan_ip[INET_ADDRSTRLEN];
 	
-	int max_clients = args->max_clients;
+	int max_clients = (args->max_clients) * 2;
 	strcpy(serv_lan_ip, args->ip);
     
 	int port = 13337;
@@ -57,16 +57,19 @@ void* startServer(void* arg){
 
 	// ALL GOOD
 	printf("The server has started and is currently listening on %s:%d\n", serv_lan_ip, port);
-
+	int connected;
 	// ACCEPTE AUTANT DE CONNEXIONS AU SERVEUR QUE max_clients
 	for(int c = 0; c < max_clients; c++){
 		if( (clients[c] = accept(server_socket, NULL, NULL)) < 0){
 			printf("Failed to accept client n°%d\n", c);
 			close(server_socket);
 			exit(EXIT_FAILURE);
-		}else{
+		} else {
 			// +1 Client Connecté !
-			printf("+1 Client connecté\n");
+			(*(args->clients)) = c/2;
+			if (c == 1){
+				(*(args->clients)) = 1;
+			}
 		}
 	}
 
@@ -120,26 +123,34 @@ void* client_handler(void* arg){
     int sock_fd = args->sock_fd;
 	int nb_questions = args->nb_questions;
 	QuestionData** game_packet = args->game_packet;
-	
-
 	int reponse;
+	int q_index;
 	int valread = 0;
+	int serial_size = (sizeof(char) * 16) + (sizeof(char*) * 4);
 
-    for(int q_index = 0; q_index < nb_questions; q_index++) {
-		int serial_size = (sizeof(char) * 16) + (sizeof(char*) * 4);
+    for(q_index = 0; q_index < nb_questions; q_index++) {
 		char* serialized = malloc(sizeof(char) * serial_size);
 		serialized = serializeQuestionData(*game_packet + q_index);
-		
 
 		send(sock_fd, serialized, serial_size, 0);
-    	
 		recv(sock_fd, &reponse, sizeof(reponse), 0);
 
 		valread = ntohl(reponse); // Valread = l'index de la reponse saisie par le joueur
 		printf("client response : %d\n", valread);
     }
-	char quit_signal[18] = "tah_la_deconnexion";
-	send(sock_fd, quit_signal, strlen(quit_signal)+1, 0);
+	
+	QuestionData* quit = malloc(sizeof(QuestionData));
+	quit->question = malloc(sizeof(char) * (strlen("tah_la_deconnexion") + 1));
+	quit->question = "tah_la_deconnexion";
+	quit->answers = malloc(sizeof(char*) * 4);
+	for (int i = 0; i < 4; i++){
+		quit->answers[i] = malloc(sizeof(char));
+		quit->answers[i] = "";
+	}
+	
+	char* serial_quit = malloc(sizeof(char) * serial_size);
+	serial_quit = serializeQuestionData(quit);
+	send(sock_fd, serial_quit, serial_size, 0);
 	
 	close(args->sock_fd);
 
@@ -183,7 +194,7 @@ char* getIp(){
     	
 	if(p == NULL)
 	{
-		printf ("Error number : %d . Error message : %s \n" , errno , strerror(errno));
+		printf ("Error number : %d \nError message : %s \n" , errno , strerror(errno));
         return NULL;
     }
 
@@ -194,7 +205,6 @@ char* getIp(){
 
 // Function to serialize the QuestionData structure
 char* serializeQuestionData(QuestionData* questionData) {
-	printf("in serialize : %s\n", questionData->question);
     int totalLength = 0;
     int i;
 

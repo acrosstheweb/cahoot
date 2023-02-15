@@ -66,6 +66,7 @@ typedef struct {
 } Client_Args;
 
 typedef struct {
+	int* clients;
 	int max_clients;
 	char ip[16]; // INET_ADDRSTRLEN
     int nb_questions;
