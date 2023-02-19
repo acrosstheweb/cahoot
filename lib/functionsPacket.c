@@ -140,6 +140,8 @@ void readPacket(char* packetName, QuestionData*** questionData, int** questionsN
             token = strtok(NULL, "\"");
             token = strtok(NULL, "\"");
             token = strtok(NULL, "\"");
+            (**questionData + questionIndex)->correct_answer = malloc(sizeof(char) * (strlen(token) + 1));
+            strcpy((**questionData + questionIndex)->correct_answer, token);
             (**questionData + questionIndex)->answers = malloc(sizeof(char*) * 4);
             (**questionData + questionIndex)->answers[answerIndex] = malloc(sizeof(char) * (strlen(token) + 1));
             strcpy((**questionData + questionIndex)->answers[answerIndex], token);

@@ -23,7 +23,7 @@ int hosting(Window* window, char* packetName, QuestionData* packet_to_play, int 
     int nbConnected = 0;
     char* nbConnectedString = malloc(sizeof(char) * (strlen(maxClients) + 1));
     char* connected = malloc(sizeof(char) * (strlen("Clients connectes:  / ") + strlen(maxClients) * 2 + 1));
-
+    int max_connected = atoi(maxClients);
 
     // Définir les positions des boutons (x, y, w, h)
     SDL_Rect messageRect = {
@@ -55,7 +55,7 @@ int hosting(Window* window, char* packetName, QuestionData* packet_to_play, int 
 	Server_Args server_args;
 
     server_args.clients = &nbConnected;
-    server_args.max_clients = atoi(maxClients);
+    server_args.max_clients = max_connected;
     strcpy(server_args.ip, ip);
     server_args.game_packet = &packet_to_play;
     server_args.nb_questions = questionsNb;

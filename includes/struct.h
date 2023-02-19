@@ -44,6 +44,7 @@ struct Node{
 typedef struct {
     char* question;
     char** answers;
+    char* correct_answer;
 } QuestionData;
 
 typedef struct {

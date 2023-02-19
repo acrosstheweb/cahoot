@@ -17,12 +17,12 @@
  * @return
  */
 void* startServer(void* arg){
-    Server_Args* args = (Server_Args*) arg;
+    Server_Args* server_args = (Server_Args*) arg;
 	
 	char serv_lan_ip[INET_ADDRSTRLEN];
 	
-	int max_clients = (args->max_clients) * 2;
-	strcpy(serv_lan_ip, args->ip);
+	int max_clients = (server_args->max_clients) * 2;
+	strcpy(serv_lan_ip, server_args->ip);
     
 	int port = 13337;
 	int clients[max_clients], response_read;
@@ -66,9 +66,9 @@ void* startServer(void* arg){
 			exit(EXIT_FAILURE);
 		} else {
 			// +1 Client Connecté !
-			(*(args->clients)) = c/2;
+			(*(server_args->clients)) = c/2;
 			if (c == 1){
-				(*(args->clients)) = 1;
+				(*(server_args->clients)) = 1;
 			}
 		}
 	}
@@ -76,15 +76,17 @@ void* startServer(void* arg){
 	// On crée les threads qui éxecuteront la fonction client_handler
 	printf("creation thread jeu\n");
 	pthread_t threads[max_clients];
-	Client_Args thread_args[max_clients];
+	Client_Args client_thread_args[max_clients];
 
+	// boucle de jeu
 	for (int c = 0; c < max_clients; c++) {
 		if(c % 2 != 0){
-			thread_args[c].client_id = c;
-			thread_args[c].sock_fd = clients[c];
-			thread_args[c].game_packet = args->game_packet;
-			thread_args[c].nb_questions = args->nb_questions;
-			if (pthread_create(&threads[c], NULL, client_handler, &thread_args[c]) != 0) {
+			client_thread_args[c].client_id = c;
+			client_thread_args[c].sock_fd = clients[c];
+			client_thread_args[c].game_packet = server_args->game_packet;
+			client_thread_args[c].nb_questions = server_args->nb_questions;
+			client_thread_args[c].good_answers = 0;
+			if (pthread_create(&threads[c], NULL, client_handler, &client_thread_args[c]) != 0) {
 				perror("pthread_create failed\n");
 				close(server_socket);
 				exit(EXIT_FAILURE);
@@ -97,6 +99,14 @@ void* startServer(void* arg){
 		if(c % 2 != 0){
 			printf("Thread client %d eteint\n", c);
 			pthread_join(threads[c], NULL);
+		}
+	}
+
+	// fin de la boucle de jeu, on regarde le score
+	printf("SCOREBOARD : \n");
+	for (int c = 0; c < max_clients; c++) {
+		if(c % 2 != 0){
+			printf(">>> Client[%d] : %d\n",client_thread_args[c].client_id, client_thread_args[c].good_answers);
 		}
 	}
 
@@ -136,6 +146,12 @@ void* client_handler(void* arg){
 		recv(sock_fd, &reponse, sizeof(reponse), 0);
 
 		valread = ntohl(reponse); // Valread = l'index de la reponse saisie par le joueur
+		if(strcmp((*game_packet + q_index)->answers[valread], (*game_packet)->correct_answer) == 0){
+			printf("Ah oe oe oe oeeeee, c'est gagneeeee (enfin juste +1 point quoi)\n");
+			args->good_answers++;
+		}else{
+			printf("Ah bah t tah nul\n");
+		}
 		printf("client response : %d\n", valread);
     }
 	
