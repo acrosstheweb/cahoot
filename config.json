@@ -1,5 +1,5 @@
 {
 	"max_connections" : 1,
 	"packet_path" : "./packets/",
-	"ip_base" : "192.168.105."
+	"ip_base" : "192.168.0."
 }
