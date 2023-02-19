@@ -77,7 +77,12 @@ Conf* readConfig() {
             token = strtok(NULL, "\"");
             conf->ip_base = malloc(sizeof(char) * (strlen(token) + 1));
             strcpy(conf->ip_base, token);
-        }
+        } else if (strstr(token, "pseudo") != NULL) {
+        token = strtok(NULL, "\"");
+        token = strtok(NULL, "\"");
+        conf->pseudo = malloc(sizeof(char) * (strlen(token) + 1));
+        strcpy(conf->pseudo, token);
+    }
         token = strtok(NULL, "\"");
         token = strtok(NULL, "\"");
     }

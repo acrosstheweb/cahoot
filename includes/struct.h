@@ -51,6 +51,7 @@ typedef struct {
     char* maxConnections;
     char* packetPath;
     char* ip_base;
+    char* pseudo;
 } Conf;
 
 typedef struct {
