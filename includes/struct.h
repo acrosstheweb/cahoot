@@ -68,11 +68,18 @@ typedef struct {
 } Client_Args;
 
 typedef struct {
+    int* client_id;
+    int* score;
+} Scores;
+
+typedef struct {
 	int* clients;
 	int max_clients;
 	char ip[16]; // INET_ADDRSTRLEN
     int nb_questions;
     QuestionData** game_packet; // packet
+    Scores** scoreboard;
+    int** is_finished;
 } Server_Args;
 
 #endif

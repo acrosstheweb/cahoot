@@ -23,7 +23,7 @@ void* startServer(void* arg){
 	
 	int max_clients = (server_args->max_clients) * 2;
 	strcpy(serv_lan_ip, server_args->ip);
-    
+
 	int port = 13337;
 	int clients[max_clients], response_read;
 	char* response = malloc(sizeof(char) * 1024);
@@ -65,6 +65,7 @@ void* startServer(void* arg){
 			close(server_socket);
 			exit(EXIT_FAILURE);
 		} else {
+			*((*(server_args->scoreboard))->client_id + c/2) = c/2;
 			// +1 Client Connecté !
 			(*(server_args->clients)) = c/2;
 			if (c == 1){
@@ -103,12 +104,12 @@ void* startServer(void* arg){
 	}
 
 	// fin de la boucle de jeu, on regarde le score
-	printf("SCOREBOARD : \n");
 	for (int c = 0; c < max_clients; c++) {
 		if(c % 2 != 0){
-			printf(">>> Client[%d] : %d\n",client_thread_args[c].client_id, client_thread_args[c].good_answers);
+			*((*(server_args->scoreboard))->score + c) = client_thread_args[c].good_answers;
 		}
 	}
+	**(server_args->is_finished) = 1;
 
 	if (close(server_socket) == 0){
 		printf("Socket serveur ferme !\n");

@@ -54,11 +54,20 @@ int hosting(Window* window, char* packetName, QuestionData* packet_to_play, int 
     pthread_t threadServer;
 	Server_Args server_args;
 
+    Scores* scoreboard = malloc(sizeof(Scores));
+    scoreboard->client_id = malloc(sizeof(int) * max_connected);
+    scoreboard->score = malloc(sizeof(int) * max_connected);
+
+    int* is_finished = malloc(sizeof(int));
+    *is_finished = 0;
+
     server_args.clients = &nbConnected;
     server_args.max_clients = max_connected;
     strcpy(server_args.ip, ip);
     server_args.game_packet = &packet_to_play;
     server_args.nb_questions = questionsNb;
+    server_args.scoreboard = &scoreboard;
+    server_args.is_finished = &is_finished;
 
     if (pthread_create(&threadServer, NULL, startServer, &server_args) != 0) {
         perror("pthread_create failed");
@@ -133,6 +142,12 @@ int hosting(Window* window, char* packetName, QuestionData* packet_to_play, int 
         SDL_RenderCopy(window->renderer, packetTexture, NULL, &packetRect); // Affichage du packet séléctionné
         SDL_RenderCopy(window->renderer, messageConnectionsTexture, NULL, &messageConnectionsRect); // Affichage de "Clients connectes:"
 
+        if(*is_finished == 1){
+            printf("SCOREBOARD : (%d)\n", max_connected);
+            for (int c = 0; c < max_connected; c++) {
+                printf(">>> Client[%d] : %d\n", *(scoreboard->client_id), *(scoreboard->score));
+            }
+        }
 
         // Mettre à jour l'affichage
         SDL_RenderPresent(window->renderer);
